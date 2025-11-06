@@ -38,6 +38,7 @@ python src/api-core/api-2.py --zone uc --start "$(date -u -d '+3 minutes' '+%Y-%
 KEY_NAME=mykey IMAGE="Ubuntu 22.04" FLAVOR=m1.large NETWORK=public bash scripts/test_api6_nova_physical_host.sh
 ```
 - If not set, the script uses default values from `.env.example` or hardcoded defaults.
+- You can use `openstack image list --column Name` for thelist of `IMAGE`.
 
 **6. Run the full demo/test script**
 ```bash
