@@ -94,7 +94,42 @@ Inputs:
 After this, check:
     openstack server show my-baremetal-node
 
-You should see the floating IP listed under the Networks field.
+You should see the floating IP listed under the "addresses" field.
+Output: 
+    +-------------------------------------+------------------------------------------------------------------+
+    | Field                               | Value                                                            |
+    +-------------------------------------+------------------------------------------------------------------+
+    | OS-DCF:diskConfig                   | MANUAL                                                           |
+    | OS-EXT-AZ:availability_zone         | nova                                                             |
+    | OS-EXT-SRV-ATTR:host                | mgmt01-ironic                                                    |
+    | OS-EXT-SRV-ATTR:hypervisor_hostname | 4ebd7a4f-2e80-4dd5-b2f8-cdcbdce6fe2c                             |
+    | OS-EXT-SRV-ATTR:instance_name       | instance-00014c1f                                                |
+    | OS-EXT-STS:power_state              | Running                                                          |
+    | OS-EXT-STS:task_state               | None                                                             |
+    | OS-EXT-STS:vm_state                 | active                                                           |
+    | OS-SRV-USG:launched_at              | 2025-11-13T18:24:50.000000                                       |
+    | OS-SRV-USG:terminated_at            | None                                                             |
+    | accessIPv4                          |                                                                  |
+    | accessIPv6                          |                                                                  |
+    | addresses                           | sharednet1=10.140.83.187, 192.5.87.31                            |
+    | config_drive                        | True                                                             |
+    | created                             | 2025-11-13T18:17:56Z                                             |
+    | flavor                              | baremetal (fc95e5bb-71fb-46a1-b2bc-aaa8eaf4a70a)                 |
+    | hostId                              | 6b8bfe462acffabbf80876e9f41ac500a9da30f3f8e854e89067e268         |
+    | id                                  | dd4b4720-7c5b-49d1-a5f8-a5686b25f6fd                             |
+    | image                               | CC-Ubuntu20.04 (8d72a32d-ced8-461a-8ec9-5b80211f9800)            |
+    | key_name                            | Chris                                                            |
+    | name                                | my-baremetal-node                                                |
+    | progress                            | 0                                                                |
+    | project_id                          | 62f12f9c6a28478b976f680a6fa2fa9a                                 |
+    | properties                          |                                                                  |
+    | security_groups                     | name='default'                                                   |
+    | status                              | ACTIVE                                                           |
+    | updated                             | 2025-11-13T18:24:50Z                                             |
+    | user_id                             | e15e7cec9da6a115e8d5efc2aa253510ca10fa8f1b87bc1fc8ce6745db0cc2a7 |
+    | volumes_attached                    |                                                                  |
+    +-------------------------------------+------------------------------------------------------------------+
+
 
 
 6.4 SSH into the server

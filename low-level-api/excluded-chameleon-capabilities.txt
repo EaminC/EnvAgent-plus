@@ -65,3 +65,23 @@ resources (discovery, reservations, networks, images, and instance launches),
 and does not require persistent shared filesystems. Therefore, share management
 is out of scope for EnvAgent-plus and excluded from this document.
 
+
+Additional Chameleon capabilities currently out of scope
+-------------------------------------------------------
+- FPGA nodes:
+    Can be reserved and launched via the same Blazar + Nova APIs
+    using different node_type filters, but EnvAgent-plus does not
+    treat FPGA nodes specially in v1.
+
+- Trovi sharing portal:
+    Web-based artifact sharing and reproducibility portal.
+    Not required for creating leases or launching instances.
+
+- Daypass / allocations:
+    Allocation and quota management are handled outside EnvAgent-plus.
+    We assume the user already has a valid project and allocation.
+
+- KVM virtual machines:
+    EnvAgent-plus v1 focuses on bare-metal (physical:host) launches.
+    Support for KVM VMs would require additional CLI surface
+    (security groups, volumes, etc.) and is intentionally excluded.
