@@ -1,0 +1,67 @@
+POWER MONITORING (NOT REQUIRED FOR ENVAGENT-PLUS)
+https://chameleoncloud.readthedocs.io/en/latest/technical/power_monitoring/index.html
+
+Chameleon provides multiple power monitoring mechanisms, including IPMI/DCMI 
+infrastructure-level readings, application-level tools (perf, etrace2, Scaphandre),
+and long-term Prometheus/Grafana exporters. These tools measure node power usage 
+and energy consumption during experiments.
+
+EnvAgent-plus does not perform energy-aware experimentation and does not collect 
+or analyze system power data. Since the agent is designed for resource discovery,
+reservation handling, instance launch, and lifecycle automation—not experiment-level
+instrumentation—power monitoring functionality is excluded from this document.
+
+
+====================================================
+COMPLEX APPLIANCES (NOT REQUIRED FOR ENVAGENT-PLUS)
+https://chameleoncloud.readthedocs.io/en/latest/technical/complex/cli_management.html
+
+Chameleon supports launching multi-instance “Complex Appliances” using OpenStack
+Heat stacks. These provide orchestration for templates that define clusters,
+NFS servers, client groups, or multi-resource deployments.
+
+EnvAgent-plus does not use Heat stacks. The agent operates at the levels of:
+- resource discovery (Root → Sites → Clusters → Nodes)
+- reservation creation and inspection via Blazar
+- bare-metal server launch via Nova
+- instance lifecycle management
+- image and network selection
+
+Since Heat is not part of the provisioning workflow required by EnvAgent-plus,
+Complex Appliances are excluded from this document.
+
+
+====================================================
+OBJECT STORE / SWIFT (NOT REQUIRED FOR ENVAGENT-PLUS)
+https://chameleoncloud.readthedocs.io/en/latest/technical/swift/index.html
+
+Chameleon provides an OpenStack Swift Object Store for uploading, downloading,
+and managing data objects and containers (similar to AWS S3). Operations include
+creating containers, uploading files, listing objects, downloading objects, and
+handling segmented uploads for files larger than 4 GB.
+
+EnvAgent-plus does not upload or manage user datasets, nor does it interact with
+Swift containers or objects. The agent’s responsibilities are limited to resource
+discovery, reservations, image selection, network selection, and bare-metal/VM
+launch workflows. Because object storage is not involved in provisioning or
+orchestration, it is excluded from this document.
+
+
+
+====================================================
+SHARES / MANILA (NOT REQUIRED FOR ENVAGENT-PLUS)
+https://chameleoncloud.readthedocs.io/en/latest/technical/shares/cli_management.html
+
+Chameleon supports creating and managing shared NFS storage volumes (“shares”)
+backed by CephFS. These allow users to provision persistent storage that can be
+mounted to bare-metal instances using NFS. CLI operations include creating and
+deleting shares, resizing them, viewing details, and modifying visibility
+(public/private). Working with shares also involves reserving special storage
+networks and configuring isolated VLAN environments.
+
+EnvAgent-plus does not mount shared storage, manage NFS volumes, or interact
+with project-level CephFS shares. The agent focuses exclusively on provisioning
+resources (discovery, reservations, networks, images, and instance launches),
+and does not require persistent shared filesystems. Therefore, share management
+is out of scope for EnvAgent-plus and excluded from this document.
+

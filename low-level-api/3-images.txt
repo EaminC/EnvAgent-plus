@@ -1,0 +1,238 @@
+=========================================
+IMAGES (LOW-LEVEL CLI API)
+=========================================
+
+For EnvAgent-plus, the image operations required are:
+1. Listing available images
+2. Viewing image details
+
+These allow the agent to select a valid base image (e.g., CC-Ubuntu20.04)
+when launching a bare-metal instance.
+
+Advanced image management operations (uploading, sharing, editing, etc.)
+are not required for the agent’s functionality and are included only as an
+optional appendix at the end.
+
+Most image operations use the OpenStack Image service (Glance), and all
+commands require sourcing the OpenStack RC file.
+
+
+====================================================
+1. LIST ALL IMAGES
+====================================================
+
+Command:
+    openstack image list
+
+Input:
+    None
+
+Output:
+    A table listing:
+        - ID
+        - Name
+        - Disk Format
+        - Size
+        - Visibility (public/private/shared)
+        - Status
+
++--------------------------------------+-------------------------------------------------+-------------+
+| ID                                   | Name                                            | Status      |
++--------------------------------------+-------------------------------------------------+-------------+
+| a8747942-1bb8-46d0-9a9d-b648734d3154 | ANL-MPICH-3.3.1                                 | active      |
+| 5692d953-1667-4398-a1ee-cfb9851a203e | CC-CentOS7                                      | active      |
+| 035c2b70-e14d-454c-9453-316a23ee6b71 | CC-CentOS7-CUDA11                               | active      |
+| 0fc8cb64-8c0c-4b73-9056-324145b1be28 | CC-CentOS8-stream                               | active      |
+| fcaafb95-9fa0-4e43-aa3e-cf44f6bcc325 | CC-CentOS8-stream-CUDA11                        | active      |
+| e43e6a2f-9a39-4dcf-aa7c-0634782d8036 | CC-CentOS9-Stream                               | active      |
+| 5f671e08-f56b-4972-9c70-1e82cdb2fca4 | CC-CentOS9-Stream_2024-10-23 17:58:55.416104    | active      |
+| 4ddd3426-b0e8-4b12-b267-d34878a8533d | CC-CentOS9-Stream_2025-04-03 16:18:57.315019    | active      |
+| f8a39b45-8d69-4e08-8ce2-fdd8a8b72548 | CC-CentOS9-Stream_2025-05-05 19:34:02.985095    | active      |
+| e8cbe3ce-a5f4-46b8-b88f-82e09ef4bcac | CC-Ubuntu18.04                                  | active      |
+| 480cdb0f-60ad-4b35-9cba-08fb25ce1290 | CC-Ubuntu18.04-20211129                         | active      |
+| aa7ca7d2-f3f1-4133-9c4e-6e78d20a0896 | CC-Ubuntu18.04-20220828                         | active      |
+| 736f762c-ab26-4e99-ac7e-664d172db275 | CC-Ubuntu18.04-CUDA                             | active      |
+| 3808626e-ff10-4088-9a97-921b9b968588 | CC-Ubuntu18.04-CUDA11-20211129                  | active      |
+| 8d72a32d-ced8-461a-8ec9-5b80211f9800 | CC-Ubuntu20.04                                  | active      |
+| 5025a3c8-ab93-44af-8eec-6b23ebca46da | CC-Ubuntu20.04-20220411.2                       | active      |
+| f47d51b4-3799-4e04-b894-6a0426e95f7e | CC-Ubuntu20.04-20220828                         | deactivated |
+| 71b75072-3491-4b03-82ab-b33436d238f9 | CC-Ubuntu20.04-20221005-1665164598.226599       | active      |
+| d80dceaa-c304-42d4-a3be-06a1449ddc98 | CC-Ubuntu20.04-20230224                         | active      |
+| e91f8b1d-2e46-499d-90bc-9478effd6ec5 | CC-Ubuntu20.04-20231115                         | active      |
+| 571a089f-e277-4777-875b-d2ebc8b0739b | CC-Ubuntu20.04-20240129                         | active      |
+| 2be02db9-e591-47b4-9dd3-1d23f7a01433 | CC-Ubuntu20.04-20240326                         | active      |
+| 089fe8cf-4237-446d-83f2-886b3f9cdbd4 | CC-Ubuntu20.04-ARM64                            | active      |
+| ffdc5ec3-b1f8-46c0-a9cc-4c58b29ace2e | CC-Ubuntu20.04-ARM64-20220815-1661218610.107572 | active      |
+| cecd86c8-eb40-49ba-a66c-080e74a3ac54 | CC-Ubuntu20.04-ARM64-20230302                   | active      |
+| 4bf24169-7e5f-4ea5-991a-6d8771036478 | CC-Ubuntu20.04-CUDA                             | active      |
+| 857e2c36-2f93-4f47-85f1-a3e9c82fc336 | CC-Ubuntu20.04-CUDA-20220815-1661261834.994877  | active      |
+| 5424bc88-fd33-4158-a0ef-47580885758c | CC-Ubuntu20.04-CUDA-20230301                    | active      |
+| 51284f83-22e0-4873-bef7-36915f59fc2a | CC-Ubuntu20.04-CUDA-20230831                    | active      |
+| 3fbbdfd8-1282-4c14-b1f0-6acd0a6caa04 | CC-Ubuntu20.04-CUDA-20231115                    | active      |
+| 68de38f3-2541-429a-b01a-69ef4c86a22f | CC-Ubuntu20.04-CUDA-20240129                    | active      |
+| 4892df5f-c933-4b65-bf4a-0f1230cbcb71 | CC-Ubuntu20.04-CUDA-20240326                    | active      |
+| 5b124949-18e8-429f-af4d-977309ba3d87 | CC-Ubuntu20.04-CUDA-20241022                    | active      |
+| 095c0688-ef19-459f-8cd1-ec9880754e4f | CC-Ubuntu20.04-CUDA-20241028                    | active      |
+| 0b29cbca-842c-4bea-b89f-66e010d24c6e | CC-Ubuntu20.04-CUDA11                           | active      |
+| a69ba5a0-4825-4974-a544-c1c7820288b5 | CC-Ubuntu20.04-CUDA11-20211129                  | active      |
+| a01e2fab-f598-4e11-b00a-c0230ad9957a | CC-Ubuntu22.04                                  | active      |
+| 5d7788ea-e98e-49c9-bf42-f19268c3baa4 | CC-Ubuntu22.04-20230301                         | active      |
+| dff788f5-8c38-4443-b078-04bf0b7f6f48 | CC-Ubuntu22.04-20231115                         | active      |
+| ea065200-8268-4f1f-9278-0cc04793a0c0 | CC-Ubuntu22.04-20240129                         | active      |
+| 9fd6526b-24c3-4f7d-a9d3-08135bbbb5b6 | CC-Ubuntu22.04-20240326                         | active      |
+| 59949ea4-fd67-4746-b0b8-bd6dafa67412 | CC-Ubuntu22.04-20241022                         | active      |
+| a8a41de7-9b40-4d11-87d4-40d6a08ed91b | CC-Ubuntu22.04-ARM64                            | active      |
+| 96ddc55c-e842-4e04-9a3a-246febd8dc35 | CC-Ubuntu22.04-ARM64-20230323                   | active      |
+| e73485cb-2e8a-416a-b13d-ceb73d7c45eb | CC-Ubuntu22.04-ARM64_2024-03-26 17:53:50.763654 | active      |
+| 6b99153c-0cf7-4dc3-99ec-9e3be02d8dbe | CC-Ubuntu22.04-ARM64_2025-04-03 16:18:25.711677 | active      |
+| 262f51ea-1151-4aa0-a218-14f085a4f47b | CC-Ubuntu22.04-ARM64_2025-05-05 19:36:47.261278 | active      |
+| 1052ba60-cbe6-45ad-91ac-6ad0807c6e23 | CC-Ubuntu22.04-CUDA                             | active      |
+| cad073a2-f808-4667-87d8-6f5c05c153e4 | CC-Ubuntu22.04-CUDA-20230301                    | active      |
+| a6f2b6cb-503c-4635-bdc9-a92e0d4f1ed2 | CC-Ubuntu22.04-CUDA-20230831                    | active      |
+| a7d96fb3-8b4a-45ea-adf4-9f5476b0e0ff | CC-Ubuntu22.04-CUDA-20231115                    | active      |
+| 7baed3d0-90db-4e7e-bdca-810d67176862 | CC-Ubuntu22.04-CUDA-20240129                    | active      |
+| ab3c0f6e-8f39-4a77-8466-c3829781b9ff | CC-Ubuntu22.04-CUDA-20240326                    | active      |
+| 0e41859e-bb88-4ff2-9460-e657f0957c85 | CC-Ubuntu22.04-CUDA-20241022                    | active      |
+| 30b570c5-e1af-4a7e-816c-454a741d96e4 | CC-Ubuntu22.04-CUDA-20241028                    | active      |
+| 34d5f25d-68ab-4e7b-b6ee-e8af815a8c30 | CC-Ubuntu22.04-CUDA_2024-11-01 23:22:29.313735  | active      |
+| 85eecff2-9e24-4b41-888e-4ec940886c7f | CC-Ubuntu22.04-CUDA_2025-04-03 16:28:25.450463  | active      |
+| 9acaee40-1305-44bb-940e-72c9235086af | CC-Ubuntu22.04-CUDA_2025-05-05 19:42:40.161961  | active      |
+| c6122262-2829-47ae-b8bc-046a1300d46c | CC-Ubuntu22.04_2024-10-22 21:58:21.742785       | active      |
+| 6f17ccc2-54a6-434b-b5f4-609c65d9d565 | CC-Ubuntu22.04_2025-04-03 16:17:47.645580       | active      |
+| 9061d094-3f1b-4da5-ba71-be53c0394061 | CC-Ubuntu22.04_2025-05-05 19:32:07.845188       | active      |
+| 750c344b-7a82-41cb-81bc-b16ea8802e9c | CC-Ubuntu24.04                                  | active      |
+| 44f5fdba-6606-406b-aedc-a2d7e664d843 | CC-Ubuntu24.04-ARM64                            | active      |
+| c8a5f1ef-71ab-4eb6-a99d-12831c960589 | CC-Ubuntu24.04-ARM64_2025-04-03 16:18:25.711676 | active      |
+| 1e5c6e30-26f0-420e-82d7-08414c5e162e | CC-Ubuntu24.04-ARM64_2025-05-05 19:36:47.261759 | active      |
+| 0be1a1c4-10ba-434a-a2cf-619a8206740e | CC-Ubuntu24.04-CUDA                             | active      |
+| 2ca5e399-ec07-4744-b18a-052886877c50 | CC-Ubuntu24.04-CUDA-20241023                    | active      |
+| e271a459-810f-4e25-b1e3-01dd5de4f711 | CC-Ubuntu24.04-CUDA-20241028                    | active      |
+| 6a0db140-60e6-4c79-b020-402632889a43 | CC-Ubuntu24.04-CUDA_2024-11-01 23:22:29.344247  | active      |
+| 2f185210-2787-457d-b11d-5d002ffc1161 | CC-Ubuntu24.04-CUDA_2025-04-03 16:37:11.394468  | active      |
+| 45661d6e-d442-48b2-892f-e39a246011cc | CC-Ubuntu24.04-CUDA_2025-05-05 19:51:21.052062  | active      |
+| db780fdb-40c5-48f4-8673-7e53153c3d23 | CC-Ubuntu24.04-ROCm                             | active      |
+| 65fd10e3-cfeb-48fa-b4a5-eb261c3bfe8e | CC-Ubuntu24.04-ROCm_2025-04-03 16:17:47.657959  | active      |
+| a66571aa-dbaf-4dda-b7d8-ea0c4a97ba20 | CC-Ubuntu24.04-ROCm_2025-05-05 19:32:07.856597  | active      |
+| 4c083c73-b747-418d-89ec-59ee2b47e2fc | CC-Ubuntu24.04_2024-10-22 22:09:42.565964       | active      |
+| f2292772-4a10-4e3e-a54c-c58b955f67da | CC-Ubuntu24.04_2025-04-03 16:17:47.655592       | active      |
+| 0b7a6958-2e9a-4d13-9551-646bdf289c57 | CC-Ubuntu24.04_2025-05-05 19:32:07.856003       | active      |
+| 86436743-f985-4aa9-b130-c808ff706431 | OS-Liberty-Puppet_base                          | active      |
+| c736ba5a-20bc-468e-b2dd-fe4c4f4bfe0d | OS-Liberty-Puppet_controller                    | active      |
+| 86c374f1-fd4b-4f9a-b584-86fc4fba134a | Ubuntu22.04-HPC-MPI-Spack-CUDA                  | active      |
+| ca1c776a-6dc6-4215-a515-fdce726941cd | Ubuntu22.04-WorkflowRoofline-20240624           | active      |
+| f0cb1e42-4aa3-404e-b417-a9716e8d3989 | cirros-0.6.2                                    | active      |
+| 67fb32d7-bcf0-4a5d-91de-bd12abf8ee51 | compss_3.3.1_f                                  | active      |
+| eba40c5c-01eb-4c90-b984-f0fb6e1afdd7 | compss_image2                                   | active      |
+| 76389e3d-07d7-4a45-97e9-5ceebd7f3cdd | icpp23-gpu-deduplication                        | active      |
+| 3eb9e9a4-5e70-400b-ae5f-b61561e45cf9 | icpp23-gpu-deduplication-final                  | active      |
+| 9397e9f1-c80d-4972-943f-80ac24d588c2 | ipa-centos8-stable-xena.initramfs               | active      |
+| 7b662dda-6449-420a-9ed4-0a212a8be232 | ipa-centos8-stable-xena.kernel                  | active      |
+| adc4bc96-ee37-4aa4-b918-b238ba2da774 | mside-CentOS8-vGPU-License-Server               | active      |
+| 92bf8769-125d-4749-96b2-b794c31b4f99 | mside-CentOS8-vGPU-Server                       | active      |
+| 41fe3516-5e03-42fb-8c13-c12c851cbdd2 | pxe_deploy_kernel                               | active      |
+| 4b0e34e3-29ae-48b4-ba17-28adbf00a412 | pxe_deploy_kernel.xena                          | active      |
+| 6b95a1fb-f134-4e3b-ab82-e101737cc6fe | pxe_deploy_ramdisk                              | active      |
+| 1605d9d2-dd8f-4c51-8aa0-3428ab9769b0 | pxe_deploy_ramdisk.xena                         | active      |
+| 9d237499-6fd2-4985-ac2d-318880f8584b | sylab-ubuntu20.04_tensorflow                    | active      |
+| 47ff1a03-3c9a-41ae-95de-c98f9f091e3e | test-ipa-centos-9-stream-stable-xena.initramfs  | active      |
+| 4c7331ab-2074-43da-b3fd-b36a3d643ab5 | test-ipa-centos-9-stream-stable-xena.kernel     | active      |
+| beebfae4-4b93-4580-b812-19c4627827c1 | tinyipa_deploy_kernel                           | active      |
+| 63aad94c-0f3c-4ba1-8a8f-ef55650d5b95 | tinyipa_deploy_ramdisk                          | active      |
++--------------------------------------+-------------------------------------------------+-------------+
+
+
+Used for:
+    - Discovering available base images (e.g., CC-Ubuntu20.04)
+    - Getting IMAGE_NAME or IMAGE_ID for launches
+    - Verifying that an uploaded image appears in your project
+
+
+====================================================
+2. VIEW IMAGE DETAILS
+====================================================
+
+Command:
+    openstack image show <IMAGE>
+
+Input:
+    <IMAGE> may be:
+        - image name (e.g. CC-Ubuntu20.04)
+        - image UUID
+
+Output:
+    A detailed table of properties, including:
+        - disk_format
+        - min_ram, min_disk
+        - size
+        - visibility (public/private/shared)
+        - owner
+        - created_at / updated_at
+        - checksum
+        - container_format
+        - metadata fields
+
+openstack image show a8747942-1bb8-46d0-9a9d-b648734d3154
++------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field            | Value                                                                                                                                             |
++------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+| checksum         | 73429d1ca9c3ac7473e18a5dfdc103d8                                                                                                                  |
+| container_format | bare                                                                                                                                              |
+| created_at       | 2022-06-15T20:41:14Z                                                                                                                              |
+| disk_format      | qcow2                                                                                                                                             |
+| file             | /v2/images/a8747942-1bb8-46d0-9a9d-b648734d3154/file                                                                                              |
+| id               | a8747942-1bb8-46d0-9a9d-b648734d3154                                                                                                              |
+| min_disk         | 0                                                                                                                                                 |
+| min_ram          | 0                                                                                                                                                 |
+| name             | ANL-MPICH-3.3.1                                                                                                                                   |
+| owner            | 87438932a8af4c5fa2fe42d95a836387                                                                                                                  |
+| properties       | os_hash_algo='sha512',                                                                                                                            |
+|                  | os_hash_value='95ae2f582e57232d9bb3524aa13b5cec060a61ce53c78919a31123934b785c1fdae579e647d65982cd0398db32e1b9dbc2abf0e2b784ba873691dd32e4833511', |
+|                  | os_hidden='False', stores='file'                                                                                                                  |
+| protected        | False                                                                                                                                             |
+| schema           | /v2/schemas/image                                                                                                                                 |
+| size             | 1067175936                                                                                                                                        |
+| status           | active                                                                                                                                            |
+| tags             |                                                                                                                                                   |
+| updated_at       | 2022-06-15T20:41:20Z                                                                                                                              |
+| virtual_size     | 4715577344                                                                                                                                        |
+| visibility       | public                                                                                                                                            |
++------------------+---------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Used for:
+    - Confirming image compatibility
+    - Verifying disk_format (qcow2, raw, etc.)
+    - Checking whether image is whole-disk or partition format
+
+
+====================================================
+APPENDIX: ADVANCED IMAGE OPERATIONS (Optional)
+====================================================
+
+These operations are NOT required by EnvAgent-plus, but are included for
+completeness and for users who may want to manage custom images.
+
+A. Upload a new image:
+    openstack image create --file <path> --disk-format <format> <name>
+
+B. Download an image:
+    openstack image save --file <local_file> <IMAGE>
+
+C. Share an image publicly:
+    openstack image set --public <IMAGE>
+
+D. Share an image with a project:
+    openstack image set --shared <IMAGE>
+    openstack image add project <IMAGE> <PROJECT_ID>
+    openstack image set --accept <IMAGE>
+
+E. Modify an image:
+    openstack image set <IMAGE> --name <new> --property <key=value>
+
+F. Delete an image:
+    openstack image delete <IMAGE_ID>
+
+
+==============================
+END OF IMAGES SECTION
+==============================

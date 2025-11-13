@@ -1,0 +1,269 @@
+=========================================
+BARE METAL LAUNCH (LOW-LEVEL CLI API)
+=========================================
+
+This section describes how to launch a bare-metal instance using
+OpenStack (Nova) on Chameleon. 
+
+A bare-metal launch requires:
+1. An ACTIVE reservation (lease)
+2. A valid bare-metal image (e.g., CC-Ubuntu20.04, CC-CentOS8, etc.)
+3. A flavor of "baremetal"
+4. A keypair
+5. A network (typically sharednet1)
+6. Passing the reservation ID in the launch command
+
+
+====================================================
+1. FIND NETWORK ID (sharednet1)
+====================================================
+
+Command:
+    openstack network list
+
+Input:
+    None
+
+Output:
+    A table listing networks.
+    Look for "sharednet1" and copy its "id".
+
++--------------------------------------+------------+--------------------------------------+
+| ID                                   | Name       | Subnets                              |
++--------------------------------------+------------+--------------------------------------+
+| 44b38c44-2a42-4b6d-b129-6c8f1b2a1375 | public     | c3950603-9e04-4cc5-be8d-1efbfe59fc0a |
+| a772a899-ff3d-420b-8b31-1c485092481a | sharednet1 | b872f0eb-8367-4865-a34e-409cdf34f159 |
+| ba070c9f-4d36-48e9-86a1-3754e5cfd718 | fabnetv4   | 3b6ad924-8001-4e27-a404-f795c353e07b |
++--------------------------------------+------------+--------------------------------------+
+
+
+
+Used for:
+    Providing the correct net-id to the server launch command.
+
+
+====================================================
+2. FIND RESERVATION ID
+====================================================
+
+Command:
+    openstack reservation lease show <LEASE_ID>
+
+Example:
+    openstack reservation lease show 7601f737-6c34-4dc4-b640-db13f44227c8
+
+
+Input:
+    LEASE_ID from reservation section
+    Example fields you need:
+        id      → the lease ID
+        status  → must be ACTIVE before launching
+        reservations[*] → includes resource_id and node type
+
++--------------+-----------------------------------------------------------------------------+
+| Field        | Value                                                                       |
++--------------+-----------------------------------------------------------------------------+
+| created_at   | 2025-11-13 03:59:45                                                         |
+| degraded     | False                                                                       |
+| end_date     | 2025-11-14T02:00:00.000000                                                  |
+| events       | [                                                                           |
+|              |     {                                                                       |
+|              |         "created_at": "2025-11-13 03:59:52",                                |
+|              |         "updated_at": null,                                                 |
+|              |         "id": "5aa8baf8-762a-4119-8395-f3bdca9d41c6",                       |
+|              |         "lease_id": "7601f737-6c34-4dc4-b640-db13f44227c8",                 |
+|              |         "event_type": "end_lease",                                          |
+|              |         "time": "2025-11-14T02:00:00.000000",                               |
+|              |         "status": "UNDONE"                                                  |
+|              |     },                                                                      |
+|              |     {                                                                       |
+|              |         "created_at": "2025-11-13 03:59:52",                                |
+|              |         "updated_at": "2025-11-13 04:00:03",                                |
+|              |         "id": "f6b43726-0290-47d5-b35d-d6a31aa4fd9f",                       |
+|              |         "lease_id": "7601f737-6c34-4dc4-b640-db13f44227c8",                 |
+|              |         "event_type": "before_end_lease",                                   |
+|              |         "time": "2025-11-13T03:59:00.000000",                               |
+|              |         "status": "DONE"                                                    |
+|              |     },                                                                      |
+|              |     {                                                                       |
+|              |         "created_at": "2025-11-13 03:59:52",                                |
+|              |         "updated_at": "2025-11-13 03:59:58",                                |
+|              |         "id": "faf09867-aaaa-49f4-96e9-a3313d43eb42",                       |
+|              |         "lease_id": "7601f737-6c34-4dc4-b640-db13f44227c8",                 |
+|              |         "event_type": "start_lease",                                        |
+|              |         "time": "2025-11-13T03:59:00.000000",                               |
+|              |         "status": "DONE"                                                    |
+|              |     }                                                                       |
+|              | ]                                                                           |
+| id           | 7601f737-6c34-4dc4-b640-db13f44227c8                                        |
+| name         | my-immediate-lease                                                          |
+| project_id   | 62f12f9c6a28478b976f680a6fa2fa9a                                            |
+| reservations | [                                                                           |
+|              |     {                                                                       |
+|              |         "created_at": "2025-11-13 03:59:45",                                |
+|              |         "updated_at": "2025-11-13 03:59:58",                                |
+|              |         "id": "74dcdd19-0408-4777-a97f-a544ab21fa6d",                       |
+|              |         "lease_id": "7601f737-6c34-4dc4-b640-db13f44227c8",                 |
+|              |         "resource_id": "339504e1-01a5-4aa6-918a-9af472b3a159",              |
+|              |         "resource_type": "physical:host",                                   |
+|              |         "status": "active",                                                 |
+|              |         "missing_resources": false,                                         |
+|              |         "resources_changed": false,                                         |
+|              |         "hypervisor_properties": "",                                        |
+|              |         "resource_properties": "[\"=\", \"$node_type\", \"gpu_rtx_6000\"]", |
+|              |         "before_end": "default",                                            |
+|              |         "on_start": "default",                                              |
+|              |         "min": 1,                                                           |
+|              |         "max": 1                                                            |
+|              |     }                                                                       |
+|              | ]                                                                           |
+| start_date   | 2025-11-13T03:59:00.000000                                                  |
+| status       | ACTIVE                                                                      |
+| trust_id     | 6bb20adb0ff243208fe99e9e11963100                                            |
+| updated_at   | 2025-11-13 03:59:58                                                         |
+| user_id      | e15e7cec9da6a115e8d5efc2aa253510ca10fa8f1b87bc1fc8ce6745db0cc2a7            |
++--------------+-----------------------------------------------------------------------------+
+
+
+Used for:
+    Passing the correct reservation ID into the server create command.
+
+NOTE:
+    The "reservation ID" for launching is NOT the same as the lease id.
+    You use:
+        --hint reservation=<reservation_id>
+    where reservation_id = the ID inside the "reservations" array, 
+    not the top-level lease ID.
+
+
+====================================================
+3. LAUNCH A BARE-METAL INSTANCE
+====================================================
+
+Command:
+    openstack server create \
+        --image <IMAGE_NAME> \
+        --flavor baremetal \
+        --key-name <KEY_NAME> \
+        --nic net-id=<sharednet1_id> \
+        --hint reservation=<reservation_id> \
+        <INSTANCE_NAME>
+
+Example (fill in real values):
+    openstack server create \
+        --image CC-Ubuntu20.04 \
+        --flavor baremetal \
+        --key-name my-keypair \
+        --nic net-id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx \
+        --hint reservation=a8e7cd8a-247e-4fb6-96d9-1829fbaacd04 \
+        my-baremetal-node
+
+
+Inputs:
+    IMAGE_NAME        → from "openstack image list"
+    KEY_NAME          → from "openstack keypair list"
+    net-id            → from "openstack network list"
+    reservation_id    → from lease show:
+                         reservations[0].id (NOT lease id)
+    INSTANCE_NAME     → any name you choose
+
+Output:
+    A JSON or table describing the created server.
+    Includes:
+        id (server id)
+        status
+        flavor
+        networks
+        reservation hint
+        power state, etc.
+
+Paste your output here once you run it later.
+
+
+Used for:
+    Creating the actual bare-metal machine tied to your reservation.
+
+
+
+====================================================
+4. OPTIONAL: PROVIDE USER-DATA (BOOT SCRIPT)
+====================================================
+
+You can provide a script to run on first boot:
+
+Example script (turn off collectd):
+----------------------------------------------------
+#!/bin/bash
+systemctl stop collectd.service
+systemctl disable collectd.service
+systemctl stop os-collect-config.service
+systemctl disable os-collect-config.service
+----------------------------------------------------
+
+Launch with user data:
+    openstack server create \
+        ... \
+        --user-data myscript.sh \
+        my-instance
+
+
+Used for:
+    Installing packages, disabling monitoring agents, configuring the OS, etc.
+
+
+
+====================================================
+5. INSPECT WHICH NODE YOUR INSTANCE IS RUNNING ON
+====================================================
+
+From inside your launched instance:
+
+Command:
+    curl http://169.254.169.254/openstack/latest/vendor_data.json
+
+Output:
+    JSON describing:
+        - site
+        - cluster
+        - node
+        - resource_id
+
+
+Used for:
+    Mapping a live instance → actual hardware node.
+
+
+
+====================================================
+6. CLEANUP: DELETE INSTANCE
+====================================================
+
+Command:
+    openstack server delete <SERVER_ID>
+
+Input:
+    SERVER_ID from "server list" or "server show"
+
+Used for:
+    Releasing the physical node back to your lease.
+
+
+
+====================================================
+7. CLEANUP: DELETE LEASE (optional)
+====================================================
+
+Command:
+    openstack reservation lease delete <LEASE_ID>
+
+Input:
+    LEASE_ID from reservation section
+
+Used for:
+    Freeing reserved resources when finished.
+
+
+
+==============================
+END OF BARE METAL LAUNCH SECTION
+==============================

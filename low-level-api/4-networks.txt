@@ -1,0 +1,337 @@
+=========================================
+NETWORKING (LOW-LEVEL CLI API)
+=========================================
+
+Chameleon networking is implemented using OpenStack Neutron. For EnvAgent-plus,
+we focus on basic networking:
+
+  - Using the shared project network `sharednet1`
+  - Discovering network IDs for use in `openstack server create`
+  - Allocating and releasing Floating IPs so users can SSH into nodes
+
+Advanced networking features like isolated VLANs, stitched networks, fabnetv4,
+and jumbo frames are not required for EnvAgent-plus (see Advanced Networking,
+Out of Scope, at the end).
+
+
+====================================================
+1. LIST AVAILABLE NETWORKS
+====================================================
+
+Command:
+    openstack network list
+
+Input:
+    None
+
+Output:
+    A table listing:
+        - ID
+        - Name
+        - Status
+        - Shared, etc.
+
+Example: 
++--------------------------------------+------------+--------------------------------------+
+| ID                                   | Name       | Subnets                              |
++--------------------------------------+------------+--------------------------------------+
+| 44b38c44-2a42-4b6d-b129-6c8f1b2a1375 | public     | c3950603-9e04-4cc5-be8d-1efbfe59fc0a |
+| a772a899-ff3d-420b-8b31-1c485092481a | sharednet1 | b872f0eb-8367-4865-a34e-409cdf34f159 |
+| ba070c9f-4d36-48e9-86a1-3754e5cfd718 | fabnetv4   | 3b6ad924-8001-4e27-a404-f795c353e07b |
++--------------------------------------+------------+--------------------------------------+
+
+
+Used for:
+    - Finding the network ID for `sharednet1`
+    - Verifying that required networks exist
+
+
+====================================================
+2. INSPECT A SPECIFIC NETWORK
+====================================================
+
+Command:
+    openstack network show <NETWORK>
+
+Input:
+    <NETWORK> may be:
+        - network name (e.g. sharednet1)
+        - network UUID
+
+Example:
+    openstack network show sharednet1
+
++---------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| Field                     | Value                                                                                                                                    |
++---------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+| admin_state_up            | UP                                                                                                                                       |
+| availability_zone_hints   |                                                                                                                                          |
+| availability_zones        | nova                                                                                                                                     |
+| created_at                | 2017-12-12T21:06:59Z                                                                                                                     |
+| description               |                                                                                                                                          |
+| dns_domain                | None                                                                                                                                     |
+| id                        | a772a899-ff3d-420b-8b31-1c485092481a                                                                                                     |
+| if_match                  | None                                                                                                                                     |
+| ipv4_address_scope        | None                                                                                                                                     |
+| ipv6_address_scope        | None                                                                                                                                     |
+| is_default                | None                                                                                                                                     |
+| is_vlan_qinq              | None                                                                                                                                     |
+| is_vlan_transparent       | None                                                                                                                                     |
+| location                  | Munch({'cloud': '', 'region_name': 'CHI@UC', 'zone': None, 'project': Munch({'id': '570aad8999f7499db99eae22fe9b29bb', 'name': None,     |
+|                           | 'domain_id': None, 'domain_name': None})})                                                                                               |
+| mtu                       | 1500                                                                                                                                     |
+| name                      | sharednet1                                                                                                                               |
+| name                      | sharednet1                                                                                                                               |
+| port_security_enabled     | True                                                                                                                                     |
+| project_id                | 570aad8999f7499db99eae22fe9b29bb                                                                                                         |
+| provider:network_type     | None                                                                                                                                     |
+| provider:physical_network | None                                                                                                                                     |
+| provider:segmentation_id  | None                                                                                                                                     |
+| qos_policy_id             | None                                                                                                                                     |
+| revision_number           | 6                                                                                                                                        |
+| router:external           | Internal                                                                                                                                 |
+| segments                  | None                                                                                                                                     |
+| shared                    | True                                                                                                                                     |
+| status                    | ACTIVE                                                                                                                                   |
+| subnets                   | b872f0eb-8367-4865-a34e-409cdf34f159                                                                                                     |
+| tags                      |                                                                                                                                          |
+| updated_at                | 2020-11-17T22:21:41Z                                                                                                                     |
++---------------------------+------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Output:
+    Detailed properties, including:
+        - id (used for --nic net-id=...)
+        - provider:network_type
+        - subnets
+        - router:external (Internal / External)
+
+
+
+Used for:
+    - Getting the `net-id` value needed in:
+        openstack server create --nic net-id=<NET_ID> ...
+
+
+====================================================
+3. USING A NETWORK WHEN LAUNCHING A SERVER
+====================================================
+
+When launching a bare-metal instance, the network is specified with `--nic`:
+
+Command pattern:
+    openstack server create \
+        --image <IMAGE_NAME> \
+        --flavor baremetal \
+        --key-name <KEY_NAME> \
+        --nic net-id=<NETWORK_ID> \
+        [--hint reservation=<reservation_id>] \
+        <INSTANCE_NAME>
+
+Typical case for EnvAgent-plus:
+    - Use `sharednet1` as the default network.
+    - Get its ID via `openstack network list` or `openstack network show`.
+
+Example (We use --nic as shown above in "id"):
+    openstack server create \
+        --image CC-Ubuntu22.04 \
+        --flavor baremetal \
+        --key-name my-key \
+        --nic net-id=a772a899-ff3d-420b-8b31-1c485092481a \
+        --hint reservation=<reservation_id> \
+        my-baremetal-node
+
+Used for:
+    - Ensuring each instance has internal connectivity and NAT access
+      to the Internet via `sharednet1`.
+
+
+
+
+====================================================
+4. FLOATING IP ADDRESSES (PUBLIC ACCESS)
+====================================================
+
+Instances get a fixed private IP on `sharednet1`. To SSH from the public
+Internet, you must attach a Floating IP (public IPv4).
+
+4.1 List existing Floating IPs
+------------------------------
+
+Command:
+    openstack floating ip list
+
+Used for:
+    - Seeing which public IPs you already have allocated
+    - Checking which IP is attached to which instance
+
+Output: 
++------------------------------+---------------------+------------------+------------------------------+------------------------------+--------------------------------+
+| ID                           | Floating IP Address | Fixed IP Address | Port                         | Floating Network             | Project                        |
++------------------------------+---------------------+------------------+------------------------------+------------------------------+--------------------------------+
+| 29715e07-8fbc-48c1-9640-     | 192.5.86.150        | 10.140.81.128    | 382a55c8-2417-4566-9d11-     | 44b38c44-2a42-4b6d-b129-     | 62f12f9c6a28478b976f680a6fa2fa |
+| cc9007967cb3                 |                     |                  | 7cbc4ed4900a                 | 6c8f1b2a1375                 | 9a                             |
+| 32024e49-5496-40ec-9efa-     | 192.5.87.88         | 10.140.83.96     | 883ee0af-8d8a-48a4-9a7d-     | 44b38c44-2a42-4b6d-b129-     | 62f12f9c6a28478b976f680a6fa2fa |
+| 5d6fb76551c3                 |                     |                  | 18273f711466                 | 6c8f1b2a1375                 | 9a                             |
+| 82ef465d-93e0-4df1-88cb-     | 192.5.86.179        | None             | None                         | 44b38c44-2a42-4b6d-b129-     | 62f12f9c6a28478b976f680a6fa2fa |
+| 2e7d15f97ca6                 |                     |                  |                              | 6c8f1b2a1375                 | 9a                             |
++------------------------------+---------------------+------------------+------------------------------+------------------------------+--------------------------------+
+
+
+
+
+4.2 Allocate a new Floating IP
+------------------------------
+
+Command:
+    openstack floating ip create public
+
+Input:
+    The external network name is usually `public`.
+
+Output:
+    A table showing:
+        - Floating IP address (e.g. 192.5.87.98)
+        - ID
+        - Port / associated instance (if any)
+
+Example:
++---------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| Field               | Value                                                                                                                                          |
++---------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+| created_at          | 2025-11-13T05:01:12Z                                                                                                                           |
+| description         |                                                                                                                                                |
+| dns_domain          | None                                                                                                                                           |
+| dns_name            | None                                                                                                                                           |
+| fixed_ip_address    | None                                                                                                                                           |
+| floating_ip_address | 192.5.87.31                                                                                                                                    |
+| floating_network_id | 44b38c44-2a42-4b6d-b129-6c8f1b2a1375                                                                                                           |
+| id                  | beed0c8d-c8cd-4532-99be-8084d8652404                                                                                                           |
+| if_match            | None                                                                                                                                           |
+| location            | Munch({'cloud': '', 'region_name': 'CHI@UC', 'zone': None, 'project': Munch({'id': '62f12f9c6a28478b976f680a6fa2fa9a', 'name': None,           |
+|                     | 'domain_id': None, 'domain_name': None})})                                                                                                     |
+| name                | 192.5.87.31                                                                                                                                    |
+| name                | 192.5.87.31                                                                                                                                    |
+| port_details        | None                                                                                                                                           |
+| port_id             | None                                                                                                                                           |
+| project_id          | 62f12f9c6a28478b976f680a6fa2fa9a                                                                                                               |
+| qos_policy_id       | None                                                                                                                                           |
+| revision_number     | 0                                                                                                                                              |
+| router_id           | None                                                                                                                                           |
+| status              | DOWN                                                                                                                                           |
+| subnet_id           | None                                                                                                                                           |
+| tags                | []                                                                                                                                             |
+| updated_at          | 2025-11-13T05:01:12Z                                                                                                                           |
++---------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+Used for:
+    - Obtaining a new public IP that you can attach to a server
+
+
+
+
+4.3 Attach a Floating IP to a server
+------------------------------------
+
+Command pattern:
+    openstack server add floating ip <SERVER> <FLOATING_IP>
+
+Example:
+    openstack server add floating ip my-baremetal-node 192.5.87.98
+
+Inputs:
+    <SERVER>      → server name or ID
+    <FLOATING_IP> → IP address (e.g. 192.5.87.98)
+
+Used for:
+    - Making the instance reachable from the Internet:
+        ssh ubuntu@192.5.87.98
+
+
+4.4 Detach and release a Floating IP
+------------------------------------
+
+Detach from server (optional):
+    openstack server remove floating ip <SERVER> <FLOATING_IP>
+
+Release back to pool:
+    openstack floating ip delete <FLOATING_IP>
+
+Used for:
+    - Cleaning up public IPs when instances are terminated
+    - Being a good Chameleon citizen, since the pool is shared
+
+
+====================================================
+5. DNS HOSTNAMES FOR FLOATING IPs
+====================================================
+
+Each Floating IP has a corresponding DNS name:
+
+    - CHI@UC:
+        chi-dyn-AA-BB-CC-DD.uc.chameleoncloud.org
+
+Example:
+    IP: 192.5.87.98
+    Hostname: chi-dyn-192-5-87-98.uc.chameleoncloud.org
+
+Used for:
+    - Accessing your node via hostname instead of IP
+    - Setting up TLS certificates (e.g. with LetsEncrypt)
+
+
+====================================================
+6. FIREWALL BASICS (INSTANCE-LOCAL)
+====================================================
+
+Chameleon Ubuntu and CentOS base images typically use `firewalld` on bare metal.
+
+Common patterns:
+    # List allowed services
+    sudo firewall-cmd --zone=public --list-services
+
+    # Allow HTTP/HTTPS
+    sudo firewall-cmd --zone=public --add-service http
+    sudo firewall-cmd --zone=public --add-service https
+
+    # Make changes persistent
+    sudo firewall-cmd --runtime-to-permanent
+    sudo firewall-cmd --reload
+
+Note:
+    EnvAgent-plus does not manage firewalld rules. Users are responsible for
+    opening ports they need on the instance.
+
+Used for:
+    - Enabling web services running on bare-metal nodes
+    - Keeping SSH open while exposing only the needed ports
+
+
+====================================================
+7. ADVANCED NETWORKING (OUT OF SCOPE FOR ENVAGENT-PLUS)
+====================================================
+
+The following Chameleon networking features are powerful but not required
+for EnvAgent-plus, and are intentionally excluded from the core CLI flow:
+
+    - Isolated Network VLANs:
+        Creating custom Neutron networks, subnets, and routers
+        for layer 2 isolation and running your own DHCP etc.
+
+    - External Layer 2 Connections (Stitching):
+        Stitching Chameleon networks to external testbeds such as FABRIC
+        using reserved VLAN segments.
+
+    - External Layer 3 Connectivity (fabnetv4):
+        Special shared network for routing traffic via FABRIC’s L3 network
+        between sites and FABNET address space, without public IPs.
+
+    - Jumbo Frames:
+        Custom MTU configuration (e.g. MTU 9000) on private networks
+        and stitched links for high-performance networking experiments.
+
+These features are mostly used in advanced networking and distributed systems
+research. EnvAgent-plus focuses on standard experimental workflows using the
+shared network `sharednet1` and basic Floating IP management, so advanced
+networking configuration is out of scope for the current design.
