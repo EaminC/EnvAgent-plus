@@ -1,0 +1,177 @@
+=========================================
+KEY PAIRS (LOW-LEVEL CLI API)
+=========================================
+
+Key pairs are the SSH credentials used to access bare-metal or virtual
+instances created on Chameleon. A key pair consists of:
+    - A PUBLIC key stored in OpenStack (the “keypair” object)
+    - A PRIVATE key stored on your local machine (your SSH identity file)
+
+Chameleon will inject the PUBLIC key into the instance at boot, and you
+authenticate using the PRIVATE key.
+
+====================================================
+1. LIST EXISTING KEY PAIRS
+====================================================
+
+Command:
+    openstack keypair list
+
+Input:
+    None
+
+Output:
+    A table of key pairs with:
+        - Name
+        - Fingerprint
+        - Type
+
+Example Output:
++-------+-------------------------------------------------+------+
+| Name  | Fingerprint                                     | Type |
++-------+-------------------------------------------------+------+
+| Chris | bd:c6:08:01:b7:5f:87:6d:58:56:3f:c3:e9:7b:67:eb | ssh  |
++-------+-------------------------------------------------+------+
+
+Used for:
+    - Checking whether you already have usable key pairs
+    - Getting the correct key name for launching servers
+
+
+====================================================
+2. CREATE A NEW KEY PAIR
+====================================================
+
+You may create a **public key** from an existing SSH key, or generate a
+**new private/public key pair** automatically.
+
+--------------------------------------
+A) Create key pair *from existing public key*
+--------------------------------------
+
+Command:
+    openstack keypair create --public-key <path/to/id_rsa.pub> <name>
+
+Inputs:
+    <path/to/id_rsa.pub> → existing public key  
+    <name> → name in OpenStack
+
+Example:
+    openstack keypair create --public-key ~/.ssh/id_rsa.pub my-key
+
+Used for:
+    Re-using your existing SSH credentials.
+
+
+--------------------------------------
+B) Create a brand-new key pair (CLI generates private key)
+--------------------------------------
+
+Command:
+    openstack keypair create <name> > <name>.pem
+    chmod 600 <name>.pem
+
+Inputs:
+    <name> → keypair name  
+    <name>.pem → private key saved locally
+
+Example:
+    openstack keypair create my-key > my-key.pem
+    chmod 600 my-key.pem
+
+Output:
+    Prints private key to console, so redirect it into a file.
+
+Used for:
+    Easily generating a new SSH identity without managing public keys manually.
+
+
+====================================================
+3. VIEW DETAILS ABOUT A KEY PAIR
+====================================================
+
+Command:
+    openstack keypair show <key>
+
+Or to show only the bare public key:
+    openstack keypair show --public-key <key>
+
+Inputs:
+    <key> → key name only
+
+Output includes:
+    - name
+    - fingerprint
+    - type (ssh)
+    - public_key
+
+Used for:
+    - Validating that a keypair exists
+    - Extracting public key content
+
+
+====================================================
+4. DELETE A KEY PAIR
+====================================================
+
+Command:
+    openstack keypair delete <key>
+
+Inputs:
+    <key> → one or more names
+
+Used for:
+    Cleaning up unused key pairs from your project.
+
+
+====================================================
+5. WHERE KEY PAIRS ARE USED (important)
+====================================================
+
+When launching a server, the required input is:
+
+    --key-name <keypair_name>
+
+Example:
+    openstack server create \
+        --image CC-Ubuntu22.04 \
+        --flavor baremetal \
+        --key-name my-key \
+        --nic net-id=<network_uuid> \
+        --hint reservation=<reservation_id> \
+        my-baremetal-node
+
+If the keypair is missing or misspelled, the launch will fail.
+
+
+====================================================
+6. SECURITY NOTES
+====================================================
+
+- Always set permissions:
+      chmod 600 <private_key.pem>
+
+- NEVER upload your private key.
+  The private key should exist **only on your machine**.
+
+- OpenStack stores **only the public key**, never the private key.
+
+- If you lose your private key, you cannot SSH into any instance launched
+  with that keypair.
+
+
+====================================================
+7. SUMMARY OF WHAT THE AGENT NEEDS
+====================================================
+
+From this entire section, the EnvAgent-plus workflow only needs:
+
+    1. How to list key pairs   → openstack keypair list
+    2. How to create a key pair (both modes)
+    3. How to extract the keypair name for server creation
+
+The ONLY field needed by the launch API is:
+
+    --key-name <KEY_NAME>
+
+Everything else is reference/detail.

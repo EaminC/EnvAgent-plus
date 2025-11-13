@@ -2,17 +2,15 @@
 NETWORKING (LOW-LEVEL CLI API)
 =========================================
 
-Chameleon networking is implemented using OpenStack Neutron. For EnvAgent-plus,
-we focus on basic networking:
+Chameleon networking is based on OpenStack Neutron. For EnvAgent-plus, we only
+need a minimal subset:
 
-  - Using the shared project network `sharednet1`
-  - Discovering network IDs for use in `openstack server create`
-  - Allocating and releasing Floating IPs so users can SSH into nodes
+  - Listing networks and retrieving the ID of `sharednet1`
+  - Passing the correct network ID to `openstack server create`
+  - Allocating and managing Floating IPs for SSH access
 
-Advanced networking features like isolated VLANs, stitched networks, fabnetv4,
-and jumbo frames are not required for EnvAgent-plus (see Advanced Networking,
-Out of Scope, at the end).
-
+All advanced networking (VLANs, routers, fabnetv4, stitching, jumbo frames)
+is out of scope.
 
 ====================================================
 1. LIST AVAILABLE NETWORKS
@@ -25,11 +23,8 @@ Input:
     None
 
 Output:
-    A table listing:
-        - ID
-        - Name
-        - Status
-        - Shared, etc.
+    - ID (needed for server launches)
+    - Name (e.g. sharednet1, public)
 
 Example: 
 +--------------------------------------+------------+--------------------------------------+
@@ -41,9 +36,9 @@ Example:
 +--------------------------------------+------------+--------------------------------------+
 
 
-Used for:
-    - Finding the network ID for `sharednet1`
-    - Verifying that required networks exist
+Use case:
+    - Extract NET_ID for use with --nic net-id=<NET_ID>
+    - Usually: sharednet1 is the default network for experiments
 
 
 ====================================================
@@ -100,17 +95,14 @@ Example:
 
 
 Output:
-    Detailed properties, including:
-        - id (used for --nic net-id=...)
-        - provider:network_type
-        - subnets
-        - router:external (Internal / External)
-
+    - id                    → required in server creation
+    - subnets               → internal IP range
+    - router:external       → Internal/External
+    - mtu, provider fields  → not needed for EnvAgent-plus
 
 
 Used for:
-    - Getting the `net-id` value needed in:
-        openstack server create --nic net-id=<NET_ID> ...
+    - Verifying that sharednet1 exists and retrieving its UUID
 
 
 ====================================================
@@ -125,14 +117,10 @@ Command pattern:
         --flavor baremetal \
         --key-name <KEY_NAME> \
         --nic net-id=<NETWORK_ID> \
-        [--hint reservation=<reservation_id>] \
+        --hint reservation=<RESERVATION_ID> \
         <INSTANCE_NAME>
 
-Typical case for EnvAgent-plus:
-    - Use `sharednet1` as the default network.
-    - Get its ID via `openstack network list` or `openstack network show`.
-
-Example (We use --nic as shown above in "id"):
+Example (sharednet1 ID from the example above):
     openstack server create \
         --image CC-Ubuntu22.04 \
         --flavor baremetal \
@@ -142,19 +130,21 @@ Example (We use --nic as shown above in "id"):
         my-baremetal-node
 
 Used for:
-    - Ensuring each instance has internal connectivity and NAT access
-      to the Internet via `sharednet1`.
+    - Ensuring the instance receives a private IP
+    - Connecting to the Internet via NAT
+    - Allowing the later attachment of Floating IPs
 
 
 
 
 ====================================================
-4. FLOATING IP ADDRESSES (PUBLIC ACCESS)
+4. FLOATING IP ADDRESSES (PUBLIC INTERNET ACCESS)
 ====================================================
 
-Instances get a fixed private IP on `sharednet1`. To SSH from the public
-Internet, you must attach a Floating IP (public IPv4).
+Bare-metal nodes get only a private IP initially.  
+To access them from your laptop, allocate and attach a Floating IP.
 
+------------------------------
 4.1 List existing Floating IPs
 ------------------------------
 
@@ -179,7 +169,7 @@ Output:
 
 
 
-
+------------------------------
 4.2 Allocate a new Floating IP
 ------------------------------
 
@@ -230,55 +220,52 @@ Used for:
 
 
 
-
+------------------------------------
 4.3 Attach a Floating IP to a server
 ------------------------------------
 
-Command pattern:
+Command:
     openstack server add floating ip <SERVER> <FLOATING_IP>
 
 Example:
-    openstack server add floating ip my-baremetal-node 192.5.87.98
-
-Inputs:
-    <SERVER>      → server name or ID
-    <FLOATING_IP> → IP address (e.g. 192.5.87.98)
+    openstack server add floating ip my-node 192.5.87.31
 
 Used for:
-    - Making the instance reachable from the Internet:
-        ssh ubuntu@192.5.87.98
+    Public SSH access:
+        ssh ubuntu@192.5.87.31
 
 
+------------------------------------
 4.4 Detach and release a Floating IP
 ------------------------------------
 
-Detach from server (optional):
+Detach (optional):
     openstack server remove floating ip <SERVER> <FLOATING_IP>
 
-Release back to pool:
+Delete IP:
     openstack floating ip delete <FLOATING_IP>
 
 Used for:
-    - Cleaning up public IPs when instances are terminated
-    - Being a good Chameleon citizen, since the pool is shared
+    - Cleanup and returning IPs to the shared pool
+
 
 
 ====================================================
-5. DNS HOSTNAMES FOR FLOATING IPs
+5. DNS HOSTNAMES FOR FLOATING IPs (Optional)
 ====================================================
 
-Each Floating IP has a corresponding DNS name:
+Every floating IP has a DNS A-record:
 
-    - CHI@UC:
+    CHI@UC:
         chi-dyn-AA-BB-CC-DD.uc.chameleoncloud.org
 
 Example:
-    IP: 192.5.87.98
-    Hostname: chi-dyn-192-5-87-98.uc.chameleoncloud.org
+    IP: 192.5.87.31
+    Host: chi-dyn-192-5-87-31.uc.chameleoncloud.org
 
 Used for:
-    - Accessing your node via hostname instead of IP
-    - Setting up TLS certificates (e.g. with LetsEncrypt)
+    - Using hostnames instead of numeric IPs
+    - Setting up HTTPS certificates
 
 
 ====================================================
@@ -303,9 +290,6 @@ Note:
     EnvAgent-plus does not manage firewalld rules. Users are responsible for
     opening ports they need on the instance.
 
-Used for:
-    - Enabling web services running on bare-metal nodes
-    - Keeping SSH open while exposing only the needed ports
 
 
 ====================================================
@@ -335,3 +319,7 @@ These features are mostly used in advanced networking and distributed systems
 research. EnvAgent-plus focuses on standard experimental workflows using the
 shared network `sharednet1` and basic Floating IP management, so advanced
 networking configuration is out of scope for the current design.
+
+==============================
+END OF NETWORKING SECTION
+==============================

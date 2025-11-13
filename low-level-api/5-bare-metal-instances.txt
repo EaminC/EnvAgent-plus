@@ -149,13 +149,13 @@ Command:
         --hint reservation=<reservation_id> \
         <INSTANCE_NAME>
 
-Example (fill in real values):
+Example:
     openstack server create \
         --image CC-Ubuntu20.04 \
         --flavor baremetal \
-        --key-name my-keypair \
-        --nic net-id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx \
-        --hint reservation=a8e7cd8a-247e-4fb6-96d9-1829fbaacd04 \
+        --key-name Chris \
+        --nic net-id=a772a899-ff3d-420b-8b31-1c485092481a \
+        --hint reservation=339504e1-01a5-4aa6-918a-9af472b3a159 \
         my-baremetal-node
 
 
@@ -163,8 +163,8 @@ Inputs:
     IMAGE_NAME        → from "openstack image list"
     KEY_NAME          → from "openstack keypair list"
     net-id            → from "openstack network list"
-    reservation_id    → from lease show:
-                         reservations[0].id (NOT lease id)
+    reservation_id    → from lease show: (Find ""resource_id" from
+                         reservations[0].id (NOT lease id))
     INSTANCE_NAME     → any name you choose
 
 Output:
@@ -177,12 +177,51 @@ Output:
         reservation hint
         power state, etc.
 
-Paste your output here once you run it later.
+Example Output: 
++-------------------------------------+------------------------------------------------------------------+
+| Field                               | Value                                                            |
++-------------------------------------+------------------------------------------------------------------+
+| OS-DCF:diskConfig                   | MANUAL                                                           |
+| OS-EXT-AZ:availability_zone         |                                                                  |
+| OS-EXT-SRV-ATTR:host                | None                                                             |
+| OS-EXT-SRV-ATTR:hypervisor_hostname | None                                                             |
+| OS-EXT-SRV-ATTR:instance_name       |                                                                  |
+| OS-EXT-STS:power_state              | NOSTATE                                                          |
+| OS-EXT-STS:task_state               | scheduling                                                       |
+| OS-EXT-STS:vm_state                 | building                                                         |
+| OS-SRV-USG:launched_at              | None                                                             |
+| OS-SRV-USG:terminated_at            | None                                                             |
+| accessIPv4                          |                                                                  |
+| accessIPv6                          |                                                                  |
+| addresses                           |                                                                  |
+| adminPass                           | xBUzThSdiCF7                                                     |
+| config_drive                        |                                                                  |
+| created                             | 2025-11-13T05:32:57Z                                             |
+| flavor                              | baremetal (fc95e5bb-71fb-46a1-b2bc-aaa8eaf4a70a)                 |
+| hostId                              |                                                                  |
+| id                                  | bafa4456-0ba0-420a-8932-08e6eb5547c0                             |
+| image                               | CC-Ubuntu20.04 (8d72a32d-ced8-461a-8ec9-5b80211f9800)            |
+| key_name                            | Chris                                                            |
+| name                                | my-baremetal-node                                                |
+| progress                            | 0                                                                |
+| project_id                          | 62f12f9c6a28478b976f680a6fa2fa9a                                 |
+| properties                          |                                                                  |
+| security_groups                     | name='default'                                                   |
+| status                              | BUILD                                                            |
+| updated                             | 2025-11-13T05:32:57Z                                             |
+| user_id                             | e15e7cec9da6a115e8d5efc2aa253510ca10fa8f1b87bc1fc8ce6745db0cc2a7 |
+| volumes_attached                    |                                                                  |
++-------------------------------------+------------------------------------------------------------------+
+
 
 
 Used for:
     Creating the actual bare-metal machine tied to your reservation.
 
+
+# After creating a server, check status
+openstack server list
+openstack server show <SERVER_ID>
 
 
 ====================================================
