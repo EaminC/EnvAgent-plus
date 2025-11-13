@@ -1,0 +1,157 @@
+# Bare Metal Launch Workflow (High-Level Overview)
+
+This overview explains the correct order of operations needed to launch a
+bare-metal instance on Chameleon using the OpenStack CLI. Each component
+(Key Pairs, Images, Networks, Reservations, Server Launch, Floating IPs)
+is documented separately in its own .txt file. This section tells you how
+they fit together and why the sequence matters.
+
+====================================================
+0. Authenticate
+====================================================
+
+Before running any CLI commands, load your OpenStack environment:
+
+    source CHI-<project>-openrc.sh
+
+This initializes OS_* environment variables so the CLI can authenticate.
+
+
+====================================================
+1. Create or Verify Your Key Pair
+====================================================
+
+Servers require an SSH key to be injected at boot.
+
+List existing keys:
+
+    openstack keypair list
+
+Create one if needed:
+
+    openstack keypair create my-key > my-key.pem
+    chmod 600 my-key.pem
+
+Used later as:
+    --key-name my-key
+
+
+====================================================
+2. Choose an Image
+====================================================
+
+List available images:
+
+    openstack image list
+
+Common base images include:
+    CC-Ubuntu22.04
+    CC-Ubuntu20.04
+
+Used later as:
+    --image CC-Ubuntu22.04
+
+
+====================================================
+3. Identify a Network
+====================================================
+
+List networks:
+
+    openstack network list
+
+Most users will attach to:
+    sharednet1 → <network_uuid>
+
+Example:
+    a772a899-ff3d-420b-8b31-1c485092481a
+
+Used later as:
+    --nic net-id=<network_uuid>
+
+
+====================================================
+4. Create a Reservation (Lease)
+====================================================
+
+Bare-metal nodes require a reservation.
+
+Create:
+
+    openstack reservation lease create ...
+
+Inspect:
+
+    openstack reservation lease show <LEASE_ID>
+
+Locate the reservation object inside the lease details. Use the ID of the
+reservation item (not the lease ID).
+
+Used later as:
+    --hint reservation=<reservation_id>
+
+
+====================================================
+5. Launch a Bare-Metal Server
+====================================================
+
+Once you have all required components:
+
+- key pair
+- image
+- network
+- reservation
+
+Launch the node:
+
+    openstack server create \
+      --image CC-Ubuntu22.04 \
+      --flavor baremetal \
+      --key-name my-key \
+      --nic net-id=<network_uuid> \
+      --hint reservation=<reservation_id> \
+      my-baremetal-node
+
+This creates the instance with a private IP.
+
+
+====================================================
+6. (Optional) Add a Floating IP
+====================================================
+
+Allocate:
+
+    openstack floating ip create public
+
+Attach:
+
+    openstack server add floating ip my-baremetal-node <FLOATING_IP>
+
+SSH:
+
+    ssh ubuntu@<FLOATING_IP>
+
+
+====================================================
+7. (Optional) Cleanup
+====================================================
+
+    openstack server delete <server>
+    openstack floating ip delete <ip>
+    openstack reservation lease delete <lease>
+
+
+====================================================
+Summary of Dependency Order
+====================================================
+
+1. Authenticate
+2. Key Pair
+3. Image
+4. Network
+5. Reservation
+6. Launch Server
+7. Floating IP (optional)
+
+This is the only logical workflow that avoids circular dependencies and
+ensures a clean bare-metal launch.

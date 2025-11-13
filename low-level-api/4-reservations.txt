@@ -1,0 +1,330 @@
+==============================
+RESERVATIONS (LOW-LEVEL API)
+==============================
+
+This section documents how to inspect, create, and view hardware reservations 
+(Blazar leases) using the OpenStack/Blazar CLI. The workflow is linear: 
+each command uses IDs produced by the previous command.
+
+Prerequisite:
+Make sure you ran:
+    source ~/chameleon-openrc.sh
+and your token works:
+    openstack token issue
+
+
+====================================================
+1. LIST ALL LEASES
+====================================================
+
+Command:
+    openstack reservation lease list
+
+Input:
+    None (requires RC file sourced)
+
+Output (paste your real output here):
+----------------------------------------------------
++--------------------------------------+--------------------+----------------------------+----------------------------+
+| id                                   | name               | start_date                 | end_date                   |
++--------------------------------------+--------------------+----------------------------+----------------------------+
+| 75b1e39e-b01b-4ad2-b9a2-67ca3ee01341 | CHII               | 2025-09-21T18:59:00.000000 | 2025-09-28T18:58:00.000000 |
+| d3ba28f9-349e-4e77-87e1-45f3e281f10b | Eamm               | 2025-11-03T04:51:00.000000 | 2025-11-10T04:50:00.000000 |
+| 9f3ece74-4268-4711-8678-055186a45737 | EnvAgentplus       | 2025-10-15T22:04:00.000000 | 2025-11-19T22:03:00.000000 |
+| ac39e8e3-ffad-4fa3-8ff8-5607cbf83689 | EnvEval            | 2025-10-07T19:01:00.000000 | 2025-10-21T19:00:00.000000 |
+| 18e6fa05-0d52-42ce-96ff-cf0d6613e6ff | EnvEval2           | 2025-10-23T01:07:00.000000 | 2025-11-20T01:06:00.000000 |
+| 959846ea-6f63-41cc-badb-612bcfa15ad4 | Yiling             | 2025-09-26T23:23:00.000000 | 2025-10-10T23:22:00.000000 |
+| 33b2ce15-a56e-4e59-bb40-00e9b560f539 | my-first-lease     | 2025-11-13T16:00:00.000000 | 2025-11-13T18:00:00.000000 |
+| 152ebcbb-da8f-467a-8f4a-df96d325f59c | my-gpu-lease       | 2025-11-13T16:00:00.000000 | 2025-11-13T18:00:00.000000 |
+| 7601f737-6c34-4dc4-b640-db13f44227c8 | my-immediate-lease | 2025-11-13T03:59:00.000000 | 2025-11-14T02:00:00.000000 |
+| 8587c985-c126-4ba4-9b4c-bc4a1b9b9baa | my-immediate-lease | 2025-11-13T00:50:00.000000 | 2025-11-13T02:00:00.000000 |
+| 9a8a9a6c-6eb8-402d-b29e-23d2f705bc36 | yl                 | 2025-10-13T01:24:00.000000 | 2025-11-03T01:23:00.000000 |
++--------------------------------------+--------------------+----------------------------+----------------------------+
+
+
+Used for:
+- Enumerating all leases in your project.
+- Getting LEASE_IDs for the next commands.
+
+
+
+====================================================
+2. SHOW LEASE DETAILS
+====================================================
+
+Command:
+    openstack reservation lease show <LEASE_ID>
+
+Example:
+    openstack reservation lease show 7601f737-6c34-4dc4-b640-db13f44227c8
+
+Input:
+    "id" with corresponding name from "openstack reservation lease list"
+
+Output:
+----------------------------------------------------
++--------------+-----------------------------------------------------------------------------+
+| Field        | Value                                                                       |
++--------------+-----------------------------------------------------------------------------+
+| created_at   | 2025-11-13 03:59:45                                                         |
+| degraded     | False                                                                       |
+| end_date     | 2025-11-14T02:00:00.000000                                                  |
+| events       | [                                                                           |
+|              |     {                                                                       |
+|              |         "created_at": "2025-11-13 03:59:52",                                |
+|              |         "updated_at": null,                                                 |
+|              |         "id": "5aa8baf8-762a-4119-8395-f3bdca9d41c6",                       |
+|              |         "lease_id": "7601f737-6c34-4dc4-b640-db13f44227c8",                 |
+|              |         "event_type": "end_lease",                                          |
+|              |         "time": "2025-11-14T02:00:00.000000",                               |
+|              |         "status": "UNDONE"                                                  |
+|              |     },                                                                      |
+|              |     {                                                                       |
+|              |         "created_at": "2025-11-13 03:59:52",                                |
+|              |         "updated_at": "2025-11-13 04:00:03",                                |
+|              |         "id": "f6b43726-0290-47d5-b35d-d6a31aa4fd9f",                       |
+|              |         "lease_id": "7601f737-6c34-4dc4-b640-db13f44227c8",                 |
+|              |         "event_type": "before_end_lease",                                   |
+|              |         "time": "2025-11-13T03:59:00.000000",                               |
+|              |         "status": "DONE"                                                    |
+|              |     },                                                                      |
+|              |     {                                                                       |
+|              |         "created_at": "2025-11-13 03:59:52",                                |
+|              |         "updated_at": "2025-11-13 03:59:58",                                |
+|              |         "id": "faf09867-aaaa-49f4-96e9-a3313d43eb42",                       |
+|              |         "lease_id": "7601f737-6c34-4dc4-b640-db13f44227c8",                 |
+|              |         "event_type": "start_lease",                                        |
+|              |         "time": "2025-11-13T03:59:00.000000",                               |
+|              |         "status": "DONE"                                                    |
+|              |     }                                                                       |
+|              | ]                                                                           |
+| id           | 7601f737-6c34-4dc4-b640-db13f44227c8                                        |
+| name         | my-immediate-lease                                                          |
+| project_id   | 62f12f9c6a28478b976f680a6fa2fa9a                                            |
+| reservations | [                                                                           |
+|              |     {                                                                       |
+|              |         "created_at": "2025-11-13 03:59:45",                                |
+|              |         "updated_at": "2025-11-13 03:59:58",                                |
+|              |         "id": "74dcdd19-0408-4777-a97f-a544ab21fa6d",                       |
+|              |         "lease_id": "7601f737-6c34-4dc4-b640-db13f44227c8",                 |
+|              |         "resource_id": "339504e1-01a5-4aa6-918a-9af472b3a159",              |
+|              |         "resource_type": "physical:host",                                   |
+|              |         "status": "active",                                                 |
+|              |         "missing_resources": false,                                         |
+|              |         "resources_changed": false,                                         |
+|              |         "hypervisor_properties": "",                                        |
+|              |         "resource_properties": "[\"=\", \"$node_type\", \"gpu_rtx_6000\"]", |
+|              |         "before_end": "default",                                            |
+|              |         "on_start": "default",                                              |
+|              |         "min": 1,                                                           |
+|              |         "max": 1                                                            |
+|              |     }                                                                       |
+|              | ]                                                                           |
+| start_date   | 2025-11-13T03:59:00.000000                                                  |
+| status       | ACTIVE                                                                      |
+| trust_id     | 6bb20adb0ff243208fe99e9e11963100                                            |
+| updated_at   | 2025-11-13 03:59:58                                                         |
+| user_id      | e15e7cec9da6a115e8d5efc2aa253510ca10fa8f1b87bc1fc8ce6745db0cc2a7            |
++--------------+-----------------------------------------------------------------------------+
+
+
+Important fields:
+- status: ACTIVE / PENDING / etc.
+- start_date, end_date: reservation window
+- reservations[*].resource_type: e.g., physical:host
+- reservations[*].resource_properties: e.g., ["=", "$node_type", "gpu_rtx_6000"]
+- reservations[*].resource_id: actual physical host UUID assigned to this lease
+
+Used for:
+- Finding the hardware node assigned to this lease
+- Confirming reservation status before launching
+- Passing the correct lease_id and resource_id into launch operations
+
+
+
+====================================================
+2.5. MAP LEASE TO HOST ID
+====================================================
+
+Command:
+    openstack reservation host allocation list
+
+Input:
+    None (requires RC file sourced)
+
+Output (excerpt showing your lease):
+----------------------------------------------------
++-------------+-------------------------------------------------------------+
+| resource_id | reservations                                                |
++-------------+-------------------------------------------------------------+
+| 1139        | [{'id': '74dcdd19-0408-4777-a97f-a544ab21fa6d',             |
+|             | 'lease_id': '7601f737-6c34-4dc4-b640-db13f44227c8',         |
+|             | 'start_date': '2025-11-13T03:54:00.000000',                 |
+|             | 'end_date': '2025-11-14T02:05:00.000000',                   |
+|             | 'extras': {'user_name': 'chrislowzhengxi@uchicago.edu'}}]   |
++-------------+-------------------------------------------------------------+
+(many more rows...)
+
+Important fields:
+- resource_id: The HOST_ID (numeric) to use in "openstack reservation host show"
+- reservations[*].lease_id: Match this to your lease from step 2
+- The resource_id column gives you the actual HOST_ID number
+
+Used for:
+- Mapping a lease_id to its physical HOST_ID
+- Finding which numeric host ID was allocated to your reservation
+- This HOST_ID is what you pass to "openstack reservation host show"
+
+
+
+====================================================
+3. SHOW HOST HARDWARE DETAILS (ACTUAL NODE)
+====================================================
+
+Command:
+    openstack reservation host show <HOST_ID>
+
+Example:
+    openstack reservation host show 1139
+
+Input:
+    HOST_ID (numeric, from "openstack reservation host allocation list")
+    
+    Steps to find HOST_ID (Step 2.5):
+    1. Run: openstack reservation lease show <LEASE_ID>
+    2. Note the reservation's resource_id (UUID)
+    3. Run: openstack reservation host allocation list
+    4. Find your lease_id, the corresponding resource_id column is the HOST_ID
+
+Output:
+----------------------------------------------------
++----------------------------------+------------------------------------------------------------+
+| Field                            | Value                                                      |
++----------------------------------+------------------------------------------------------------+
+| architecture.platform_type       | x86_64                                                     |
+| architecture.smp_size            | 2                                                          |
+| architecture.smt_size            | 48                                                         |
+| availability_zone                |                                                            |
+| bios.release_date                | 05/17/2018                                                 |
+| bios.vendor                      | Dell Inc.                                                  |
+| bios.version                     | 1.4                                                        |
+| chassis.manufacturer             | Dell Inc.                                                  |
+| chassis.name                     | PowerEdge R740                                             |
+| chassis.serial                   | 9YL08M2                                                    |
+| cpu_arch                         | x86_64                                                     |
+| cpu_info                         |                                                            |
+| created_at                       | 2018-03-09 19:03:31                                        |
+| disabled                         | False                                                      |
+| gpu.gpu                          | True                                                       |
+| gpu.gpu_count                    | 1                                                          |
+| gpu.gpu_model                    | RTX 6000                                                   |
+| gpu.gpu_vendor                   | NVIDIA                                                     |
+| hypervisor_hostname              | 4ebd7a4f-2e80-4dd5-b2f8-cdcbdce6fe2c                       |
+| hypervisor_type                  | ironic                                                     |
+| hypervisor_version               | 1                                                          |
+| id                               | 1139                                                       |
+| local_gb                         | 0                                                          |
+| main_memory.humanized_ram_size   | 192 GiB                                                    |
+| main_memory.ram_size             | 205084688384                                               |
+| memory_mb                        | 0                                                          |
+| monitoring.wattmeter             | False                                                      |
+| network_adapters.0.bridged       | False                                                      |
+| network_adapters.0.device        | eno1                                                       |
+| network_adapters.0.driver        | i40e                                                       |
+| network_adapters.0.enabled       | True                                                       |
+| network_adapters.0.interface     | Ethernet                                                   |
+| network_adapters.0.mac           | 24:6e:96:79:1d:96                                          |
+| network_adapters.0.management    | False                                                      |
+| network_adapters.0.model         | Ethernet Controller X710 for 10GbE SFP+ (rev 01)           |
+| network_adapters.0.mounted       | True                                                       |
+| network_adapters.0.rate          | 10000000000                                                |
+| network_adapters.0.vendor        | Intel Corporation                                          |
+| network_adapters.1.bridged       | False                                                      |
+| network_adapters.1.device        | eno2                                                       |
+| network_adapters.1.driver        | i40e                                                       |
+| network_adapters.1.enabled       | False                                                      |
+| network_adapters.1.interface     | Ethernet                                                   |
+| network_adapters.1.mac           | 24:6e:96:79:1d:98                                          |
+| network_adapters.1.management    | False                                                      |
+| network_adapters.1.model         | Ethernet Controller X710 for 10GbE SFP+ (rev 01)           |
+| network_adapters.1.mounted       | False                                                      |
+| network_adapters.1.rate          | 10000000000                                                |
+| network_adapters.1.vendor        | Intel Corporation                                          |
+| network_adapters.2.bridged       | False                                                      |
+| network_adapters.2.device        | eno3                                                       |
+| network_adapters.2.driver        | igb                                                        |
+| network_adapters.2.enabled       | False                                                      |
+| network_adapters.2.interface     | Ethernet                                                   |
+| network_adapters.2.mac           | 24:6e:96:79:1d:b6                                          |
+| network_adapters.2.management    | False                                                      |
+| network_adapters.2.model         | Intel Corporation I350 Gigabit Network Connection (rev 01) |
+| network_adapters.2.mounted       | False                                                      |
+| network_adapters.2.rate          | 1000000000                                                 |
+| network_adapters.2.vendor        | Intel Corporation                                          |
+| network_adapters.3.bridged       | False                                                      |
+| network_adapters.3.device        | eno4                                                       |
+| network_adapters.3.driver        | igb                                                        |
+| network_adapters.3.enabled       | False                                                      |
+| network_adapters.3.interface     | Ethernet                                                   |
+| network_adapters.3.mac           | 24:6e:96:79:1d:b7                                          |
+| network_adapters.3.management    | False                                                      |
+| network_adapters.3.model         | Intel Corporation I350 Gigabit Network Connection (rev 01) |
+| network_adapters.3.mounted       | False                                                      |
+| network_adapters.3.rate          | 1000000000                                                 |
+| network_adapters.3.vendor        | Intel Corporation                                          |
+| node_name                        | nc09                                                       |
+| node_type                        | gpu_rtx_6000                                               |
+| placement.node                   | 9                                                          |
+| placement.rack                   | 3                                                          |
+| processor.cache_l1               | None                                                       |
+| processor.cache_l1d              | 32768                                                      |
+| processor.cache_l1i              | 32768                                                      |
+| processor.cache_l2               | 1048576                                                    |
+| processor.cache_l3               | 20185088                                                   |
+| processor.clock_speed            | 2600000000                                                 |
+| processor.instruction_set        | x86-64                                                     |
+| processor.model                  | Intel Xeon                                                 |
+| processor.other_description      | Intel(R) Xeon(R) Gold 6126 CPU @ 2.60GHz                   |
+| processor.vendor                 | Intel                                                      |
+| processor.version                | None                                                       |
+| reservable                       | True                                                       |
+| service_name                     | 4ebd7a4f-2e80-4dd5-b2f8-cdcbdce6fe2c                       |
+| status                           |                                                            |
+| storage_devices.0.device         | sda                                                        |
+| storage_devices.0.driver         | megaraid_sas                                               |
+| storage_devices.0.humanized_size | 240 GB                                                     |
+| storage_devices.0.interface      | SATA                                                       |
+| storage_devices.0.model          | MZ7KM240HMHQ0D3                                            |
+| storage_devices.0.rev            | GD53                                                       |
+| storage_devices.0.size           | 240057409536                                               |
+| storage_devices.0.vendor         | Samsung                                                    |
+| su_factor                        | 2.0                                                        |
+| supported_job_types.besteffort   | False                                                      |
+| supported_job_types.deploy       | True                                                       |
+| supported_job_types.virtual      | ivt                                                        |
+| trust_id                         | 70c36ba1882a46e4a20fd1a0da096f6c                           |
+| type                             | node                                                       |
+| uid                              | 4ebd7a4f-2e80-4dd5-b2f8-cdcbdce6fe2c                       |
+| updated_at                       | 2025-09-16 17:21:56                                        |
+| vcpus                            | 0                                                          |
++----------------------------------+------------------------------------------------------------+
+
+
+Important fields:
+- node_name: e.g., nc09
+- node_type: gpu_rtx_6000
+- GPU info: gpu_model, gpu_count
+- RAM: main_memory.humanized_ram_size = 192 GiB
+- Network adapters: model, rate, interface
+- supported_job_types: deploy=True, besteffort=False, virtual=ivt
+- uid: unique hardware identifier
+
+Used for:
+- Confirming which hardware was really assigned to the lease
+- Validating capabilities before launching a bare-metal instance
+- Mapping reservation → resource_id → hardware specifications
+
+
+==============================
+END OF RESERVATIONS SECTION
+==============================

@@ -1,0 +1,168 @@
+====================================================
+6. FLOATING IPs (OPTIONAL PUBLIC ACCESS)
+====================================================
+
+By default, your bare-metal server only has a private IP on `sharednet1`.
+To SSH from the public Internet, you need to:
+
+  1) Allocate a Floating IP from the `public` network
+  2) Attach that IP to your server
+  3) (Later) Detach and delete it when done
+
+
+6.1 List existing Floating IPs
+------------------------------
+
+Command:
+    openstack floating ip list
+
+Used for:
+    - Seeing which floating IPs you already have
+    - Checking which IP is attached to which server
+
+Example output:
+    +------------------------------+---------------------+------------------+------------------------------+------------------------------+--------------------------------+
+    | ID                           | Floating IP Address | Fixed IP Address | Port                         | Floating Network             | Project                        |
+    +------------------------------+---------------------+------------------+------------------------------+------------------------------+--------------------------------+
+    | 29715e07-8fbc-48c1-9640-     | 192.5.86.150        | 10.140.81.128    | 382a55c8-2417-4566-9d11-     | 44b38c44-2a42-4b6d-b129-     | 62f12f9c6a28478b976f680a6fa2fa |
+    | cc9007967cb3                 |                     |                  | 7cbc4ed4900a                 | 6c8f1b2a1375                 | 9a                             |
+    | 32024e49-5496-40ec-9efa-     | 192.5.87.88         | 10.140.83.96     | 883ee0af-8d8a-48a4-9a7d-     | 44b38c44-2a42-4b6d-b129-     | 62f12f9c6a28478b976f680a6fa2fa |
+    | 5d6fb76551c3                 |                     |                  | 18273f711466                 | 6c8f1b2a1375                 | 9a                             |
+    | 82ef465d-93e0-4df1-88cb-     | 192.5.86.179        | None             | None                         | 44b38c44-2a42-4b6d-b129-     | 62f12f9c6a28478b976f680a6fa2fa |
+    | 2e7d15f97ca6                 |                     |                  |                              | 6c8f1b2a1375                 | 9a                             |
+    | beed0c8d-c8cd-4532-99be-     | 192.5.87.31         | None             | None                         | 44b38c44-2a42-4b6d-b129-     | 62f12f9c6a28478b976f680a6fa2fa |
+    | 8084d8652404                 |                     |                  |                              | 6c8f1b2a1375                 | 9a                             |
+    +------------------------------+---------------------+------------------+------------------------------+------------------------------+--------------------------------+
+
+
+
+6.2 Allocate a new Floating IP
+------------------------------
+
+Command:
+    openstack floating ip create public
+
+Input:
+    public → name of the external network that provides floating IPs
+
+Example output:
+    +---------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+    | Field               | Value                                                                                                                                          |
+    +---------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+    | created_at          | 2025-11-13T05:42:38Z                                                                                                                           |
+    | description         |                                                                                                                                                |
+    | dns_domain          | None                                                                                                                                           |
+    | dns_name            | None                                                                                                                                           |
+    | fixed_ip_address    | None                                                                                                                                           |
+    | floating_ip_address | 192.5.87.68                                                                                                                                    |
+    | floating_network_id | 44b38c44-2a42-4b6d-b129-6c8f1b2a1375                                                                                                           |
+    | id                  | 6fc93da4-f3ef-4bb1-aded-3cd6f5d21920                                                                                                           |
+    | if_match            | None                                                                                                                                           |
+    | location            | Munch({'cloud': '', 'region_name': 'CHI@UC', 'zone': None, 'project': Munch({'id': '62f12f9c6a28478b976f680a6fa2fa9a', 'name': None,           |
+    |                     | 'domain_id': None, 'domain_name': None})})                                                                                                     |
+    | name                | 192.5.87.68                                                                                                                                    |
+    | name                | 192.5.87.68                                                                                                                                    |
+    | port_details        | None                                                                                                                                           |
+    | port_id             | None                                                                                                                                           |
+    | project_id          | 62f12f9c6a28478b976f680a6fa2fa9a                                                                                                               |
+    | qos_policy_id       | None                                                                                                                                           |
+    | revision_number     | 0                                                                                                                                              |
+    | router_id           | None                                                                                                                                           |
+    | status              | DOWN                                                                                                                                           |
+    | subnet_id           | None                                                                                                                                           |
+    | tags                | []                                                                                                                                             |
+    | updated_at          | 2025-11-13T05:42:38Z                                                                                                                           |
+    +---------------------+------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+You will use `floating_ip_address` (for SSH) and sometimes `id` (for deletion).
+
+
+6.3 Attach a Floating IP to a server
+------------------------------------
+
+Command pattern:
+    openstack server add floating ip <SERVER> <FLOATING_IP>
+
+Example:
+    openstack server add floating ip my-baremetal-node 192.5.87.31
+
+Inputs:
+    <SERVER>      → server name or ID (for example `my-baremetal-node`)
+    <FLOATING_IP> → address from step 6.2 (for example `192.5.87.31`)
+
+After this, check:
+    openstack server show my-baremetal-node
+
+You should see the floating IP listed under the "addresses" field.
+Output: 
+    +-------------------------------------+------------------------------------------------------------------+
+    | Field                               | Value                                                            |
+    +-------------------------------------+------------------------------------------------------------------+
+    | OS-DCF:diskConfig                   | MANUAL                                                           |
+    | OS-EXT-AZ:availability_zone         | nova                                                             |
+    | OS-EXT-SRV-ATTR:host                | mgmt01-ironic                                                    |
+    | OS-EXT-SRV-ATTR:hypervisor_hostname | 4ebd7a4f-2e80-4dd5-b2f8-cdcbdce6fe2c                             |
+    | OS-EXT-SRV-ATTR:instance_name       | instance-00014c1f                                                |
+    | OS-EXT-STS:power_state              | Running                                                          |
+    | OS-EXT-STS:task_state               | None                                                             |
+    | OS-EXT-STS:vm_state                 | active                                                           |
+    | OS-SRV-USG:launched_at              | 2025-11-13T18:24:50.000000                                       |
+    | OS-SRV-USG:terminated_at            | None                                                             |
+    | accessIPv4                          |                                                                  |
+    | accessIPv6                          |                                                                  |
+    | addresses                           | sharednet1=10.140.83.187, 192.5.87.31                            |
+    | config_drive                        | True                                                             |
+    | created                             | 2025-11-13T18:17:56Z                                             |
+    | flavor                              | baremetal (fc95e5bb-71fb-46a1-b2bc-aaa8eaf4a70a)                 |
+    | hostId                              | 6b8bfe462acffabbf80876e9f41ac500a9da30f3f8e854e89067e268         |
+    | id                                  | dd4b4720-7c5b-49d1-a5f8-a5686b25f6fd                             |
+    | image                               | CC-Ubuntu20.04 (8d72a32d-ced8-461a-8ec9-5b80211f9800)            |
+    | key_name                            | Chris                                                            |
+    | name                                | my-baremetal-node                                                |
+    | progress                            | 0                                                                |
+    | project_id                          | 62f12f9c6a28478b976f680a6fa2fa9a                                 |
+    | properties                          |                                                                  |
+    | security_groups                     | name='default'                                                   |
+    | status                              | ACTIVE                                                           |
+    | updated                             | 2025-11-13T18:24:50Z                                             |
+    | user_id                             | e15e7cec9da6a115e8d5efc2aa253510ca10fa8f1b87bc1fc8ce6745db0cc2a7 |
+    | volumes_attached                    |                                                                  |
+    +-------------------------------------+------------------------------------------------------------------+
+
+
+
+6.4 SSH into the server
+-----------------------
+
+Once the floating IP is attached and the instance is ACTIVE:
+
+    ssh ubuntu@192.5.87.31
+
+Notes:
+    - Username is typically `ubuntu` for CC-Ubuntu images
+    - SSH uses the private key that corresponds to the keypair you used
+      in `--key-name` when creating the server
+
+
+6.5 Detach and release the Floating IP (cleanup)
+------------------------------------------------
+
+Detach from server (optional, but explicit):
+    openstack server remove floating ip <SERVER> <FLOATING_IP>
+
+Then delete the floating IP so it goes back to the pool:
+    openstack floating ip delete <FLOATING_IP>
+
+Example:
+    openstack server remove floating ip my-baremetal-node 192.5.87.31
+    openstack floating ip delete 192.5.87.31
+
+Used for:
+    - Cleaning up public IPs when you terminate servers
+    - Avoiding exhaustion of the shared floating IP pool
+
+
+==============================
+END OF FLOATING IP SECTION
+==============================
