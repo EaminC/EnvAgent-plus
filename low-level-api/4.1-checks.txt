@@ -1,0 +1,200 @@
+========================================================
+CHECKS.txt
+========================================================
+
+This document defines all validation checks the agent must perform
+after launching a bare-metal instance on Chameleon. The goal is to 
+verify that the node is healthy, correctly provisioned, reachable, 
+and consistent with the user reservation.
+
+The LLM should follow all checks below and report any failures. 
+At the end, the LLM must reason about whether there are checks 
+missing and propose additional checks.
+
+
+========================================================
+1. Check basic node reachability
+========================================================
+
+1.1 Verify that the instance boots and becomes ACTIVE
+    Required command:
+        openstack server show <SERVER_ID>
+    Conditions:
+        status should be ACTIVE
+        vm_state should not be error
+        task_state should be None
+
+1.2 Verify private IP is assigned
+    Required field:
+        addresses should include an internal IP from sharednet1
+
+1.3 If floating IP assigned
+        Verify that ping works and SSH responds
+        Example:
+            ping -c 2 <FLOATING_IP>
+            ssh -o StrictHostKeyChecking=no ubuntu@<FLOATING_IP> hostname
+
+If these checks fail, the agent must report a connectivity failure.
+
+
+========================================================
+2. Check reservation correctness
+========================================================
+
+2.1 Confirm that the reservation used in launch matches the node
+    From:
+        openstack reservation lease show <LEASE_ID>
+
+    The following must match:
+        reservations[*].id == the reservation ID passed in
+        reservations[*].resource_type contains physical:host
+        reservations[*].resource_id equals the physical host ID of the running node
+
+2.2 Verify the lease status is ACTIVE
+
+
+========================================================
+3. Check CPU information
+========================================================
+
+3.1 Verify CPU count
+    From inside the node:
+        nproc
+    Compare with expected vcpus from:
+        openstack reservation host show <HOST_ID>
+
+3.2 Verify CPU model
+    Inside:
+        lscpu
+    Node must match the advertised model in host show
+
+3.3 Verify number of sockets and cores per socket:
+        lscpu | grep -i socket
+        lscpu | grep -i core
+    
+
+========================================================
+4. Check memory information
+========================================================
+
+4.1 Verify available RAM
+    Inside:
+        free -h
+        cat /proc/meminfo
+    Compare with main_memory.humanized_ram_size in host show
+
+4.2 Confirm that swap is disabled (expected on bare metal)
+
+
+========================================================
+5. Check GPU information
+========================================================
+
+If the node type includes a GPU (for example gpu_rtx_6000):
+
+5.1 Validate that GPU is visible:
+        nvidia-smi
+
+5.2 Validate GPU count:
+        nvidia-smi -L
+    Must match gpu.gpu_count in host show
+
+5.3 Validate GPU model:
+    Must match gpu.gpu_model in host show
+
+
+========================================================
+6. Check storage devices
+========================================================
+
+6.1 Validate available disk:
+        lsblk
+        df -h /
+
+6.2 Compare against storage_devices fields in:
+        openstack reservation host show <HOST_ID>
+
+6.3 Ensure that root filesystem mounted correctly
+
+
+========================================================
+7. Check network health
+========================================================
+
+7.1 Verify internal connectivity
+        ping -c 2 8.8.8.8
+
+7.2 Verify DNS
+        dig google.com
+        or:
+        ping google.com
+
+7.3 Verify that the MTU is what the network expects
+        ip link show eno1 | grep mtu
+
+
+========================================================
+8. Check OS information
+========================================================
+
+8.1 Confirm image identity
+    Inside node:
+        cat /etc/os-release
+    Compare NAME and VERSION with the selected image
+    Example:
+        CC-Ubuntu20.04 should match Ubuntu 20.04
+
+8.2 Check kernel version:
+        uname -a
+
+
+========================================================
+9. Check system services
+========================================================
+
+9.1 Verify collectd is disabled if user requested to disable:
+        systemctl status collectd
+
+9.2 Verify cloud-init completed:
+        systemctl status cloud-init
+
+
+========================================================
+10. Optional security checks
+========================================================
+
+10.1 Verify firewall rules:
+        sudo firewall-cmd --zone=public --list-services
+
+10.2 Verify SSH allows only key-based login, not passwords
+
+
+========================================================
+11. Cleanup readiness checks
+========================================================
+
+11.1 Confirm if the machine can be safely deleted
+        openstack server show <SERVER_ID>
+        Ensure no attached floating IP that is still needed
+
+11.2 Confirm lease end schedule is correct
+
+
+========================================================
+12. Final instruction to the LLM
+========================================================
+
+After performing all checks above, the agent must scan the results 
+and determine whether any important validation checks are missing. 
+The agent must propose additional checks if needed. The agent 
+should also warn if:
+
+- a value looks suspicious
+- host metadata does not match reported hardware
+- network behavior is inconsistent
+- BIOS, CPU, RAM, or GPU values look incorrect
+- cloud-init or system services failed
+- the node appears unhealthy in any way
+
+The agent must never assume that a node is healthy unless all checks pass.
+
