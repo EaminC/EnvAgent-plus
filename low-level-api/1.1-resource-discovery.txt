@@ -1,4 +1,29 @@
-1. get the root cluster infomation
+========================================================
+1.1 RESOURCE DISCOVERY (API-LEVEL HARDWARE LOOKUP)
+========================================================
+
+Purpose:
+- Discover available Chameleon sites, clusters, and nodes through the public API.
+- Allow the LLM to understand which hardware exists before creating a reservation.
+- Provide enough metadata (node_type, GPU type, RAM, location) to guide decisions.
+
+When to use:
+- When the user asks “what hardware is available?”
+- Before creating a reservation, to determine which site and node type to target.
+- When debugging why a reservation cannot find hardware that matches filters.
+
+Key outputs the LLM should rely on:
+- Site IDs (uc, tacc, nu, edge, ncar, nrp)
+- Cluster IDs (usually “chameleon”)
+- Node metadata (node_name, node_type, hardware characteristics)
+- Node API URLs that lead to node lists the LLM can parse
+
+This file does not create reservations. It only discovers hardware.
+
+
+========================================================
+1. Root API Query (Get top-level entry point)
+========================================================
 
 command:
 
@@ -30,7 +55,10 @@ important  output that can be used for  next step:   info in "links", eg.  "/sit
 
 
 
-2. from root to sites
+
+========================================================
+2. From Root → Sites
+========================================================
  
 command:
 curl "https://api.chameleoncloud.org/sites?pretty"
@@ -211,7 +239,12 @@ important output： nodes :chi@uc -> curl "https://api.chameleoncloud.org/sites/
 
 
 
-3. from sites to clusters
+========================================================
+3. From Sites → Clusters
+========================================================
+
+Command (example for TACC):
+
 curl "https://api.chameleoncloud.org/sites/tacc/clusters?pretty"
 
 {
@@ -243,10 +276,19 @@ curl "https://api.chameleoncloud.org/sites/tacc/clusters?pretty"
   ]
 }
 
+Important output:
+- Cluster ID: usually “chameleon”
+- Next-hop link to nodes:
+
+      /sites/<site_id>/clusters/chameleon/nodes
 
 
+========================================================
+4. From Clusters → Nodes
+========================================================
 
-4 from clusters to nodes
+Command (example for UC):
+
 curl "https://api.chameleoncloud.org/sites/uc/clusters/chameleon/nodes?pretty"
 
 {
@@ -263,3 +305,33 @@ curl "https://api.chameleoncloud.org/sites/uc/clusters/chameleon/nodes?pretty"
 
 example output a.json
 (Truncated)
+
+
+Important node metadata:
+- node_name (ex: c14-10)
+- node_type (ex: compute_icelake_r650, gpu_rtx_6000, etc.)
+- hardware attributes (CPU, RAM, GPU) appear when querying node detail URLs
+- These fields determine what reservation filters to use
+
+Example output file format (truncated):
+- a.json, b.json, etc.
+
+
+========================================================
+Summary for Resource Discovery
+========================================================
+
+1. Get root:
+       /
+2. Extract “sites” link.
+3. Query each site to find clusters.
+4. Extract “nodes” link.
+5. Query each cluster for node metadata.
+6. Use node_type, node_name, and hardware specs to decide reservation filters.
+
+This file is read BEFORE any reservation is created. It gives the LLM full
+knowledge of what hardware exists across all Chameleon sites.
+
+========================================================
+END OF FILE
+========================================================

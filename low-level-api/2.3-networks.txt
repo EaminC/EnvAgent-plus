@@ -1,16 +1,28 @@
 =========================================
-NETWORKING (LOW-LEVEL CLI API)
+2.3 NETWORKING (LOW-LEVEL CLI API)
 =========================================
 
-Chameleon networking is based on OpenStack Neutron. For EnvAgent-plus, we only
-need a minimal subset:
+Chameleon networking is based on OpenStack Neutron.
 
-  - Listing networks and retrieving the ID of `sharednet1`
-  - Passing the correct network ID to `openstack server create`
-  - Allocating and managing Floating IPs for SSH access
+Purpose:
+- Let the agent discover which networks are available.
+- Find the ID of the standard experiment network, usually `sharednet1`.
+- Manage Floating IPs so users can SSH from the public Internet.
 
-All advanced networking (VLANs, routers, fabnetv4, stitching, jumbo frames)
-is out of scope.
+When to use:
+- Before launching a server, when the LLM needs:
+      --nic net-id=<NETWORK_ID>
+- When the user asks which networks exist or what `sharednet1` is.
+- When the user needs a public IP for SSH or wants to clean up Floating IPs.
+
+Key outputs the LLM should rely on:
+- NETWORK_ID for `sharednet1` or another chosen network.
+- Floating IP address and its ID.
+- The mapping between a Floating IP and a specific server.
+
+All advanced networking features such as VLANs, routers, fabnetv4, stitching,
+and jumbo frames are out of scope for EnvAgent-plus.
+
 
 ====================================================
 1. LIST AVAILABLE NETWORKS

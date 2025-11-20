@@ -1,6 +1,26 @@
 =========================================
-IMAGES (LOW-LEVEL CLI API)
+2.2 IMAGES (LOW-LEVEL CLI API)
 =========================================
+
+Purpose:
+- Discover which base images are available for launches.
+- Select a valid IMAGE_NAME or IMAGE_ID for bare-metal and VM servers.
+- Optionally inspect image details to check compatibility.
+
+When to use:
+- Before launching a server, when the LLM needs:
+      --image <IMAGE_NAME_OR_ID>
+- When the user asks which OS images exist on a site.
+- When debugging a launch failure due to an invalid or missing image.
+
+Key outputs the LLM should rely on:
+- IMAGE_NAME (for example, CC-Ubuntu22.04, CC-Ubuntu24.04-CUDA).
+- IMAGE_ID (UUID) if the user wants to reference images by ID.
+- Basic metadata from `image show` if compatibility needs to be checked.
+
+Advanced operations (upload, share, delete) are reference only and are not
+required for EnvAgent-plus workflows.
+
 
 For EnvAgent-plus, the image operations required are:
 1. Listing available images

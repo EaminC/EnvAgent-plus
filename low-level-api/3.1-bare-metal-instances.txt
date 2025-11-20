@@ -2,16 +2,27 @@
 BARE METAL LAUNCH (LOW-LEVEL CLI API)
 =========================================
 
-This section describes how to launch a bare-metal instance using
-OpenStack (Nova) on Chameleon. 
+Purpose:
+- Enable the agent to launch a bare-metal instance tied to an ACTIVE reservation.
+- Make the agent identify the correct inputs: network ID, reservation_id, image name, keypair name.
+- Ensure the agent understands that --hint reservation=<reservation_id> uses the reservation ID inside the lease, not the lease ID itself.
 
-A bare-metal launch requires:
-1. An ACTIVE reservation (lease)
-2. A valid bare-metal image (e.g., CC-Ubuntu20.04, CC-CentOS8, etc.)
-3. A flavor of "baremetal"
-4. A keypair
-5. A network (typically sharednet1)
-6. Passing the reservation ID in the launch command
+When to use:
+- Whenever the user wants to launch a bare-metal node.
+- After a lease is ACTIVE and the reservation has an assigned resource_id.
+- When the agent needs to assemble a server-create command with all required fields.
+
+Key outputs the LLM should rely on:
+- sharednet1 NETWORK_ID from `openstack network list`
+- reservation_id from the `reservations[*].id` field in `openstack reservation lease show`
+- IMAGE_NAME or IMAGE_ID from `openstack image list`
+- KEY_NAME from `openstack keypair list`
+- INSTANCE_NAME provided by the user
+
+Notes:
+- The lease ID and the reservation ID are different. For server launches, the agent must use the reservation_id.
+- Only the “baremetal” flavor is valid for physical hosts.
+
 
 
 ====================================================

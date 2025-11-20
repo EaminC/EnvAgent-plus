@@ -1,14 +1,25 @@
 =========================================
-KEY PAIRS (LOW-LEVEL CLI API)
+2.1 KEY PAIRS (LOW-LEVEL CLI API)
 =========================================
 
-Key pairs are the SSH credentials used to access bare-metal or virtual
-instances created on Chameleon. A key pair consists of:
-    - A PUBLIC key stored in OpenStack (the “keypair” object)
-    - A PRIVATE key stored on your local machine (your SSH identity file)
+Purpose:
+- Manage SSH key pairs for authenticating into bare-metal or virtual instances.
+- Ensure the LLM always has a valid keypair name to pass during server launch.
+- Provide instructions for creating, listing, validating, and deleting keypairs.
 
-Chameleon will inject the PUBLIC key into the instance at boot, and you
-authenticate using the PRIVATE key.
+When to use:
+- Before any bare-metal or VM launch that requires:
+      --key-name <KEY_NAME>
+- When the user needs to create a key, check if they already have one, or fix SSH issues.
+- When the launch fails due to missing or incorrect keypair names.
+
+Key outputs the LLM must rely on:
+- The keypair name used during server creation.
+- The private key file path (local only) used for SSH.
+- The public key stored in OpenStack.
+
+This file does not launch anything. It only ensures the SSH credentials exist.
+
 
 ====================================================
 1. LIST EXISTING KEY PAIRS

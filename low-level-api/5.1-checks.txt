@@ -2,14 +2,23 @@
 CHECKS.txt
 ========================================================
 
-This document defines all validation checks the agent must perform
-after launching a bare-metal instance on Chameleon. The goal is to 
-verify that the node is healthy, correctly provisioned, reachable, 
-and consistent with the user reservation.
+Purpose:
+    - Ensure the launched bare-metal node is healthy, reachable, and consistent with the reservation.
+    - Give the LLM a minimal but complete checklist to validate a node before telling the user it is ready.
+    - Let the LLM detect common provisioning failures (boot errors, wrong host assigned, missing GPU, wrong RAM, etc.).
 
-The LLM should follow all checks below and report any failures. 
-At the end, the LLM must reason about whether there are checks 
-missing and propose additional checks.
+What the agent actually needs:
+    - Check ACTIVE state and private IP.
+    - Confirm reservation_id matches the node that was launched.
+    - Verify hardware (CPU, RAM, GPU) matches host show.
+    - Verify OS matches the image used in the launch.
+    - Confirm network and DNS are functional.
+    - Report any mismatches or suspicious values immediately.
+
+What can be trimmed (optional):
+    - Optional firewall checks and service checks may be skipped unless the user explicitly asks.
+    - MTU check may be optional unless the user reports networking issues.
+
 
 
 ========================================================

@@ -1,13 +1,30 @@
 ====================================================
-6. FLOATING IPs (OPTIONAL PUBLIC ACCESS)
+4.1 FLOATING IPs (OPTIONAL PUBLIC ACCESS)
 ====================================================
 
-By default, your bare-metal server only has a private IP on `sharednet1`.
-To SSH from the public Internet, you need to:
+Purpose:
+    - Allow the agent to enable public SSH access to a bare-metal instance.
+    - Let the agent allocate, attach, and later clean up Floating IPs.
+    - Ensure the agent understands that floating IPs come from the "public" network
+      and attach to the instance's private IP on sharednet1.
 
-  1) Allocate a Floating IP from the `public` network
-  2) Attach that IP to your server
-  3) (Later) Detach and delete it when done
+When to use:
+    - After a bare-metal server is ACTIVE and has a private IP.
+    - Whenever the user wants to SSH from outside Chameleon.
+    - When the agent needs to map: instance → port → floating IP.
+
+Key outputs the LLM should rely on:
+    - floating_ip_address (for SSH)
+    - floating_ip ID (for deletion)
+    - existing allocation state from `openstack floating ip list`
+    - server name or ID (from the launch step)
+    - network "public" as the source for new floating IPs
+
+Notes:
+    - Floating IPs are optional. The node works fine with private networking inside Chameleon.
+    - Only one floating IP is typically required per instance.
+    - The agent should always clean up unused floating IPs to avoid quota issues.
+
 
 
 6.1 List existing Floating IPs

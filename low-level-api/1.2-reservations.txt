@@ -1,29 +1,51 @@
 ==============================
-RESERVATIONS (LOW-LEVEL API)
+1.2 RESERVATIONS (LOW-LEVEL API)
 ==============================
 
-This section documents how to inspect, create, and view hardware reservations 
-(Blazar leases) using the OpenStack/Blazar CLI. The workflow is linear: 
-each command uses IDs produced by the previous command.
+Purpose:
+- Inspect, create, and understand hardware reservations (Blazar leases).
+- Map from a lease to the actual physical host that was allocated.
+- Produce IDs needed later for bare-metal launches and hardware validation.
+
+When to use:
+- After resource discovery, when the user wants to reserve real hardware.
+- When the user asks “what leases do I have?” or “which node did this lease give me?”
+- Before launching a bare-metal server that must use a specific lease.
+
+Key outputs the LLM should rely on:
+- LEASE_ID: the main lease identifier from `lease list` and `lease show`.
+- reservation.id: the reservation object inside the lease.
+- reservation.resource_id (UUID) and HOST_ID (numeric) from host allocation.
+- Node-level hardware details (GPU model, RAM, etc.) from `host show`.
+
+The workflow is linear. Each command uses IDs produced by the previous one.
+
 
 Prerequisite:
 Make sure you ran:
+
     source ~/chameleon-openrc.sh
+
 and your token works:
+
     openstack token issue
 
 
-openstack reservation lease create \
-  --reservation min=1,max=1,resource_type=physical:host,resource_properties='["=", "$node_type", "gpu_rtx_6000"]' \
-  --start-date "now" \
-  --end-date "2025-11-13 02:00" \
-  my-immediate-lease
+Example: create a lease for one GPU node:
+
+    openstack reservation lease create \
+      --reservation min=1,max=1,resource_type=physical:host,resource_properties='["=", "$node_type", "gpu_rtx_6000"]' \
+      --start-date "now" \
+      --end-date "2025-11-13 02:00" \
+      my-immediate-lease
   
+
 ====================================================
 1. LIST ALL LEASES
 ====================================================
 
 Command:
+
     openstack reservation lease list
 
 Input:
@@ -51,6 +73,8 @@ Output (paste your real output here):
 Used for:
 - Enumerating all leases in your project.
 - Getting LEASE_IDs for the next commands.
+- Letting the user pick which lease to inspect or reuse.
+
 
 
 

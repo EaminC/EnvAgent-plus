@@ -2,12 +2,19 @@
 1.1 DOWNLOAD AND PREPARE REPO
 ========================================================
 
-Before the agent can perform any low-level Chameleon operations
-(reservations, launches, image lookups, etc.), the local copy
-of the EnvAgent-plus repository must be present and up to date.
+Purpose:
+- Make sure the EnvAgent-plus repository and Python environment are ready.
 
-The LLM should follow the instructions below to ensure the repo
-is correctly downloaded, updated, and ready for use.
+When to use:
+- Before any low-level Chameleon operation (reservations, launches, images, networks).
+- Again if later steps fail with missing commands, missing repo, or missing Python packages.
+
+Key outputs the LLM should rely on:
+- A local folder EnvAgent-plus/ with the expected structure below.
+- A working Python environment with required packages installed.
+- An OpenStack RC file sourced so OS_* variables are set.
+
+The LLM must not continue to later parts until these conditions are met.
 
 
 ========================================================
@@ -80,14 +87,14 @@ Install dependencies:
 The LLM must verify the following before running any Chameleon
 operations:
 
-    ✔ Repo folder exists
-    ✔ All *.txt low-level API files are present
-    ✔ User is inside the repo directory
+    ✔ Repo folder EnvAgent-plus/ exists
+    ✔ All *.txt low-level API files are present under low-level-api/
+    ✔ User is inside the EnvAgent-plus/ repo directory
     ✔ Python environment is active (if used)
-    ✔ Required packages are installed
-    ✔ User provided OpenStack RC file (OS_* variables)
+    ✔ Required packages are installed without errors
+    ✔ User has sourced an OpenStack RC file (OS_* variables present)
 
-If anything is missing, the LLM must instruct the user to fix it
+If anything is missing, the LLM must instruct the user how to fix it
 before continuing.
 
 
@@ -98,9 +105,9 @@ before continuing.
 Do NOT proceed to reservations, images, or networking until:
 
     - The repository is cloned
-    - Up to date
-    - Requirements installed
-    - User has sourced their Chameleon OpenRC file
+    - The repository is up to date
+    - Requirements are installed
+    - The user has sourced their Chameleon OpenRC file
 
 Once confirmed, the LLM may move on to the next step in the workflow.
 

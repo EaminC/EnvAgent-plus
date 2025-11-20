@@ -1,157 +1,152 @@
-# Bare Metal Launch Workflow (High-Level Overview)
+# High-Level Bare-Metal Workflow (Master Overview)
 
-This overview explains the correct order of operations needed to launch a
-bare-metal instance on Chameleon using the OpenStack CLI. Each component
-(Key Pairs, Images, Networks, Reservations, Server Launch, Floating IPs)
-is documented separately in its own .txt file. This section tells you how
-they fit together and why the sequence matters.
-
-====================================================
-0. Authenticate
-====================================================
-
-Before running any CLI commands, load your OpenStack environment:
-
-    source CHI-<project>-openrc.sh
-
-This initializes OS_* environment variables so the CLI can authenticate.
-
+This overview explains the correct sequence for launching a bare-metal node
+through Chameleon. Each part has its own .txt file with detailed commands.
+This file describes what to do, when to do it, and which file to read for
+deeper instructions.
 
 ====================================================
-1. Create or Verify Your Key Pair
+Part 0. Repo Setup and Authentication
 ====================================================
 
-Servers require an SSH key to be injected at boot.
+Goal:
+Make sure the environment is ready before touching hardware or reservations.
 
-List existing keys:
+Relevant file:
+1.1-download-repo.txt
 
-    openstack keypair list
+Steps:
+1. Confirm the EnvAgent-plus repo is present and updated.
+2. Confirm Python dependencies are installed.
+3. Confirm the user has sourced their Chameleon RC file.
+   Example:
+       source CHI-<project>-openrc.sh
+4. Stop if these steps fail. Do not continue.
 
-Create one if needed:
-
-    openstack keypair create my-key > my-key.pem
-    chmod 600 my-key.pem
-
-Used later as:
-    --key-name my-key
-
-
-====================================================
-2. Choose an Image
-====================================================
-
-List available images:
-
-    openstack image list
-
-Common base images include:
-    CC-Ubuntu22.04
-    CC-Ubuntu20.04
-
-Used later as:
-    --image CC-Ubuntu22.04
-
+After this, the LLM may proceed.
 
 ====================================================
-3. Identify a Network
+Part 1. Resource Discovery and Reservation Planning
 ====================================================
 
-List networks:
+Relevant files:
+1.2-resource-discovery.txt
+1.3-reservations.txt
 
-    openstack network list
+1. Discover hardware:
+   Use the discovery workflow to find sites, clusters, nodes, and node types.
+   Use 1.2-resource-discovery.txt when the user asks about availability.
 
-Most users will attach to:
-    sharednet1 → <network_uuid>
+2. Create or reuse a reservation:
+   Use 1.3-reservations.txt to:
+   - List leases
+   - Show lease details
+   - Create a new lease
+   - Map lease_id to host_id
+   - Confirm assigned hardware
 
-Example:
-    a772a899-ff3d-420b-8b31-1c485092481a
-
-Used later as:
-    --nic net-id=<network_uuid>
-
-
-====================================================
-4. Create a Reservation (Lease)
-====================================================
-
-Bare-metal nodes require a reservation.
-
-Create:
-
-    openstack reservation lease create ...
-
-Inspect:
-
-    openstack reservation lease show <LEASE_ID>
-
-Locate the reservation object inside the lease details. Use the ID of the
-reservation item (not the lease ID).
-
-Used later as:
-    --hint reservation=<reservation_id>
-
+Output:
+reservation_id
+Used later during launch.
 
 ====================================================
-5. Launch a Bare-Metal Server
+Part 2. Prepare Key Pair, Image, and Network
 ====================================================
 
-Once you have all required components:
+Relevant files:
+2.1-keys.txt
+2.2-images.txt
+2.3-networks.txt
 
-- key pair
-- image
-- network
-- reservation
+The LLM must prepare three components before launching.
 
-Launch the node:
+1. Key Pair:
+   Needed for SSH.
+   Later passed as:
+       --key-name <KEY>
+
+2. Image:
+   List available images and pick one.
+   Later used as:
+       --image <IMAGE>
+
+3. Network:
+   List networks and select one.
+   Later used as:
+       --nic net-id=<NETWORK_UUID>
+
+These three components do not depend on the reservation.
+
+====================================================
+Part 3. Launch a Bare-Metal Instance
+====================================================
+
+Relevant file:
+2.4-bare-metal-instances.txt
+
+Once the LLM has:
+- reservation_id
+- a key pair
+- an image
+- a network
+
+Launch the instance:
 
     openstack server create \
-      --image CC-Ubuntu22.04 \
+      --image <IMAGE> \
       --flavor baremetal \
-      --key-name my-key \
-      --nic net-id=<network_uuid> \
-      --hint reservation=<reservation_id> \
-      my-baremetal-node
+      --key-name <KEY> \
+      --nic net-id=<NETWORK_UUID> \
+      --hint reservation=<RESERVATION_ID> \
+      <SERVER_NAME>
 
-This creates the instance with a private IP.
-
-
-====================================================
-6. (Optional) Add a Floating IP
-====================================================
-
-Allocate:
-
-    openstack floating ip create public
-
-Attach:
-
-    openstack server add floating ip my-baremetal-node <FLOATING_IP>
-
-SSH:
-
-    ssh ubuntu@<FLOATING_IP>
-
+This creates a node with a private IP.
 
 ====================================================
-7. (Optional) Cleanup
+Part 4. Add a Floating IP (Optional)
 ====================================================
 
-    openstack server delete <server>
-    openstack floating ip delete <ip>
-    openstack reservation lease delete <lease>
+Relevant file:
+3.1-floating-ip.txt
 
+If the user needs external SSH access:
+
+1. Allocate a floating IP.
+2. Attach it to the server.
+3. Connect with:
+
+       ssh ubuntu@<FLOATING_IP>
 
 ====================================================
-Summary of Dependency Order
+Part 5. Run Checks and Troubleshoot
 ====================================================
 
-1. Authenticate
-2. Key Pair
-3. Image
-4. Network
-5. Reservation
-6. Launch Server
-7. Floating IP (optional)
+Relevant file:
+4.1-checks.txt
 
-This is the only logical workflow that avoids circular dependencies and
-ensures a clean bare-metal launch.
+Use this to verify:
+- The server is ACTIVE
+- The reservation is correct
+- The correct hardware node was assigned
+- The floating IP is attached
+- The user can SSH
+
+Use this whenever the user reports a failure.
+
+====================================================
+Final Dependency Order
+====================================================
+
+1. Repo readiness and authentication (Part 0)
+2. Resource discovery (Part 1)
+3. Reservation creation (Part 1)
+4. Key pair (Part 2)
+5. Image selection (Part 2)
+6. Network selection (Part 2)
+7. Launch instance (Part 3)
+8. Floating IP (Part 4)
+9. Checks (Part 5)
+
+This is the only valid workflow for launching bare-metal hardware through
+OpenStack and Chameleon.
+
