@@ -1,0 +1,14 @@
+# OpenStack SDK dependencies (existing)
+openstacksdk>=1.0.0
+python-blazarclient>=3.0.0
+python-dotenv>=1.0.0
+keystoneauth1>=5.0.0
+
+# AI integration for provision tool v2.0
+openai>=1.0.0
+
+# Requests for Chameleon API
+requests>=2.31.0
+
+# Note: python-openstackclient CLI tools are assumed to be installed separately
+# for the CLI-based version (provision.py)
