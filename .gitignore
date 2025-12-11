@@ -1,1 +1,12 @@
 .venv/
+venv
+__pycache__/
+*/__pycache__/
+*_info.json
+auto-server-* 
+envboot/__pycache__/...
+
+# Editor configs
+*.swp
+.DS_Store2.0/src/.env
+.env

@@ -36,10 +36,10 @@ class RepoAnalyzer:
                 text=True,
                 check=True
             )
-            print(f"✓ 成功克隆仓库到: {target_path}")
+            print(f"✓ Repository cloned to: {target_path}")
             return target_path
         except subprocess.CalledProcessError as e:
-            raise Exception(f"克隆仓库失败: {e.stderr}")
+            raise Exception(f"Failed to clone repository: {e.stderr}")
     
     def find_environment_files(self, repo_path: Path) -> Dict[str, Optional[str]]:
         """查找环境相关文件"""
@@ -69,7 +69,7 @@ class RepoAnalyzer:
                             content = content[:10000] + "\n... (truncated)"
                         found_files[filename] = content
                 except Exception as e:
-                    print(f"警告: 无法读取 {filename}: {e}")
+                    print(f"Warning: Cannot read {filename}: {e}")
                     found_files[filename] = None
             else:
                 found_files[filename] = None
@@ -87,48 +87,48 @@ class RepoAnalyzer:
                 files_content += f"\n\n=== {filename} ===\n{content}"
         
         if not files_content:
-            files_content = "未找到环境配置文件"
+            files_content = "No environment configuration files found"
         
-        system_prompt = """你是一个专业的系统管理员和DevOps工程师。
-你的任务是分析GitHub仓库的环境配置文件，推断出运行该项目所需的硬件和软件资源。
+        system_prompt = """You are a professional system administrator and DevOps engineer.
+Your task is to analyze GitHub repository configuration files and infer the hardware and software resources needed to run the project.
 
-请以JSON格式返回分析结果，包含以下字段：
+Return analysis results in JSON format with the following fields:
 {
-    "cpu_cores": <最小CPU核心数，整数或null>,
-    "ram_gb": <最小RAM大小(GB)，整数或null>,
-    "gpu_required": <是否需要GPU，布尔值>,
-    "gpu_memory_gb": <GPU显存需求(GB)，整数或null>,
-    "disk_gb": <磁盘空间需求(GB)，整数或null>,
-    "os_type": <操作系统类型，如"ubuntu", "centos"等>,
-    "os_version": <操作系统版本，如"22.04", "20.04"等>,
-    "cuda_required": <是否需要CUDA支持，布尔值>,
-    "python_version": <Python版本要求，字符串或null>,
-    "special_requirements": <特殊需求说明，字符串列表>
+    "cpu_cores": <minimum CPU cores, integer or null>,
+    "ram_gb": <minimum RAM size (GB), integer or null>,
+    "gpu_required": <whether GPU is needed, boolean>,
+    "gpu_memory_gb": <GPU memory requirement (GB), integer or null>,
+    "disk_gb": <disk space requirement (GB), integer or null>,
+    "os_type": <OS type, e.g. "ubuntu", "centos">,
+    "os_version": <OS version, e.g. "22.04", "20.04">,
+    "cuda_required": <whether CUDA support is needed, boolean>,
+    "python_version": <Python version requirement, string or null>,
+    "special_requirements": <special requirements, string array>
 }
 
-如果某个字段无法确定，请设置为null。请给出保守但合理的估计。"""
+If a field cannot be determined, set it to null. Provide conservative but reasonable estimates."""
         
-        user_prompt = f"""请分析以下仓库的环境配置文件，推断硬件和软件需求：
+        user_prompt = f"""Analyze the following repository configuration files and infer hardware and software requirements:
 
 {files_content}
 
-请返回JSON格式的分析结果。"""
+Return analysis results in JSON format."""
         
         try:
             response = self.ai_client.ask_with_context(system_prompt, user_prompt, temperature=0.3)
             requirements = self.ai_client.parse_json_response(response)
             
-            print("\n✓ 仓库需求分析完成:")
-            print(f"  CPU: {requirements.get('cpu_cores', 'N/A')} 核")
+            print("\n✓ Repository requirements analysis complete:")
+            print(f"  CPU: {requirements.get('cpu_cores', 'N/A')} cores")
             print(f"  RAM: {requirements.get('ram_gb', 'N/A')} GB")
-            print(f"  GPU: {'需要' if requirements.get('gpu_required') else '不需要'}")
+            print(f"  GPU: {'Required' if requirements.get('gpu_required') else 'Not required'}")
             if requirements.get('gpu_required'):
-                print(f"  GPU显存: {requirements.get('gpu_memory_gb', 'N/A')} GB")
-            print(f"  磁盘: {requirements.get('disk_gb', 'N/A')} GB")
-            print(f"  操作系统: {requirements.get('os_type', 'N/A')} {requirements.get('os_version', '')}")
-            print(f"  CUDA: {'需要' if requirements.get('cuda_required') else '不需要'}")
+                print(f"  GPU Memory: {requirements.get('gpu_memory_gb', 'N/A')} GB")
+            print(f"  Disk: {requirements.get('disk_gb', 'N/A')} GB")
+            print(f"  OS: {requirements.get('os_type', 'N/A')} {requirements.get('os_version', '')}")
+            print(f"  CUDA: {'Required' if requirements.get('cuda_required') else 'Not required'}")
             
             return requirements
         except Exception as e:
-            raise Exception(f"分析需求失败: {str(e)}")
+            raise Exception(f"Requirements analysis failed: {str(e)}")
 

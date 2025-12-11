@@ -1,19 +1,26 @@
 """
-资源发现模块
-负责发现Chameleon云上的可用硬件资源
+Resource Discovery Module
+Responsible for discovering available hardware resources on Chameleon Cloud
 """
 import subprocess
 import json
 import requests
+import sys
+from pathlib import Path
 from typing import List, Dict, Any, Optional
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from ai_client import AIClient
+
+# Import OpenStack utilities
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
+from envboot.osutil import blz
 
 
 class ResourceDiscovery:
-    """资源发现器"""
+    """Resource Discovery"""
     
     def __init__(self, ai_client: AIClient, default_site: str = "uc"):
-        """初始化资源发现器"""
+        """Initialize resource discovery"""
         self.ai_client = ai_client
         self.default_site = default_site
         self.base_url = "https://api.chameleoncloud.org"
@@ -60,17 +67,31 @@ class ResourceDiscovery:
             raise Exception(f"获取节点详情失败: {str(e)}")
     
     def list_reservation_hosts(self) -> List[Dict[str, Any]]:
-        """列出所有可预约的主机（使用OpenStack CLI）"""
+        """List all reservable hosts using Blazar client"""
         try:
-            result = subprocess.run(
-                ['openstack', 'reservation', 'host', 'list', '-f', 'json'],
-                capture_output=True,
-                text=True,
-                check=True
-            )
-            return json.loads(result.stdout)
-        except subprocess.CalledProcessError as e:
-            raise Exception(f"列出预约主机失败: {e.stderr}")
+            blazar = blz()
+            # Get all hosts from Blazar
+            hosts_raw = blazar.host.list()
+            # Convert to list of dicts, handling both dict and object types
+            hosts = []
+            for host in hosts_raw:
+                if isinstance(host, dict):
+                    hosts.append(host)
+                else:
+                    # If it's an object, convert attributes to dict
+                    host_dict = {}
+                    for attr in dir(host):
+                        if not attr.startswith('_'):
+                            try:
+                                val = getattr(host, attr)
+                                if not callable(val):
+                                    host_dict[attr] = val
+                            except:
+                                pass
+                    hosts.append(host_dict)
+            return hosts
+        except Exception as e:
+            raise Exception(f"Failed to list reservation hosts: {str(e)}")
     
     def get_host_details(self, host_id: str) -> Dict[str, Any]:
         """获取主机详细信息"""
@@ -95,24 +116,24 @@ class ResourceDiscovery:
             return False
     
     def discover_resources(self, site: Optional[str] = None) -> Dict[str, Any]:
-        """发现资源（简化版：使用OpenStack CLI）"""
+        """Discover resources (simplified version using Blazar client)"""
         if site is None:
             site = self.default_site
         
-        print(f"\n正在发现 {site} 站点的资源...")
+        print(f"\nDiscovering resources at {site} site...")
         
-        # 获取所有主机
+        # Get all hosts
         hosts = self.list_reservation_hosts()
-        print(f"✓ 找到 {len(hosts)} 个主机")
+        print(f"✓ Found {len(hosts)} hosts")
         
-        # 提取唯一的node_type
+        # Extract unique node_types
         node_types = set()
         for host in hosts:
             node_type = host.get('node_type', '')
             if node_type:
                 node_types.add(node_type)
         
-        print(f"✓ 发现 {len(node_types)} 种节点类型: {', '.join(sorted(node_types))}")
+        print(f"✓ Discovered {len(node_types)} node types: {', '.join(sorted(node_types))}")
         
         return {
             'site': site,
@@ -149,57 +170,59 @@ class ResourceDiscovery:
     
     def select_resources_with_ai(self, requirements: Dict[str, Any], 
                                   available_resources: Dict[str, Any]) -> Dict[str, Any]:
-        """使用AI根据需求选择资源"""
+        """Use AI to select resources based on requirements"""
         
         hosts = available_resources.get('hosts', [])
         properties = self.extract_resource_properties(hosts)
         
-        # 构建资源信息
+        # Build resource information
         resource_info = f"""
-可用节点类型: {', '.join(sorted(properties['node_types']))}
-可用GPU型号: {', '.join(sorted(properties['gpu_models'])) if properties['gpu_models'] else '无'}
-可用架构: {', '.join(sorted(properties['architectures']))}
-总主机数: {len(hosts)}
+Available node types: {', '.join(sorted(properties['node_types']))}
+Available GPU models: {', '.join(sorted(properties['gpu_models'])) if properties['gpu_models'] else 'None'}
+Available architectures: {', '.join(sorted(properties['architectures']))}
+Total hosts: {len(hosts)}
 """
         
-        system_prompt = """你是一个云计算资源管理专家。
-你的任务是根据用户的硬件需求，从可用资源中选择最合适的节点类型。
+        system_prompt = """You are a cloud computing resource management expert.
+Your task is to select the most suitable node type from available resources based on user hardware requirements.
 
-Chameleon节点类型命名规则：
-- compute_*: 通用计算节点
-- gpu_*: GPU节点（如gpu_rtx_6000, gpu_a100等）
-- storage_*: 存储优化节点
+Chameleon node type naming conventions:
+- compute_*: General compute nodes (e.g., compute_cascadelake_r640, compute_skylake)
+- gpu_*: GPU nodes (e.g., gpu_rtx_6000, gpu_a100_pcie)
+- storage_*: Storage-optimized nodes
 
-请返回JSON格式：
+Return JSON format:
 {
-    "node_type": "选择的节点类型",
-    "reasoning": "选择理由",
-    "filter_expression": "OpenStack过滤表达式，格式如: [\\\"=\\\", \\\"$node_type\\\", \\\"gpu_rtx_6000\\\"]"
-}"""
-        
-        user_prompt = f"""用户需求：
-- CPU核心: {requirements.get('cpu_cores', 'N/A')}
-- RAM: {requirements.get('ram_gb', 'N/A')} GB
-- 需要GPU: {requirements.get('gpu_required', False)}
-- GPU显存: {requirements.get('gpu_memory_gb', 'N/A')} GB
-- 磁盘: {requirements.get('disk_gb', 'N/A')} GB
+    "node_type": "selected node type (exact match from available list)",
+    "reasoning": "selection rationale",
+    "filter_expression": "JSON string format: [\\"=\\", \\"$node_type\\", \\"gpu_rtx_6000\\"]"
+}
 
-可用资源：
+IMPORTANT: Use the EXACT node_type string from the available list. Do not abbreviate or modify it."""
+        
+        user_prompt = f"""User requirements:
+- CPU cores: {requirements.get('cpu_cores', 'N/A')}
+- RAM: {requirements.get('ram_gb', 'N/A')} GB
+- GPU required: {requirements.get('gpu_required', False)}
+- GPU memory: {requirements.get('gpu_memory_gb', 'N/A')} GB
+- Disk: {requirements.get('disk_gb', 'N/A')} GB
+
+Available resources:
 {resource_info}
 
-请选择最合适的节点类型。如果需要GPU，请优先选择GPU节点。"""
+Select the most suitable node type. If GPU is required, prioritize GPU nodes. Return the EXACT node_type string from the available list."""
         
         try:
             response = self.ai_client.ask_with_context(system_prompt, user_prompt, temperature=0.3)
             selection = self.ai_client.parse_json_response(response)
             
-            print(f"\n✓ AI资源选择完成")
-            print(f"  节点类型: {selection.get('node_type', 'N/A')}")
-            print(f"  理由: {selection.get('reasoning', 'N/A')}")
+            print(f"\n✓ AI resource selection complete")
+            print(f"  Node type: {selection.get('node_type', 'N/A')}")
+            print(f"  Reasoning: {selection.get('reasoning', 'N/A')}")
             
             return selection
         except Exception as e:
-            raise Exception(f"AI资源选择失败: {str(e)}")
+            raise Exception(f"AI resource selection failed: {str(e)}")
     
     def filter_available_hosts(self, hosts: List[Dict[str, Any]], 
                                 node_type: str) -> List[Dict[str, Any]]:
@@ -212,21 +235,37 @@ Chameleon节点类型命名规则：
                     filtered.append(host)
         return filtered
     
-    def check_availability_batch(self, hosts: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """批量检查主机可用性"""
+    def check_availability_batch(self, hosts: List[Dict[str, Any]], max_workers: int = 10) -> List[Dict[str, Any]]:
+        """Batch check host availability using parallel requests"""
         available_hosts = []
-        print(f"\n正在检查 {len(hosts)} 个主机的可用性...")
+        print(f"\nChecking availability of {len(hosts)} hosts in parallel...")
         
-        for i, host in enumerate(hosts, 1):
+        def check_single_host(host):
+            """Helper function to check a single host"""
             host_id = host.get('id', '')
             node_name = host.get('node_name', 'unknown')
-            
-            if self.check_host_availability(host_id):
-                available_hosts.append(host)
-                print(f"  [{i}/{len(hosts)}] {node_name} (ID: {host_id}): ✓ 可用")
-            else:
-                print(f"  [{i}/{len(hosts)}] {node_name} (ID: {host_id}): ✗ 不可用")
+            is_available = self.check_host_availability(host_id)
+            return host, is_available, host_id, node_name
         
-        print(f"\n✓ 找到 {len(available_hosts)} 个可用主机")
+        # Use ThreadPoolExecutor for parallel checking
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Submit all tasks
+            future_to_host = {executor.submit(check_single_host, host): host for host in hosts}
+            
+            # Process results as they complete
+            completed = 0
+            for future in as_completed(future_to_host):
+                completed += 1
+                try:
+                    host, is_available, host_id, node_name = future.result()
+                    if is_available:
+                        available_hosts.append(host)
+                        print(f"  [{completed}/{len(hosts)}] {node_name} (ID: {host_id}): ✓ Available")
+                    else:
+                        print(f"  [{completed}/{len(hosts)}] {node_name} (ID: {host_id}): ✗ Unavailable")
+                except Exception as e:
+                    print(f"  [{completed}/{len(hosts)}] Error checking host: {str(e)}")
+        
+        print(f"\n✓ Found {len(available_hosts)} available hosts")
         return available_hosts
 

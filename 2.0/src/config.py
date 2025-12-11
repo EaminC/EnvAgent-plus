@@ -29,15 +29,25 @@ class Config:
     
     @classmethod
     def from_env(cls, env_file: Optional[str] = None) -> "Config":
-        """从环境变量或.env文件加载配置"""
+        """Load configuration from environment variables or .env file"""
+        # Auto-detect .env file if not specified
+        if env_file is None:
+            # Try to find .env in the same directory as this config file
+            config_dir = Path(__file__).parent
+            potential_env = config_dir / '.env'
+            if potential_env.exists():
+                env_file = str(potential_env)
+        
         if env_file and os.path.exists(env_file):
-            # 加载.env文件
+            # Load .env file
             with open(env_file, 'r') as f:
                 for line in f:
                     line = line.strip()
                     if line and not line.startswith('#'):
                         key, value = line.split('=', 1)
-                        os.environ[key.strip()] = value.strip()
+                        # Strip quotes from value if present
+                        value = value.strip().strip('"').strip("'")
+                        os.environ[key.strip()] = value
         
         return cls(
             openai_base_url=os.getenv('OPENAI_BASE_URL', 'https://api.forge.tensorblock.co/v1'),
