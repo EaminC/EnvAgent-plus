@@ -8,4 +8,5 @@ envboot/__pycache__/...
 
 # Editor configs
 *.swp
-.DS_Store
+.DS_Store2.0/src/.env
+.env
