@@ -28,7 +28,7 @@ class AIClient:
             )
             return completion.choices[0].message.content
         except Exception as e:
-            raise Exception(f"AI请求失败: {str(e)}")
+            raise Exception(f"AI request failed: {str(e)}")
     
     def ask_with_context(self, system_prompt: str, user_prompt: str, temperature: float = 0.7) -> str:
         """使用系统提示和用户提示进行对话"""
@@ -56,5 +56,5 @@ class AIClient:
                 json_str = response[start:end].strip()
                 return json.loads(json_str)
             else:
-                raise ValueError(f"无法解析JSON响应: {response}")
+                raise ValueError(f"Cannot parse JSON response: {response}")
 

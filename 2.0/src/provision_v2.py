@@ -28,6 +28,7 @@ from config import load_config
 from ai_client import AIClient
 from repo_analyzer import RepoAnalyzer
 from image_selector import ImageSelector
+from resource_discovery import ResourceDiscovery
 
 
 def check_openstack_credentials():
@@ -79,7 +80,7 @@ def select_image_with_sdk(ai_client: AIClient, requirements: dict):
         
         # Filter active CC images
         cc_images = [img for img in images 
-                     if img.name.startswith('CC-') and img.status == 'active']
+                     if img.name.startswith('CC-') and img.status == 'ACTIVE']
         
         if not cc_images:
             raise Exception("No CC-* images found")
@@ -126,18 +127,44 @@ Select 3-5 best candidates."""
         
         # Stage 2: Get details and final selection
         if candidates:
-            # Just pick the first candidate for simplicity
-            # (could enhance with another AI call for details)
-            selected_image = candidates[0]
-            print(f"\n✓ Final Selection: {selected_image}")
+            # Get detailed info for candidates
+            candidate_details = []
+            for candidate_name in candidates:
+                for img in cc_images:
+                    if img.name == candidate_name:
+                        candidate_details.append({
+                            "name": img.name,
+                            "id": img.id,
+                            "size": img.size,
+                            "min_disk": img.min_disk,
+                            "min_ram": img.min_ram,
+                            "created_at": str(img.created_at)
+                        })
+                        break
             
-            # Get image ID
-            for img in cc_images:
-                if img.name == selected_image:
-                    return selected_image, img.id
+            if candidate_details:
+                # TODO: Could add AI Stage 2 here for detailed comparison
+                # For now, pick the first valid candidate
+                selected = candidate_details[0]
+                print(f"\n✓ Final Selection: {selected['name']}")
+                print(f"  Image ID: {selected['id']}")
+                return selected['name'], selected['id']
         
-        # Fallback
-        return "CC-Ubuntu22.04", cc_images[0].id
+        # Fallback: Find any Ubuntu 22.04 CUDA image
+        print("⚠ No candidates found, using fallback selection")
+        for img in cc_images:
+            if 'Ubuntu22.04' in img.name and 'CUDA' in img.name:
+                print(f"✓ Fallback image: {img.name}")
+                return img.name, img.id
+        
+        # Last resort: any Ubuntu 22.04 image
+        for img in cc_images:
+            if 'Ubuntu22.04' in img.name:
+                print(f"✓ Last resort fallback: {img.name}")
+                return img.name, img.id
+        
+        # If nothing works, fail clearly
+        raise Exception("No suitable CC-* image found. Please check available images.")
         
     except Exception as e:
         print(f"✗ Image selection failed: {e}")
@@ -199,8 +226,11 @@ def get_network_id(os_conn, network_name: str = "sharednet1"):
 
 
 def create_lease_with_ai(ai_client: AIClient, requirements: dict, 
-                         node_type: str, lease_name: str):
+                         node_type: str, lease_name: str, duration_hours: int = None,
+                         filter_expression: str = None):
     """Create Blazar lease with AI-determined duration."""
+    import json  # For JSON encoding resource_properties
+    
     print(f"\n{'='*60}")
     print("Step 5: Create Hardware Reservation")
     print(f"{'='*60}")
@@ -226,15 +256,20 @@ Requirements:
 
 Determine lease duration in hours."""
     
-    try:
-        response = ai_client.ask_with_context(system_prompt, user_prompt, temperature=0.3)
-        result = ai_client.parse_json_response(response)
-        hours = int(result.get('duration_hours', 24))
-        print(f"✓ AI determined duration: {hours} hours")
-        print(f"  Reasoning: {result.get('reasoning', 'N/A')}")
-    except Exception as e:
-        print(f"⚠ AI duration failed, using default 24 hours: {e}")
-        hours = 24
+    # Use manual duration if provided, otherwise use AI
+    if duration_hours is not None:
+        hours = duration_hours
+        print(f"✓ Using manual duration: {hours} hours")
+    else:
+        try:
+            response = ai_client.ask_with_context(system_prompt, user_prompt, temperature=0.3)
+            result = ai_client.parse_json_response(response)
+            hours = int(result.get('duration_hours', 24))
+            print(f"✓ AI determined duration: {hours} hours")
+            print(f"  Reasoning: {result.get('reasoning', 'N/A')}")
+        except Exception as e:
+            print(f"⚠ AI duration failed, using default 24 hours: {e}")
+            hours = 24
     
     # Calculate times
     start_time = current_time + timedelta(minutes=2)
@@ -252,6 +287,13 @@ Determine lease duration in hours."""
     # Create lease using Blazar client
     try:
         blazar = blz()
+        # Use provided filter_expression or build default
+        if filter_expression:
+            resource_props = filter_expression
+        else:
+            # Format resource_properties as JSON string for Blazar API
+            resource_props = json.dumps(["=", "$node_type", node_type])
+        
         lease = blazar.lease.create(
             name=lease_name,
             start=start_str,
@@ -260,7 +302,8 @@ Determine lease duration in hours."""
                 "resource_type": "physical:host",
                 "min": 1,
                 "max": 1,
-                "resource_properties": f'["=", "$node_type", "{node_type}"]',
+                "hypervisor_properties": "",
+                "resource_properties": resource_props,
             }],
             events=[]
         )
@@ -389,10 +432,21 @@ def assign_floating_ip(os_conn, server_id: str):
         
         print(f"✓ Using floating IP: {available_ip.floating_ip_address}")
         
-        # Attach to server
+        # Attach to server via Neutron port
+        # Get server's port
         server = os_conn.compute.get_server(server_id)
-        os_conn.compute.add_floating_ip_to_server(
-            server, available_ip.floating_ip_address
+        
+        # Find the server's port
+        ports = list(os_conn.network.ports(device_id=server_id))
+        if not ports:
+            raise Exception("No network port found for server")
+        
+        port = ports[0]
+        
+        # Update floating IP to point to this port
+        os_conn.network.update_ip(
+            available_ip,
+            port_id=port.id
         )
         
         print(f"✓ Floating IP attached")
@@ -420,6 +474,7 @@ def main():
     parser.add_argument('--lease-name', help='Lease name')
     parser.add_argument('--server-name', help='Server name')
     parser.add_argument('--node-type', help='Node type (e.g., gpu_rtx_6000)')
+    parser.add_argument('--lease-duration', type=int, help='Lease duration in hours (overrides AI)')
     parser.add_argument('--site', default='uc', help='Chameleon site (default: uc)')
     parser.add_argument('--network', default='sharednet1', help='Network name')
     parser.add_argument('--no-floating-ip', action='store_true', help='Skip floating IP')
@@ -471,21 +526,58 @@ def main():
         # Step 4: Get network
         network_id = get_network_id(os_conn, args.network)
         
-        # Determine node type
+        # Determine node type using ResourceDiscovery
         node_type = args.node_type
+        filter_expression = None
+        
         if not node_type:
-            # Simple heuristic
-            if requirements.get('gpu_required'):
-                node_type = "gpu_rtx_6000"
+            # Initialize ResourceDiscovery
+            resource_discovery = ResourceDiscovery(ai_client, default_site=args.site)
+            
+            # Discover available resources
+            print(f"\n{'='*60}")
+            print("Discovering Available Resources")
+            print(f"{'='*60}")
+            available_resources = resource_discovery.discover_resources(args.site)
+            
+            if available_resources and available_resources.get('node_types'):
+                print(f"✓ Found {len(available_resources['node_types'])} node types available")
+                
+                # Use AI to select best node type from available options
+                try:
+                    selection = resource_discovery.select_resources_with_ai(
+                        requirements, available_resources
+                    )
+                    node_type = selection.get('node_type')
+                    filter_expression = selection.get('filter_expression')
+                    print(f"✓ AI selected node type: {node_type}")
+                    print(f"  Reasoning: {selection.get('reasoning', 'N/A')}")
+                except Exception as e:
+                    print(f"⚠ AI selection failed: {e}")
+                    # Fallback: pick from available node types
+                    if requirements.get('gpu_required'):
+                        # Try to find a GPU node type
+                        gpu_types = [nt for nt in available_resources['node_types'] if 'gpu' in nt.lower()]
+                        node_type = gpu_types[0] if gpu_types else list(available_resources['node_types'])[0]
+                    else:
+                        # Pick first compute node type
+                        compute_types = [nt for nt in available_resources['node_types'] if 'compute' in nt.lower()]
+                        node_type = compute_types[0] if compute_types else list(available_resources['node_types'])[0]
+                    print(f"✓ Fallback node type: {node_type}")
             else:
-                node_type = "compute_cascadelake_r640"
+                # No discovery data, use hard-coded fallback
+                print("⚠ Resource discovery returned no data, using fallback")
+                if requirements.get('gpu_required'):
+                    node_type = "gpu_rtx_6000"
+                else:
+                    node_type = "compute_cascadelake_r640"
         
         print(f"\n✓ Target node type: {node_type}")
         
         # Step 5: Create lease
         lease_name = args.lease_name or f"auto-{node_type}-{datetime.now().strftime('%Y%m%d%H%M')}"
         lease_id, reservation_id = create_lease_with_ai(
-            ai_client, requirements, node_type, lease_name
+            ai_client, requirements, node_type, lease_name, args.lease_duration, filter_expression
         )
         
         # Step 6: Launch server
