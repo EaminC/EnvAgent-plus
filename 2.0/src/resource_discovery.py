@@ -8,6 +8,7 @@ import requests
 import sys
 from pathlib import Path
 from typing import List, Dict, Any, Optional
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from ai_client import AIClient
 
 # Import OpenStack utilities
@@ -234,21 +235,37 @@ Select the most suitable node type. If GPU is required, prioritize GPU nodes. Re
                     filtered.append(host)
         return filtered
     
-    def check_availability_batch(self, hosts: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-        """批量检查主机可用性"""
+    def check_availability_batch(self, hosts: List[Dict[str, Any]], max_workers: int = 10) -> List[Dict[str, Any]]:
+        """Batch check host availability using parallel requests"""
         available_hosts = []
-        print(f"\n正在检查 {len(hosts)} 个主机的可用性...")
+        print(f"\nChecking availability of {len(hosts)} hosts in parallel...")
         
-        for i, host in enumerate(hosts, 1):
+        def check_single_host(host):
+            """Helper function to check a single host"""
             host_id = host.get('id', '')
             node_name = host.get('node_name', 'unknown')
-            
-            if self.check_host_availability(host_id):
-                available_hosts.append(host)
-                print(f"  [{i}/{len(hosts)}] {node_name} (ID: {host_id}): ✓ 可用")
-            else:
-                print(f"  [{i}/{len(hosts)}] {node_name} (ID: {host_id}): ✗ 不可用")
+            is_available = self.check_host_availability(host_id)
+            return host, is_available, host_id, node_name
         
-        print(f"\n✓ 找到 {len(available_hosts)} 个可用主机")
+        # Use ThreadPoolExecutor for parallel checking
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Submit all tasks
+            future_to_host = {executor.submit(check_single_host, host): host for host in hosts}
+            
+            # Process results as they complete
+            completed = 0
+            for future in as_completed(future_to_host):
+                completed += 1
+                try:
+                    host, is_available, host_id, node_name = future.result()
+                    if is_available:
+                        available_hosts.append(host)
+                        print(f"  [{completed}/{len(hosts)}] {node_name} (ID: {host_id}): ✓ Available")
+                    else:
+                        print(f"  [{completed}/{len(hosts)}] {node_name} (ID: {host_id}): ✗ Unavailable")
+                except Exception as e:
+                    print(f"  [{completed}/{len(hosts)}] Error checking host: {str(e)}")
+        
+        print(f"\n✓ Found {len(available_hosts)} available hosts")
         return available_hosts
 
