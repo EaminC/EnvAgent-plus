@@ -10,3 +10,7 @@ envboot/__pycache__/...
 *.swp
 .DS_Store2.0/src/.env
 .env
+
+2.0/api/forge.py
+
+test_logs

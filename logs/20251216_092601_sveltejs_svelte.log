@@ -1,0 +1,93 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/sveltejs/svelte" --site uc
+Start:   2025-12-16T09:26:01Z
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_cascadelake_r"]', 'start_date': datetime.datetime(2025, 12, 16, 9, 28), 'end_date': datetime.datetime(2025, 12, 18, 9, 28), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 582, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_cascadelake_r"]', 'start_date': datetime.datetime(2025, 12, 16, 9, 28), 'end_date': datetime.datetime(2025, 12, 18, 9, 28), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/svelte
+
+✓ Repository requirements analysis complete:
+  CPU: 2 cores
+  RAM: 4 GB
+  GPU: Not required
+  Disk: 5 GB
+  OS: ubuntu 20.04
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 image without CUDA or GPU support. The selected images are all based on Ubuntu 20.04 and do not include CUDA in their naming, indicating they do not have CUDA support. These images are the best candidates as they meet all the specified requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at uc site...
+✓ Found 132 hosts
+✓ Discovered 10 node types: compute_cascadelake_r, compute_gigaio, compute_nvdimm, compute_skylake, fpga, gpu_a100_nvlink, gpu_a100_pcie, gpu_rtx_6000, gpu_v100, storage_nvme
+✓ Found 10 node types available
+
+✓ AI resource selection complete
+  Node type: compute_cascadelake_r
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The compute_cascadelake_r node type is a general compute node that can meet the user's CPU and RAM requirements. It is also likely to have sufficient disk space for the user's needs.
+✓ AI selected node type: compute_cascadelake_r
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The compute_cascadelake_r node type is a general compute node that can meet the user's CPU and RAM requirements. It is also likely to have sufficient disk space for the user's needs.
+
+✓ Target node type: compute_cascadelake_r
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements suggest a development environment setup for a JavaScript/TypeScript project, which typically involves setting up and testing a development environment, running tests, and possibly deploying or demonstrating the application. Given the need for specific tools like pnpm, node.js, eslint, prettier, typescript, and vitest, it is reasonable to assume that the user might need extra time to configure, test, and iterate on their setup. Therefore, a 48-hour lease duration provides a comfortable buffer for these activities.
+
+Creating lease:
+  Name: auto-compute_cascadelake_r-202512160926
+  Node Type: compute_cascadelake_r
+  Start: 2025-12-16 09:28
+  End: 2025-12-18 09:28
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_cascadelake_r"]', 'start_date': datetime.datetime(2025, 12, 16, 9, 28), 'end_date': datetime.datetime(2025, 12, 18, 9, 28), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+End:     2025-12-16T09:26:30Z (exit=1, duration=29s)

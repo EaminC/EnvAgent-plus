@@ -1,0 +1,94 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/PriorLabs/TabPFN" --site uc
+Start:   2025-12-16T08:33:07Z
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 35), 'end_date': datetime.datetime(2025, 12, 18, 8, 35), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 582, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 35), 'end_date': datetime.datetime(2025, 12, 18, 8, 35), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/TabPFN
+
+✓ Repository requirements analysis complete:
+  CPU: 2 cores
+  RAM: 8 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: None GB
+  OS: ubuntu None
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu OS with CUDA support. The selected images are Ubuntu-based and have CUDA support, which is necessary for GPU-related tasks. The selected images include different versions of Ubuntu (20.04, 22.04, and 24.04) to provide flexibility in terms of OS version, while all ensuring CUDA compatibility.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at uc site...
+✓ Found 132 hosts
+✓ Discovered 10 node types: compute_cascadelake_r, compute_gigaio, compute_nvdimm, compute_skylake, fpga, gpu_a100_nvlink, gpu_a100_pcie, gpu_rtx_6000, gpu_v100, storage_nvme
+✓ Found 10 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available GPU nodes, the 'gpu_rtx_6000' matches the requirement as it is known to have 24 GB of GPU memory, which exceeds the user's requirement. The other GPU options, such as 'gpu_a100_nvlink' and 'gpu_a100_pcie', are more powerful and likely more expensive, making 'gpu_rtx_6000' the most suitable and cost-effective choice for the user's needs.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available GPU nodes, the 'gpu_rtx_6000' matches the requirement as it is known to have 24 GB of GPU memory, which exceeds the user's requirement. The other GPU options, such as 'gpu_a100_nvlink' and 'gpu_a100_pcie', are more powerful and likely more expensive, making 'gpu_rtx_6000' the most suitable and cost-effective choice for the user's needs.
+
+✓ Target node type: gpu_rtx_6000
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements indicate a need for a GPU with CUDA support and PyTorch, which suggests a machine learning or deep learning task. These tasks can be computationally intensive and time-consuming, often requiring more than a day to complete, especially if training a model. Therefore, a 48-hour lease duration is recommended to ensure sufficient time for setup, execution, and any necessary adjustments or troubleshooting.
+
+Creating lease:
+  Name: auto-gpu_rtx_6000-202512160833
+  Node Type: gpu_rtx_6000
+  Start: 2025-12-16 08:35
+  End: 2025-12-18 08:35
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 35), 'end_date': datetime.datetime(2025, 12, 18, 8, 35), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+End:     2025-12-16T08:33:38Z (exit=1, duration=31s)

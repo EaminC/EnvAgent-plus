@@ -1,0 +1,4 @@
+# Test subset: 1 GPU repo, 2 non-GPU repos
+https://github.com/yrcong/RelTR
+https://github.com/nlohmann/json
+https://github.com/fmtlib/fmt

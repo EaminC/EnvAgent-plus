@@ -130,8 +130,10 @@ Select 3-5 best candidates."""
             # Get detailed info for candidates
             candidate_details = []
             for candidate_name in candidates:
+                # Normalize AI-returned names that may include " (ID: ...)" suffixes
+                candidate_clean = candidate_name.split(" (ID:")[0].strip()
                 for img in cc_images:
-                    if img.name == candidate_name:
+                    if img.name == candidate_clean:
                         candidate_details.append({
                             "name": img.name,
                             "id": img.id,
@@ -227,7 +229,7 @@ def get_network_id(os_conn, network_name: str = "sharednet1"):
 
 def create_lease_with_ai(ai_client: AIClient, requirements: dict, 
                          node_type: str, lease_name: str, duration_hours: int = None,
-                         filter_expression: str = None):
+                         filter_expression: str = None, start_delay_minutes: int = 2):
     """Create Blazar lease with AI-determined duration."""
     import json  # For JSON encoding resource_properties
     
@@ -272,7 +274,7 @@ Determine lease duration in hours."""
             hours = 24
     
     # Calculate times
-    start_time = current_time + timedelta(minutes=2)
+    start_time = current_time + timedelta(minutes=start_delay_minutes)
     end_time = start_time + timedelta(hours=hours)
     
     start_str = start_time.strftime("%Y-%m-%d %H:%M")
@@ -479,6 +481,7 @@ def main():
     parser.add_argument('--network', default='sharednet1', help='Network name')
     parser.add_argument('--no-floating-ip', action='store_true', help='Skip floating IP')
     parser.add_argument('--skip-repo-clone', action='store_true', help='Skip repo clone (testing)')
+    parser.add_argument('--start-delay-minutes', type=int, default=2, help='Delay start time by N minutes (default: 2)')
     
     args = parser.parse_args()
     
@@ -577,7 +580,10 @@ def main():
         # Step 5: Create lease
         lease_name = args.lease_name or f"auto-{node_type}-{datetime.now().strftime('%Y%m%d%H%M')}"
         lease_id, reservation_id = create_lease_with_ai(
-            ai_client, requirements, node_type, lease_name, args.lease_duration, filter_expression
+            ai_client, requirements, node_type, lease_name,
+            duration_hours=args.lease_duration,
+            filter_expression=filter_expression,
+            start_delay_minutes=args.start_delay_minutes
         )
         
         # Step 6: Launch server
