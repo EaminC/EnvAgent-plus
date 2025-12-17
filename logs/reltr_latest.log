@@ -1,0 +1,396 @@
+Start Tue Dec 16 08:15:13 UTC 2025 : RelTR run
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 17), 'end_date': datetime.datetime(2025, 12, 18, 8, 17), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 581, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 17), 'end_date': datetime.datetime(2025, 12, 18, 8, 17), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/RelTR
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 50 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 OS with CUDA support. The selected images are all Ubuntu 20.04 with CUDA, ensuring compatibility with the specified OS version and CUDA requirement. These images are the best fit as they meet all the specified criteria.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at uc site...
+✓ Found 132 hosts
+✓ Discovered 10 node types: compute_cascadelake_r, compute_gigaio, compute_nvdimm, compute_skylake, fpga, gpu_a100_nvlink, gpu_a100_pcie, gpu_rtx_6000, gpu_v100, storage_nvme
+✓ Found 10 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available GPU node types, 'gpu_rtx_6000' and 'gpu_v100' are suitable options. The RTX 6000 model is explicitly listed as available and meets the requirement for GPU memory. Therefore, 'gpu_rtx_6000' is selected as it matches the user's GPU memory requirement and is available in the list.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available GPU node types, 'gpu_rtx_6000' and 'gpu_v100' are suitable options. The RTX 6000 model is explicitly listed as available and meets the requirement for GPU memory. Therefore, 'gpu_rtx_6000' is selected as it matches the user's GPU memory requirement and is available in the list.
+
+✓ Target node type: gpu_rtx_6000
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements suggest a setup for machine learning or deep learning tasks, likely involving model training or inference using PyTorch. Given the need for a GPU and specific CUDA version, the task could involve significant computational work. Additionally, the inclusion of libraries like pycocotools indicates potential image processing or computer vision tasks, which can be time-consuming. Therefore, a lease duration of 48 hours is recommended to ensure sufficient time for setup, execution, and any necessary iterations or troubleshooting.
+
+Creating lease:
+  Name: auto-gpu_rtx_6000-202512160815
+  Node Type: gpu_rtx_6000
+  Start: 2025-12-16 08:17
+  End: 2025-12-18 08:17
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 17), 'end_date': datetime.datetime(2025, 12, 18, 8, 17), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+Start Tue Dec 16 08:17:25 UTC 2025 : RelTR quick run (gpu_v100, 1h)
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_v100"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 19), 'end_date': datetime.datetime(2025, 12, 16, 9, 19), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 581, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_v100"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 19), 'end_date': datetime.datetime(2025, 12, 16, 9, 19), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/RelTR
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 50 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirement is for Ubuntu 20.04 with CUDA support. The selected images are all based on Ubuntu 20.04 and have CUDA support, which matches the specified requirements. Other images either do not match the OS version or do not include CUDA support.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+✓ Target node type: gpu_v100
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ Using manual duration: 1 hours
+
+Creating lease:
+  Name: auto-gpu_v100-202512160817
+  Node Type: gpu_v100
+  Start: 2025-12-16 08:19
+  End: 2025-12-16 09:19
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_v100"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 19), 'end_date': datetime.datetime(2025, 12, 16, 9, 19), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+Retry: RelTR (gpu_a100_pcie, 1h)
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_a100_pcie"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 20), 'end_date': datetime.datetime(2025, 12, 16, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 581, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_a100_pcie"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 20), 'end_date': datetime.datetime(2025, 12, 16, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/RelTR
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 50 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirement specifies Ubuntu 20.04 with CUDA support. The selected images are all based on Ubuntu 20.04 and have CUDA support, which meets the specified requirements. Other images either do not match the OS version or do not have CUDA support.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+✓ Target node type: gpu_a100_pcie
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ Using manual duration: 1 hours
+
+Creating lease:
+  Name: auto-gpu_a100_pcie-202512160818
+  Node Type: gpu_a100_pcie
+  Start: 2025-12-16 08:20
+  End: 2025-12-16 09:20
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_a100_pcie"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 20), 'end_date': datetime.datetime(2025, 12, 16, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+Retry: RelTR (gpu_a100_nvlink, 1h)
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_a100_nvlink"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 20), 'end_date': datetime.datetime(2025, 12, 16, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 581, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_a100_nvlink"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 20), 'end_date': datetime.datetime(2025, 12, 16, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/RelTR
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 50 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 operating system with CUDA support. The selected images are all Ubuntu 20.04 with CUDA, ensuring compatibility with the specified OS version and CUDA requirement. These images are the best fit as they directly match the criteria provided.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+✓ Target node type: gpu_a100_nvlink
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ Using manual duration: 1 hours
+
+Creating lease:
+  Name: auto-gpu_a100_nvlink-202512160818
+  Node Type: gpu_a100_nvlink
+  Start: 2025-12-16 08:20
+  End: 2025-12-16 09:20
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_a100_nvlink"]', 'start_date': datetime.datetime(2025, 12, 16, 8, 20), 'end_date': datetime.datetime(2025, 12, 16, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+Retry: RelTR (gpu_v100, 2h, start in 3h)
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_v100"]', 'start_date': datetime.datetime(2025, 12, 16, 11, 22), 'end_date': datetime.datetime(2025, 12, 16, 13, 22), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 582, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_v100"]', 'start_date': datetime.datetime(2025, 12, 16, 11, 22), 'end_date': datetime.datetime(2025, 12, 16, 13, 22), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/RelTR
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 50 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 operating system with CUDA support. The selected images are all based on Ubuntu 20.04 and include CUDA, which meets the requirement for GPU support. These images are the best candidates as they match all specified criteria.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+✓ Target node type: gpu_v100
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-gpu_v100-202512160822
+  Node Type: gpu_v100
+  Start: 2025-12-16 11:22
+  End: 2025-12-16 13:22
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_v100"]', 'start_date': datetime.datetime(2025, 12, 16, 11, 22), 'end_date': datetime.datetime(2025, 12, 16, 13, 22), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}

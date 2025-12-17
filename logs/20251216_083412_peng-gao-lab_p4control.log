@@ -1,0 +1,129 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/peng-gao-lab/p4control" --site uc
+Start:   2025-12-16T08:34:12Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/p4control
+
+✓ Repository requirements analysis complete:
+  CPU: 4 cores
+  RAM: 8 GB
+  GPU: Not required
+  Disk: 20 GB
+  OS: ubuntu 20.04
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 image without CUDA or GPU support. The selected images are all Ubuntu 20.04 base images without CUDA, which aligns perfectly with the requirements. These images are identified by their names, which do not include 'CUDA' and specify '20.04', ensuring they meet the OS version requirement.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at uc site...
+✓ Found 132 hosts
+✓ Discovered 10 node types: compute_cascadelake_r, compute_gigaio, compute_nvdimm, compute_skylake, fpga, gpu_a100_nvlink, gpu_a100_pcie, gpu_rtx_6000, gpu_v100, storage_nvme
+✓ Found 10 node types available
+
+✓ AI resource selection complete
+  Node type: compute_cascadelake_r
+  Reasoning: The user does not require a GPU, so we should select a general compute node. The 'compute_cascadelake_r' is a suitable choice as it is a general compute node and should meet the CPU and RAM requirements specified by the user.
+✓ AI selected node type: compute_cascadelake_r
+  Reasoning: The user does not require a GPU, so we should select a general compute node. The 'compute_cascadelake_r' is a suitable choice as it is a general compute node and should meet the CPU and RAM requirements specified by the user.
+
+✓ Target node type: compute_cascadelake_r
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements include several specialized software installations and configurations, such as Tofino Switch SDE, BCC, and eBPF support, which may require additional time for setup and testing. Additionally, the need for specific versions of Bison, Flex, and Scapy suggests a complex environment setup that could take longer than usual. Allocating 48 hours provides a buffer to ensure all components are correctly installed and functioning, especially considering potential troubleshooting and validation processes.
+
+Creating lease:
+  Name: auto-compute_cascadelake_r-202512160834
+  Node Type: compute_cascadelake_r
+  Start: 2025-12-16 08:36
+  End: 2025-12-18 08:36
+
+✓ Lease created: 5f18211d-b340-43a1-b40a-d8624bbf4e87
+
+Waiting for lease to activate...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: STARTING, waiting...
+✓ Lease is ACTIVE
+✓ Reservation ID: 6000f21a-8763-4dcb-8921-6f28b6f5378f
+
+============================================================
+Step 6: Launch Bare Metal Server
+============================================================
+
+Launching server:
+  Name: auto-server-202512160836
+  Image ID: 1052ba60-cbe6-45ad-91ac-6ad0807c6e23
+  Key: my-key
+  Network ID: a772a899-ff3d-420b-8b31-1c485092481a
+  Reservation ID: 6000f21a-8763-4dcb-8921-6f28b6f5378f
+
+✓ Server creation initiated: 101951ec-5314-4498-b74d-a839ec6e5a94
+
+Waiting for server to become ACTIVE...
+(This may take 10-30 minutes for bare metal)
+  Status: BUILD
+  Status: ACTIVE
+
+✓ Server is ACTIVE
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 192.5.87.31
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Server Name: auto-server-202512160836
+Server ID: 101951ec-5314-4498-b74d-a839ec6e5a94
+Lease ID: 5f18211d-b340-43a1-b40a-d8624bbf4e87
+Reservation ID: 6000f21a-8763-4dcb-8921-6f28b6f5378f
+Image: CC-Ubuntu22.04-CUDA
+Node Type: compute_cascadelake_r
+Floating IP: 192.5.87.31
+
+SSH Connection:
+  ssh ubuntu@192.5.87.31
+
+✓ Info saved to: auto-server-202512160836_info.json
+End:     2025-12-16T08:46:26Z (exit=0, duration=734s)

@@ -1,0 +1,131 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/RutgersCSSystems/crossprefetch-asplos24-artifacts" --site uc
+Start:   2025-12-16T08:46:31Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/crossprefetch-asplos24-artifacts
+
+✓ Repository requirements analysis complete:
+  CPU: 128 cores
+  RAM: None GB
+  GPU: Not required
+  Disk: 350 GB
+  OS: ubuntu None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify that the OS type should be Ubuntu, with no specific version required, and CUDA is not needed. Therefore, the best candidates are images that are Ubuntu-based without CUDA support. The selected images are: CC-Ubuntu24.04 (ID: 750c344b-7a82-41cb-81bc-b16ea8802e9c), CC-Ubuntu22.04 (ID: a01e2fab-f598-4e11-b00a-c0230ad9957a), CC-Ubuntu20.04 (ID: 8d72a32d-ced8-461a-8ec9-5b80211f9800), CC-Ubuntu24.04_2025-05-05 (ID: 0b7a6958-2e9a-4d13-9551-646bdf289c57), and CC-Ubuntu22.04_2025-05-05 (ID: 9061d094-3f1b-4da5-ba71-be53c0394061). These images meet the criteria of being Ubuntu-based without CUDA support.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at uc site...
+✓ Found 132 hosts
+✓ Discovered 10 node types: compute_cascadelake_r, compute_gigaio, compute_nvdimm, compute_skylake, fpga, gpu_a100_nvlink, gpu_a100_pcie, gpu_rtx_6000, gpu_v100, storage_nvme
+✓ Found 10 node types available
+
+✓ AI resource selection complete
+  Node type: compute_cascadelake_r
+  Reasoning: The user requires a node with 128 CPU cores and 350 GB of disk space, without the need for a GPU. Among the available node types, 'compute_cascadelake_r' is a general compute node that is likely to meet the high CPU core requirement. Since the user does not require a GPU, there is no need to select a GPU node, and the storage-optimized node is not necessary as the disk requirement is moderate.
+✓ AI selected node type: compute_cascadelake_r
+  Reasoning: The user requires a node with 128 CPU cores and 350 GB of disk space, without the need for a GPU. Among the available node types, 'compute_cascadelake_r' is a general compute node that is likely to meet the high CPU core requirement. Since the user does not require a GPU, there is no need to select a GPU node, and the storage-optimized node is not necessary as the disk requirement is moderate.
+
+✓ Target node type: compute_cascadelake_r
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ AI determined duration: 72 hours
+  Reasoning: The requirements specify a high-performance setup with 128 CPU cores and specialized storage needs, including NVMe SSDs and a remote NVMe setup using NVMe-oF. Additionally, the request includes a modified Linux kernel installation and F2FS filesystem support, which suggests a complex setup process. Given the specificity and complexity of the requirements, a 72-hour lease duration is recommended to ensure ample time for setup, testing, and any necessary troubleshooting.
+
+Creating lease:
+  Name: auto-compute_cascadelake_r-202512160847
+  Node Type: compute_cascadelake_r
+  Start: 2025-12-16 08:49
+  End: 2025-12-19 08:49
+
+✓ Lease created: 338196f2-5cb9-4239-b3ea-075519dbeed1
+
+Waiting for lease to activate...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+✓ Lease is ACTIVE
+✓ Reservation ID: 50b021ef-1828-4b17-9f0f-ef6f95995214
+
+============================================================
+Step 6: Launch Bare Metal Server
+============================================================
+
+Launching server:
+  Name: auto-server-202512160849
+  Image ID: 1052ba60-cbe6-45ad-91ac-6ad0807c6e23
+  Key: my-key
+  Network ID: a772a899-ff3d-420b-8b31-1c485092481a
+  Reservation ID: 50b021ef-1828-4b17-9f0f-ef6f95995214
+
+✓ Server creation initiated: 04deb379-32ac-4436-b1d6-e7ef4acf5785
+
+Waiting for server to become ACTIVE...
+(This may take 10-30 minutes for bare metal)
+  Status: BUILD
+  Status: ACTIVE
+
+✓ Server is ACTIVE
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 192.5.87.101
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Server Name: auto-server-202512160849
+Server ID: 04deb379-32ac-4436-b1d6-e7ef4acf5785
+Lease ID: 338196f2-5cb9-4239-b3ea-075519dbeed1
+Reservation ID: 50b021ef-1828-4b17-9f0f-ef6f95995214
+Image: CC-Ubuntu22.04-CUDA
+Node Type: compute_cascadelake_r
+Floating IP: 192.5.87.101
+
+SSH Connection:
+  ssh ubuntu@192.5.87.101
+
+✓ Info saved to: auto-server-202512160849_info.json
+End:     2025-12-16T08:58:18Z (exit=0, duration=707s)

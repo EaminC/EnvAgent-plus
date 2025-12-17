@@ -1,0 +1,93 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/catchorg/Catch2" --site uc
+Start:   2025-12-16T09:17:46Z
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_cascadelake_r"]', 'start_date': datetime.datetime(2025, 12, 16, 9, 20), 'end_date': datetime.datetime(2025, 12, 17, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 582, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_cascadelake_r"]', 'start_date': datetime.datetime(2025, 12, 16, 9, 20), 'end_date': datetime.datetime(2025, 12, 17, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/Catch2
+
+✓ Repository requirements analysis complete:
+  CPU: 1 cores
+  RAM: 1 GB
+  GPU: Not required
+  Disk: None GB
+  OS: ubuntu 20.04
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 75 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify Ubuntu 20.04 without CUDA or GPU support. The selected images are all Ubuntu 20.04 base images without CUDA, which perfectly match the requirements. These images are: CC-Ubuntu20.04 (ID: 8d72a32d-ced8-461a-8ec9-5b80211f9800), CC-Ubuntu20.04-20240326 (ID: 2be02db9-e591-47b4-9dd3-1d23f7a01433), CC-Ubuntu20.04-20240129 (ID: 571a089f-e277-4777-875b-d2ebc8b0739b), CC-Ubuntu20.04-20231115 (ID: e91f8b1d-2e46-499d-90bc-9478effd6ec5), and CC-Ubuntu20.04-20230224 (ID: d80dceaa-c304-42d4-a3be-06a1449ddc98).
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: a772a899-ff3d-420b-8b31-1c485092481a)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at uc site...
+✓ Found 132 hosts
+✓ Discovered 10 node types: compute_cascadelake_r, compute_gigaio, compute_nvdimm, compute_skylake, fpga, gpu_a100_nvlink, gpu_a100_pcie, gpu_rtx_6000, gpu_v100, storage_nvme
+✓ Found 10 node types available
+
+✓ AI resource selection complete
+  Node type: compute_cascadelake_r
+  Reasoning: The user's requirements specify a need for a CPU with 1 core and 1 GB of RAM, with no GPU required. Among the available node types, the compute_cascadelake_r is a general compute node that is suitable for CPU-centric tasks without the need for GPU resources. It matches the user's requirements for a basic compute node.
+✓ AI selected node type: compute_cascadelake_r
+  Reasoning: The user's requirements specify a need for a CPU with 1 core and 1 GB of RAM, with no GPU required. Among the available node types, the compute_cascadelake_r is a general compute node that is suitable for CPU-centric tasks without the need for GPU resources. It matches the user's requirements for a basic compute node.
+
+✓ Target node type: compute_cascadelake_r
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ AI determined duration: 24 hours
+  Reasoning: The resource requirements are minimal with no special or GPU needs, indicating a general-purpose use case. Without specific information on the task or project duration, a default lease duration of 24 hours is appropriate to accommodate typical short-term tasks.
+
+Creating lease:
+  Name: auto-compute_cascadelake_r-202512160918
+  Node Type: compute_cascadelake_r
+  Start: 2025-12-16 09:20
+  End: 2025-12-17 09:20
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_cascadelake_r"]', 'start_date': datetime.datetime(2025, 12, 16, 9, 20), 'end_date': datetime.datetime(2025, 12, 17, 9, 20), 'project_id': '62f12f9c6a28478b976f680a6fa2fa9a', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+End:     2025-12-16T09:18:10Z (exit=1, duration=24s)
