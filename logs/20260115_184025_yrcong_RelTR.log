@@ -1,0 +1,58 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/yrcong/RelTR" --site tacc
+Start:   2026-01-15T18:40:25Z
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 519, in main
+    image_name, image_id = select_image_with_sdk(ai_client, requirements)
+  File "2.0/src/provision_v2.py", line 79, in select_image_with_sdk
+    images = list(os_conn.compute.images())
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/openstack/service_description.py", line 89, in __get__
+    proxy = self._make_proxy(instance)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/openstack/service_description.py", line 289, in _make_proxy
+    found_version = temp_adapter.get_api_major_version()
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 352, in get_api_major_version
+    return self.session.get_api_major_version(auth or self.auth, **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/session.py", line 1289, in get_api_major_version
+    return auth.get_api_major_version(self, **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/base.py", line 497, in get_api_major_version
+    data = get_endpoint_data(discover_versions=discover_versions)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/base.py", line 268, in get_endpoint_data
+    service_catalog = self.get_access(session).service_catalog
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/base.py", line 131, in get_access
+    self.auth_ref = self.get_auth_ref(session)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/v3/base.py", line 185, in get_auth_ref
+    resp = session.post(token_url, json=body, headers=headers,
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/session.py", line 1162, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/session.py", line 985, in request
+    raise exceptions.from_response(resp, method, url)
+keystoneauth1.exceptions.http.Unauthorized: The request you have made requires authentication. (HTTP 401) (Request-ID: req-acf3d63b-0cca-43f6-b96b-bdea0f658f29)
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/RelTR
+
+✓ Repository requirements analysis complete:
+  CPU: 4 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 50 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✗ Image selection failed: The request you have made requires authentication. (HTTP 401) (Request-ID: req-acf3d63b-0cca-43f6-b96b-bdea0f658f29)
+
+
+✗ ERROR: The request you have made requires authentication. (HTTP 401) (Request-ID: req-acf3d63b-0cca-43f6-b96b-bdea0f658f29)
+End:     2026-01-15T18:40:32Z (exit=1, duration=7s)

@@ -11,8 +11,9 @@
 set -euo pipefail
 
 REPOS_FILE="${REPOS_FILE:-repos.txt}"
-LOG_DIR="logs"
-SUMMARY_FILE="summary.csv"
+SITE="${SITE:-uc}"
+LOG_DIR="logs_${SITE}"
+SUMMARY_FILE="${LOG_DIR}/summary.csv"
 
 mkdir -p "$LOG_DIR"
 
@@ -55,12 +56,12 @@ for (( i=0; i< TOTAL; i++ )); do
   start_iso=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
   start_epoch=$(date +%s)
 
-  echo "Command: python 2.0/src/provision_v2.py --repo \"$url\" --site uc" | tee -a "$log_path"
+  echo "Command: python 2.0/src/provision_v2.py --repo \"$url\" --site $SITE" | tee -a "$log_path"
   echo "Start:   $start_iso" | tee -a "$log_path"
 
   # Run the provisioning, capturing the python exit code while still tee-ing logs
   set +e
-  python 2.0/src/provision_v2.py --repo "$url" --site uc 2>&1 | tee -a "$log_path"
+  python 2.0/src/provision_v2.py --repo "$url" --site "$SITE" --key-path ~/.ssh/id_rsa.pub 2>&1 | tee -a "$log_path"
   exit_code=${PIPESTATUS[0]}
   set -e
 

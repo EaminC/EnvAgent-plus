@@ -1,0 +1,94 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/PriorLabs/TabPFN" --site tacc
+Start:   2026-01-15T19:11:43Z
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
+    lease = blazar.lease.create(
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/v1/leases.py", line 32, in create
+    resp, body = self.request_manager.post('/leases', body=values)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 399, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
+    raise exception.BlazarClientException(msg, code=resp.status_code)
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_k80"]', 'start_date': datetime.datetime(2026, 1, 15, 19, 14), 'end_date': datetime.datetime(2026, 1, 17, 19, 14), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 582, in main
+    lease_id, reservation_id = create_lease_with_ai(
+  File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
+    raise Exception(f"Lease creation failed: {str(e)}")
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_k80"]', 'start_date': datetime.datetime(2026, 1, 15, 19, 14), 'end_date': datetime.datetime(2026, 1, 17, 19, 14), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/TabPFN
+
+✓ Repository requirements analysis complete:
+  CPU: 2 cores
+  RAM: 8 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: None GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 407 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 operating system with CUDA support. The images that match these criteria are those that include 'Ubuntu20.04-CUDA' in their names. The selected images are: 'CC-Ubuntu20.04-CUDA' (ID: 91d8e584-bc97-4e81-a1e5-cf858ac3afd7), 'CC-Ubuntu20.04-CUDA11' (ID: a5ed16a4-16fb-4b63-8e62-ad5989bec58a), 'CC-Ubuntu20.04-CUDA-20241101' (ID: a8fddebf-0e01-47f1-ae35-cc7b1dd99ccc), 'CC-Ubuntu20.04-CUDA-20241022' (ID: 5b9fcdd3-739b-4f83-9c9f-fc03c4926120), and 'CC-Ubuntu20.04-CUDA-20241028' (ID: 714e046e-2d0a-4306-b1e3-2a0a99eb4d36). These images are the most recent and relevant to the specified requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 310 hosts
+✓ Discovered 18 node types: compute_arm64, compute_cascadelake, compute_cascadelake_r, compute_gigaio, compute_haswell_ib, compute_icelake_r650, compute_icelake_r750, compute_liqid, compute_skylake, compute_zen3, gpu_k80, gpu_m40, gpu_mi100, gpu_p100, gpu_p100_nvlink, gpu_p100_v100, storage, storage_hierarchy
+✓ Found 18 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_k80
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available GPU nodes, 'gpu_k80' is the only one listed, and it meets the GPU requirement. Although the K80 has 24 GB of total memory, it is split across two GPUs, each with 12 GB, which satisfies the user's requirement for 8 GB of GPU memory. The node also provides sufficient CPU cores and RAM for the user's needs.
+✓ AI selected node type: gpu_k80
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available GPU nodes, 'gpu_k80' is the only one listed, and it meets the GPU requirement. Although the K80 has 24 GB of total memory, it is split across two GPUs, each with 12 GB, which satisfies the user's requirement for 8 GB of GPU memory. The node also provides sufficient CPU cores and RAM for the user's needs.
+
+✓ Target node type: gpu_k80
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements indicate a need for a GPU with CUDA support and PyTorch, which suggests a development or testing environment for machine learning or deep learning tasks. These tasks often require more time for setup, testing, and iteration. Additionally, the inclusion of 'uv for local development' suggests an active development phase, which typically requires more than a single day. Therefore, a 48-hour lease is recommended to accommodate these activities without frequent interruptions.
+
+Creating lease:
+  Name: auto-gpu_k80-202601151912
+  Node Type: gpu_k80
+  Start: 2026-01-15 19:14
+  End: 2026-01-17 19:14
+
+
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_k80"]', 'start_date': datetime.datetime(2026, 1, 15, 19, 14), 'end_date': datetime.datetime(2026, 1, 17, 19, 14), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+End:     2026-01-15T19:12:14Z (exit=1, duration=31s)

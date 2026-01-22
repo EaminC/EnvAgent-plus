@@ -1,0 +1,117 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/iaoing/Silhouette" --site tacc
+Start:   2026-01-15T21:45:23Z
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 397, in launch_server_with_sdk
+    raise Exception("Server entered ERROR state")
+Exception: Server entered ERROR state
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 591, in main
+    server_id, server_info = launch_server_with_sdk(
+  File "2.0/src/provision_v2.py", line 404, in launch_server_with_sdk
+    raise Exception(f"Server launch failed: {str(e)}")
+Exception: Server launch failed: Server entered ERROR state
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/Silhouette
+
+✓ Repository requirements analysis complete:
+  CPU: 1 cores
+  RAM: 4 GB
+  GPU: Not required
+  Disk: 30 GB
+  OS: ubuntu 22.x
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 407 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 22.x OS without CUDA or GPU support. The selected images are all Ubuntu 22.04 versions without CUDA, ensuring compatibility with the specified requirements. These images are the most recent and relevant matches for the given criteria.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 310 hosts
+✓ Discovered 18 node types: compute_arm64, compute_cascadelake, compute_cascadelake_r, compute_gigaio, compute_haswell_ib, compute_icelake_r650, compute_icelake_r750, compute_liqid, compute_skylake, compute_zen3, gpu_k80, gpu_m40, gpu_mi100, gpu_p100, gpu_p100_nvlink, gpu_p100_v100, storage, storage_hierarchy
+✓ Found 18 node types available
+
+✓ AI resource selection complete
+  Node type: compute_cascadelake
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The compute_cascadelake node type is selected as it is a general-purpose compute node that can meet the user's requirements of 1 CPU core, 4 GB RAM, and 30 GB disk space.
+✓ AI selected node type: compute_cascadelake
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The compute_cascadelake node type is selected as it is a general-purpose compute node that can meet the user's requirements of 1 CPU core, 4 GB RAM, and 30 GB disk space.
+
+✓ Target node type: compute_cascadelake
+
+============================================================
+Step 5: Create Hardware Reservation
+============================================================
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements include setting up a virtualized environment with KVM and QEMU, which may require additional configuration and testing time. Persistent Memory support also suggests that the setup may involve specific tuning and validation. Given these factors, a 48-hour lease provides ample time for setup, testing, and any necessary adjustments.
+
+Creating lease:
+  Name: auto-compute_cascadelake-202601152145
+  Node Type: compute_cascadelake
+  Start: 2026-01-15 21:47
+  End: 2026-01-17 21:47
+
+✓ Lease created: c57d564a-dd9b-4c98-a1fe-81ca994ffbf4
+
+Waiting for lease to activate...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+✓ Lease is ACTIVE
+✓ Reservation ID: 4215e146-5f6c-47f3-8555-f223bc4eaa93
+
+============================================================
+Step 6: Launch Bare Metal Server
+============================================================
+
+Launching server:
+  Name: auto-server-202601152147
+  Image ID: c82b931e-4cf8-4366-9878-1ae941f24348
+  Key: my-key
+  Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
+  Reservation ID: 4215e146-5f6c-47f3-8555-f223bc4eaa93
+
+✓ Server creation initiated: 744460d9-70c7-4c2d-a3e2-b0b15b3c56cd
+
+Waiting for server to become ACTIVE...
+(This may take 10-30 minutes for bare metal)
+  Status: BUILD
+  Status: ERROR
+
+
+✗ ERROR: Server launch failed: Server entered ERROR state
+End:     2026-01-15T21:47:38Z (exit=1, duration=135s)

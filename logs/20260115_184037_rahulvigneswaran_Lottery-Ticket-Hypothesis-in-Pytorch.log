@@ -1,0 +1,3 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch" --site tacc
+Start:   2026-01-15T18:40:37Z
+End:     2026-01-15T18:40:38Z (exit=120, duration=1s)

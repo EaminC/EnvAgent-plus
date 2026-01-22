@@ -1,0 +1,4 @@
+# Test subset: GPU-requiring repos
+https://github.com/yrcong/RelTR
+https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch
+https://github.com/PriorLabs/TabPFN
