@@ -1,0 +1,151 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/fmi-basel/neural-decoding-RSNN" --site tacc
+Start:   2026-02-05T00:34:30Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/neural-decoding-RSNN
+
+✓ Repository requirements analysis complete:
+  CPU: 4 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 10 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 OS with CUDA support. However, none of the available images explicitly mention CUDA support for Ubuntu 20.04. Therefore, the best candidates are the most recent Ubuntu 20.04 images, as they are likely to be compatible with CUDA installations. These images are 'CC-Ubuntu20.04-20230531.1', 'CC-Ubuntu20.04-20230531', and 'CC-Ubuntu20.04-20230518'. These images are chosen based on their recency, which increases the likelihood of better compatibility and support for CUDA and GPU functionalities.
+
+✓ Final Selection: CC-Ubuntu20.04-20230531.1
+  Image ID: f4c531e8-5d8b-4d3f-8692-ce2024b38af6
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 85 hosts
+✓ Discovered 2 node types: compute, gpu
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available node types, only GPU nodes can fulfill this requirement. The 'gpu_rtx_6000' node type is selected because it is a GPU node, which is necessary to meet the user's GPU requirement.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available node types, only GPU nodes can fulfill this requirement. The 'gpu_rtx_6000' node type is selected because it is a GPU node, which is necessary to meet the user's GPU requirement.
+
+✓ Target node type: gpu_rtx_6000
+
+============================================================
+Step 5: Create Hardware Reservation (with Fallbacks)
+============================================================
+✓ AI determined duration: 72 hours
+  Reasoning: The requirements specify a need for a GPU with specific capabilities (NVIDIA RTX A4000 or equivalent), CUDA support, and additional software configurations such as a specific library commit and configuration management tools. These factors indicate a complex setup, which typically requires more time to ensure proper configuration and testing. Therefore, a lease duration of 72 hours is recommended to accommodate these needs.
+
+============================================================
+Attempting Hardware Reservation (with fallbacks)
+============================================================
+Fallback chain (3 options):
+  1. Primary: gpu_rtx_6000 for 72h
+  2. Fallback: gpu_rtx_6000 for 36h (reduced duration)
+  3. Fallback: KVM-based VM (when bare metal unavailable)
+
+[Attempt 1/3] Primary: gpu_rtx_6000 for 72h
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 36), 'end_date': datetime.datetime(2026, 2, 8, 0, 36), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 2/3] Fallback: gpu_rtx_6000 for 36h (reduced duration)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 36), 'end_date': datetime.datetime(2026, 2, 6, 12, 36), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 3/3] Fallback: KVM-based VM (when bare metal unavailable)
+    ⚠ KVM fallback (VM-based) - skipping Blazar, will use OpenStack directly
+
+============================================================
+Reservation Fallback Report
+============================================================
+Status: ✓ SUCCESS
+Message: Using KVM fallback (no Blazar lease)
+
+Successful option:
+  Fallback: KVM-based VM (when bare metal unavailable)
+  Node type: KVM (VM-based)
+  Duration: 72h
+
+Fallback chain had 3 options
+
+⚠ Using KVM (VM-based) instead of bare metal
+   This is a temporary fallback - consider retrying later for bare metal
+
+============================================================
+Step 6: Launch KVM-based VM
+============================================================
+⚠ KVM fallback mode: launching VM instead of bare metal
+   (Reservation ID not applicable for KVM)
+
+  Launching KVM VM:
+    Name: auto-server-202602050035
+    Image ID: f4c531e8-5d8b-4d3f-8692-ce2024b38af6
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: 4, RAM: 16GB)...
+  ✓ Selected flavor: m1.xlarge
+    CPU: 8, RAM: 16384MB
+
+  ✓ KVM instance creation initiated: 610fac54-c937-4aad-bfb4-77531388b6b2
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+Creating new floating IP...
+✓ Using floating IP: 129.114.25.68
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Server Name: auto-server-202602050035
+Server ID: 610fac54-c937-4aad-bfb4-77531388b6b2
+Lease ID: kvm-lease
+Image: CC-Ubuntu20.04-20230531.1
+Node Type (requested): gpu_rtx_6000
+Node Type (actual): kvm
+⚠ Running on KVM VM (bare metal unavailable)
+Floating IP: 129.114.25.68
+
+SSH Connection:
+  ssh ubuntu@129.114.25.68
+
+✓ Info saved to: auto-server-202602050035_info.json
+End:     2026-02-05T00:35:17Z (exit=0, duration=47s)

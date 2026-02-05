@@ -1,0 +1,181 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch" --site tacc
+Start:   2026-02-04T23:58:11Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/Lottery-Ticket-Hypothesis-in-Pytorch
+
+✓ Repository requirements analysis complete:
+  CPU: 4 cores
+  RAM: 8 GB
+  GPU: Required
+  GPU Memory: 4 GB
+  Disk: 10 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 407 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 operating system with CUDA support. The images that match these criteria are those with 'CC-Ubuntu20.04-CUDA' in their names. The selected images are 'CC-Ubuntu20.04-CUDA' with various versions and updates, ensuring that they meet the requirement for CUDA support on Ubuntu 20.04.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 310 hosts
+✓ Discovered 18 node types: compute_arm64, compute_cascadelake, compute_cascadelake_r, compute_gigaio, compute_haswell_ib, compute_icelake_r650, compute_icelake_r750, compute_liqid, compute_skylake, compute_zen3, gpu_k80, gpu_m40, gpu_mi100, gpu_p100, gpu_p100_nvlink, gpu_p100_v100, storage, storage_hierarchy
+✓ Found 18 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_k80
+  Reasoning: The user requires a node with a GPU and a minimum of 4 GB GPU memory. Among the available GPU node types, 'gpu_k80' is the most suitable option that meets the GPU requirement. Although the exact GPU memory for K80 is not specified, it is known to have 12 GB of GPU memory, which exceeds the user's requirement. The other GPU node types available (gpu_m40, gpu_mi100, gpu_p100, gpu_p100_nvlink, gpu_p100_v100) are not listed as available, so 'gpu_k80' is selected.
+✓ AI selected node type: gpu_k80
+  Reasoning: The user requires a node with a GPU and a minimum of 4 GB GPU memory. Among the available GPU node types, 'gpu_k80' is the most suitable option that meets the GPU requirement. Although the exact GPU memory for K80 is not specified, it is known to have 12 GB of GPU memory, which exceeds the user's requirement. The other GPU node types available (gpu_m40, gpu_mi100, gpu_p100, gpu_p100_nvlink, gpu_p100_v100) are not listed as available, so 'gpu_k80' is selected.
+
+✓ Target node type: gpu_k80
+
+============================================================
+Step 5: Create Hardware Reservation (with Fallbacks)
+============================================================
+✓ AI determined duration: 48 hours
+  Reasoning: The workload involves GPU usage and CUDA, which suggests a more complex setup than a basic CPU-only task. However, the overall resource requirements are moderate, with 4 CPU cores, 8 GB RAM, and 10 GB disk space. Given these factors, a 48-hour lease duration is appropriate to ensure sufficient time for setup, execution, and any necessary adjustments.
+
+============================================================
+Attempting Hardware Reservation (with fallbacks)
+============================================================
+Fallback chain (11 options):
+  1. Primary: gpu_k80 for 48h
+  2. Fallback: gpu_k80 for 24h (reduced duration)
+  3. GPU Alt 1: gpu_p100 (48h)
+  4. GPU Alt 2: gpu_p100 (24h)
+  5. GPU Alt 3: gpu_m40 (48h)
+  6. GPU Alt 4: gpu_m40 (24h)
+  7. GPU Alt 5: gpu_p100_nvlink (48h)
+  8. GPU Alt 6: gpu_p100_nvlink (24h)
+  9. GPU Alt 7: gpu_p100_v100 (48h)
+  10. GPU Alt 8: gpu_p100_v100 (24h)
+  11. Fallback: KVM-based VM (when bare metal unavailable)
+
+[Attempt 1/11] Primary: gpu_k80 for 48h
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_k80"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 0), 'end_date': datetime.datetime(2026, 2, 7, 0, 0), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 2/11] Fallback: gpu_k80 for 24h (reduced duration)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_k80"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 0), 'end_date': datetime.datetime(2026, 2, 6, 0, 0), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 3/11] GPU Alt 1: gpu_p100 (48h)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 0), 'end_date': datetime.datetime(2026, 2, 7, 0, 0), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 4/11] GPU Alt 2: gpu_p100 (24h)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 0), 'end_date': datetime.datetime(2026, 2, 6, 0, 0), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 5/11] GPU Alt 3: gpu_m40 (48h)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_m40"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 1), 'end_date': datetime.datetime(2026, 2, 7, 0, 1), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 6/11] GPU Alt 4: gpu_m40 (24h)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_m40"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 1), 'end_date': datetime.datetime(2026, 2, 6, 0, 1), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 7/11] GPU Alt 5: gpu_p100_nvlink (48h)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100_nvlink"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 1), 'end_date': datetime.datetime(2026, 2, 7, 0, 1), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 8/11] GPU Alt 6: gpu_p100_nvlink (24h)
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 115, in launch_kvm_instance
+    raise Exception("KVM instance entered ERROR state")
+Exception: KVM instance entered ERROR state
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 600, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 122, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100_nvlink"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 1), 'end_date': datetime.datetime(2026, 2, 6, 0, 1), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 9/11] GPU Alt 7: gpu_p100_v100 (48h)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100_v100"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 1), 'end_date': datetime.datetime(2026, 2, 7, 0, 1), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 10/11] GPU Alt 8: gpu_p100_v100 (24h)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100_v100"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 1), 'end_date': datetime.datetime(2026, 2, 6, 0, 1), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 11/11] Fallback: KVM-based VM (when bare metal unavailable)
+    ⚠ KVM fallback (VM-based) - skipping Blazar, will use OpenStack directly
+
+============================================================
+Reservation Fallback Report
+============================================================
+Status: ✓ SUCCESS
+Message: Using KVM fallback (no Blazar lease)
+
+Successful option:
+  Fallback: KVM-based VM (when bare metal unavailable)
+  Node type: KVM (VM-based)
+  Duration: 48h
+
+Fallback chain had 11 options
+
+⚠ Using KVM (VM-based) instead of bare metal
+   This is a temporary fallback - consider retrying later for bare metal
+
+============================================================
+Step 6: Launch KVM-based VM
+============================================================
+⚠ KVM fallback mode: launching VM instead of bare metal
+   (Reservation ID not applicable for KVM)
+
+  Launching KVM VM:
+    Name: auto-server-202602042359
+    Image ID: c82b931e-4cf8-4366-9878-1ae941f24348
+    Key: my-key
+    Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
+
+  Selecting KVM flavor (CPU: 4, RAM: 8GB)...
+  ⚠ No flavor found matching requirements, using smallest available
+  ✓ Selected flavor: baremetal
+    CPU: 1, RAM: 1MB
+
+  ✓ KVM instance creation initiated: 6e951495-7f1f-44db-b226-c31ca60ac2b0
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+
+✗ ERROR: KVM instance launch failed: KVM instance entered ERROR state
+End:     2026-02-05T00:00:09Z (exit=1, duration=118s)

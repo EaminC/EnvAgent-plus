@@ -1,0 +1,138 @@
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 148, in launch_kvm_instance
+    raise Exception("KVM instance entered ERROR state")
+Exception: KVM instance entered ERROR state
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 600, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 155, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/RelTR
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 50 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements specify Ubuntu 20.04 with CUDA support. However, among the available images, there are no explicit Ubuntu 20.04 images with CUDA mentioned. Therefore, the best candidates are the most recent Ubuntu 20.04 images available, as they may have the potential to support CUDA installations or configurations. These images are 'CC-Ubuntu20.04-20230531.1', 'CC-Ubuntu20.04-20230531', and 'CC-Ubuntu20.04-20230518'.
+
+✓ Final Selection: CC-Ubuntu20.04-20230531.1
+  Image ID: f4c531e8-5d8b-4d3f-8692-ce2024b38af6
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 85 hosts
+✓ Discovered 2 node types: compute, gpu
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available node types, 'gpu_rtx_6000' is a GPU node that likely meets the GPU memory requirement. Since the user prioritizes GPU capability, a GPU node is selected over a general compute node.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with at least 8 GB of memory. Among the available node types, 'gpu_rtx_6000' is a GPU node that likely meets the GPU memory requirement. Since the user prioritizes GPU capability, a GPU node is selected over a general compute node.
+
+✓ Target node type: gpu_rtx_6000
+
+============================================================
+Step 5: Create Hardware Reservation (with Fallbacks)
+============================================================
+✓ AI determined duration: 72 hours
+  Reasoning: The setup involves a GPU with specific CUDA and PyTorch requirements, which indicates a complex workload. Additionally, the need for specific versions of software and libraries suggests that the setup and testing might take additional time. Therefore, a lease duration of 72 hours is recommended to ensure ample time for configuration, testing, and any troubleshooting that might be necessary.
+
+============================================================
+Attempting Hardware Reservation (with fallbacks)
+============================================================
+Fallback chain (3 options):
+  1. Primary: gpu_rtx_6000 for 72h
+  2. Fallback: gpu_rtx_6000 for 36h (reduced duration)
+  3. Fallback: KVM-based VM (when bare metal unavailable)
+
+[Attempt 1/3] Primary: gpu_rtx_6000 for 72h
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 50), 'end_date': datetime.datetime(2026, 2, 8, 0, 50), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 2/3] Fallback: gpu_rtx_6000 for 36h (reduced duration)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_rtx_6000"]', 'start_date': datetime.datetime(2026, 2, 5, 0, 50), 'end_date': datetime.datetime(2026, 2, 6, 12, 50), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 3/3] Fallback: KVM-based VM (when bare metal unavailable)
+    ⚠ KVM fallback (VM-based) - skipping Blazar, will use OpenStack directly
+
+============================================================
+Reservation Fallback Report
+============================================================
+Status: ✓ SUCCESS
+Message: Using KVM fallback (no Blazar lease)
+
+Successful option:
+  Fallback: KVM-based VM (when bare metal unavailable)
+  Node type: KVM (VM-based)
+  Duration: 72h
+
+Fallback chain had 3 options
+
+⚠ Using KVM (VM-based) instead of bare metal
+   This is a temporary fallback - consider retrying later for bare metal
+
+============================================================
+Step 6: Launch KVM-based VM
+============================================================
+⚠ KVM fallback mode: launching VM instead of bare metal
+   (Reservation ID not applicable for KVM)
+
+  Launching KVM VM:
+    Name: auto-server-202602050048
+    Image ID: f4c531e8-5d8b-4d3f-8692-ce2024b38af6
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: 8, RAM: 16GB)...
+  ✓ Selected flavor: m1.xlarge
+    CPU: 8, RAM: 16384MB
+
+  ✓ KVM instance creation initiated: 3552c9e4-62b1-49da-b1ce-8984f381ecad
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+
+✗ ERROR: KVM instance launch failed: KVM instance entered ERROR state

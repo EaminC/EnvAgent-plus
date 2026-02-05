@@ -1,0 +1,2 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/peng-gao-lab/p4control" --site tacc
+Start:   2026-02-04T23:51:54Z

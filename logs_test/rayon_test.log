@@ -1,0 +1,13 @@
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+
+============================================================
+ERROR: Missing OpenStack Credentials
+============================================================
+Missing environment variables: OS_USERNAME
+
+Please run:
+  source /path/to/your/openrc.sh
+

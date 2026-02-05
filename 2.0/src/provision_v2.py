@@ -5,6 +5,12 @@ Automated Hardware Provisioning Tool v2.0
 This tool integrates with the existing EnvAgent-plus API core tools
 and uses the OpenStack SDK via envboot.osutil for better performance.
 
+Features:
+- Intelligent fallback strategy for resource availability
+- Multiple node type options
+- Reduced duration fallbacks
+- KVM (VM-based) fallback option
+
 Usage:
     python provision_v2.py --repo <github_repo_url> [options]
 
@@ -18,6 +24,7 @@ import subprocess
 import json
 from pathlib import Path
 from datetime import datetime, timedelta
+from typing import List, Tuple, Optional, Dict, Any
 
 # Import existing infrastructure
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -29,6 +36,8 @@ from ai_client import AIClient
 from repo_analyzer import RepoAnalyzer
 from image_selector import ImageSelector
 from resource_discovery import ResourceDiscovery
+from reservation_fallback import ReservationFallbackManager, format_fallback_report
+from kvm_launcher import launch_kvm_instance, get_kvm_connection_info
 
 
 def check_openstack_credentials():
@@ -227,17 +236,12 @@ def get_network_id(os_conn, network_name: str = "sharednet1"):
     return network.id
 
 
-def create_lease_with_ai(ai_client: AIClient, requirements: dict, 
-                         node_type: str, lease_name: str, duration_hours: int = None,
-                         filter_expression: str = None, start_delay_minutes: int = 2):
-    """Create Blazar lease with AI-determined duration."""
-    import json  # For JSON encoding resource_properties
-    
-    print(f"\n{'='*60}")
-    print("Step 5: Create Hardware Reservation")
-    print(f"{'='*60}")
-    
-    # AI determines duration
+def determine_lease_duration_with_ai(
+    ai_client: AIClient,
+    requirements: dict,
+    default_hours: int = 48,
+) -> int:
+    """Use AI to determine appropriate lease duration."""
     current_time = datetime.now()
     
     system_prompt = """You are a cloud resource manager.
@@ -245,105 +249,94 @@ Determine appropriate lease duration based on requirements.
 
 Return JSON:
 {
-    "duration_hours": <hours>,
+    "duration_hours": <integer hours>,
     "reasoning": "explanation"
 }
 
-Default to 24 hours if uncertain."""
+For small workloads, suggest 24-48 hours.
+For complex setups, suggest 48-72 hours.
+Default to 48 hours if uncertain."""
     
     user_prompt = f"""Current time: {current_time.strftime('%Y-%m-%d %H:%M:%S')}
 
 Requirements:
 {json.dumps(requirements, indent=2, ensure_ascii=False)}
 
-Determine lease duration in hours."""
+Determine appropriate lease duration in hours."""
     
-    # Use manual duration if provided, otherwise use AI
-    if duration_hours is not None:
-        hours = duration_hours
-        print(f"✓ Using manual duration: {hours} hours")
-    else:
-        try:
-            response = ai_client.ask_with_context(system_prompt, user_prompt, temperature=0.3)
-            result = ai_client.parse_json_response(response)
-            hours = int(result.get('duration_hours', 24))
-            print(f"✓ AI determined duration: {hours} hours")
-            print(f"  Reasoning: {result.get('reasoning', 'N/A')}")
-        except Exception as e:
-            print(f"⚠ AI duration failed, using default 24 hours: {e}")
-            hours = 24
-    
-    # Calculate times
-    start_time = current_time + timedelta(minutes=start_delay_minutes)
-    end_time = start_time + timedelta(hours=hours)
-    
-    start_str = start_time.strftime("%Y-%m-%d %H:%M")
-    end_str = end_time.strftime("%Y-%m-%d %H:%M")
-    
-    print(f"\nCreating lease:")
-    print(f"  Name: {lease_name}")
-    print(f"  Node Type: {node_type}")
-    print(f"  Start: {start_str}")
-    print(f"  End: {end_str}")
-    
-    # Create lease using Blazar client
     try:
-        blazar = blz()
-        # Use provided filter_expression or build default
-        if filter_expression:
-            resource_props = filter_expression
-        else:
-            # Format resource_properties as JSON string for Blazar API
-            resource_props = json.dumps(["=", "$node_type", node_type])
-        
-        lease = blazar.lease.create(
-            name=lease_name,
-            start=start_str,
-            end=end_str,
-            reservations=[{
-                "resource_type": "physical:host",
-                "min": 1,
-                "max": 1,
-                "hypervisor_properties": "",
-                "resource_properties": resource_props,
-            }],
-            events=[]
-        )
-        
-        lease_id = lease['id']
-        print(f"\n✓ Lease created: {lease_id}")
-        
-        # Wait for lease to become ACTIVE
-        print("\nWaiting for lease to activate...")
-        import time
-        max_wait = 300  # 5 minutes
-        start_wait = time.time()
-        
-        while time.time() - start_wait < max_wait:
-            lease_info = blazar.lease.get(lease_id)
-            status = lease_info.get('status', '')
-            
-            if status == 'ACTIVE':
-                print("✓ Lease is ACTIVE")
-                
-                # Extract reservation ID
-                reservations = lease_info.get('reservations', [])
-                if reservations:
-                    reservation_id = reservations[0].get('id', '')
-                    print(f"✓ Reservation ID: {reservation_id}")
-                    return lease_id, reservation_id
-                else:
-                    raise Exception("No reservations found in lease")
-            elif status == 'ERROR':
-                raise Exception("Lease entered ERROR state")
-            else:
-                print(f"  Status: {status}, waiting...")
-                time.sleep(10)
-        
-        raise Exception("Timeout waiting for lease activation")
-        
+        response = ai_client.ask_with_context(system_prompt, user_prompt, temperature=0.3)
+        result = ai_client.parse_json_response(response)
+        hours = int(result.get('duration_hours', default_hours))
+        print(f"✓ AI determined duration: {hours} hours")
+        print(f"  Reasoning: {result.get('reasoning', 'N/A')}")
+        return hours
     except Exception as e:
-        raise Exception(f"Lease creation failed: {str(e)}")
+        print(f"⚠ AI duration failed, using default {default_hours} hours: {e}")
+        return default_hours
+
+
+def create_lease_with_fallbacks(
+    ai_client: AIClient,
+    requirements: dict,
+    primary_node_type: str,
+    available_node_types: List[str],
+    lease_basename: str,
+    duration_hours: int = None,
+    start_delay_minutes: int = 2,
+) -> Tuple[str, str, str]:
+    """
+    Create lease with intelligent fallback strategy.
+    
+    Returns:
+        (lease_id, reservation_id, used_node_type)
+    """
+    print(f"\n{'='*60}")
+    print("Step 5: Create Hardware Reservation (with Fallbacks)")
+    print(f"{'='*60}")
+    
+    # Determine duration
+    if duration_hours is None:
+        duration_hours = determine_lease_duration_with_ai(ai_client, requirements)
+    else:
+        print(f"✓ Using manual duration: {duration_hours} hours")
+    
+    # Initialize fallback manager
+    fallback_mgr = ReservationFallbackManager(ai_client)
+    
+    # Generate fallback chain
+    fallback_chain = fallback_mgr.generate_fallback_chain(
+        primary_node_type=primary_node_type,
+        requirements=requirements,
+        available_node_types=available_node_types,
+        primary_duration_hours=duration_hours,
+        min_duration_hours=2,
+    )
+    
+    # Attempt reservations
+    success, lease_id, reservation_id, message, successful_option = \
+        fallback_mgr.attempt_reservations(
+            lease_basename=lease_basename,
+            fallback_chain=fallback_chain,
+            start_delay_minutes=start_delay_minutes,
+            max_attempts=None,  # Try full chain to allow KVM fallback
+        )
+    
+    # Print report
+    print(format_fallback_report(success, fallback_chain, successful_option, message))
+    
+    if not success:
+        raise Exception(f"All reservation attempts failed: {message}")
+    
+    # Handle KVM fallback case
+    if successful_option and successful_option.is_kvm:
+        print("\n⚠ Using KVM (VM-based) instead of bare metal")
+        print("   This is a temporary fallback - consider retrying later for bare metal")
+        return lease_id, reservation_id, "kvm"
+    
+    used_node_type = successful_option.node_type if successful_option else primary_node_type
+    print(f"\n✓ Reservation successful: {used_node_type}")
+    return lease_id, reservation_id, used_node_type
 
 
 def launch_server_with_sdk(os_conn, server_name: str, image_id: str, 
@@ -577,20 +570,50 @@ def main():
         
         print(f"\n✓ Target node type: {node_type}")
         
-        # Step 5: Create lease
-        lease_name = args.lease_name or f"auto-{node_type}-{datetime.now().strftime('%Y%m%d%H%M')}"
-        lease_id, reservation_id = create_lease_with_ai(
-            ai_client, requirements, node_type, lease_name,
+        # Step 5: Create lease with fallback strategy
+        lease_basename = args.lease_name or f"auto-{node_type}"
+        available_node_types = available_resources.get('node_types', [node_type]) if available_resources else [node_type]
+        
+        lease_id, reservation_id, used_node_type = create_lease_with_fallbacks(
+            ai_client=ai_client,
+            requirements=requirements,
+            primary_node_type=node_type,
+            available_node_types=available_node_types,
+            lease_basename=lease_basename,
             duration_hours=args.lease_duration,
-            filter_expression=filter_expression,
             start_delay_minutes=args.start_delay_minutes
         )
         
         # Step 6: Launch server
         server_name = args.server_name or f"auto-server-{datetime.now().strftime('%Y%m%d%H%M')}"
-        server_id, server_info = launch_server_with_sdk(
-            os_conn, server_name, image_id, key_name, network_id, reservation_id
-        )
+        
+        # Handle KVM fallback differently
+        if used_node_type == "kvm":
+            print(f"\n{'='*60}")
+            print("Step 6: Launch KVM-based VM")
+            print(f"{'='*60}")
+            print("⚠ KVM fallback mode: launching VM instead of bare metal")
+            print("   (Reservation ID not applicable for KVM)")
+            reservation_id = None  # KVM doesn't use Blazar reservations
+            
+            # Launch KVM instance
+            server_id, server_info = launch_kvm_instance(
+                os_conn=os_conn,
+                server_name=server_name,
+                image_id=image_id,
+                key_name=key_name,
+                network_id=network_id,
+                cpu_cores=requirements.get('cpu_cores', 2),
+                ram_gb=requirements.get('ram_gb', 2),
+            )
+        else:
+            print(f"\n{'='*60}")
+            print("Step 6: Launch Bare Metal Server")
+            print(f"{'='*60}")
+            server_id, server_info = launch_server_with_sdk(
+                os_conn, server_name, image_id, key_name, network_id, reservation_id
+            )
+
         
         # Step 7: Floating IP
         floating_ip = None
@@ -604,9 +627,15 @@ def main():
         print(f"Server Name: {server_name}")
         print(f"Server ID: {server_id}")
         print(f"Lease ID: {lease_id}")
-        print(f"Reservation ID: {reservation_id}")
+        if reservation_id:
+            print(f"Reservation ID: {reservation_id}")
         print(f"Image: {image_name}")
-        print(f"Node Type: {node_type}")
+        print(f"Node Type (requested): {node_type}")
+        print(f"Node Type (actual): {used_node_type}")
+        
+        if used_node_type == "kvm":
+            print(f"⚠ Running on KVM VM (bare metal unavailable)")
+
         
         if floating_ip:
             print(f"Floating IP: {floating_ip}")

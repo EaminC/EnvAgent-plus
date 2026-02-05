@@ -1,0 +1,149 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/peng-gao-lab/p4control" --site tacc
+Start:   2026-02-05T00:35:22Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/p4control
+
+✓ Repository requirements analysis complete:
+  CPU: 4 cores
+  RAM: 8 GB
+  GPU: Not required
+  Disk: 20 GB
+  OS: ubuntu 20.04
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirement specifies an Ubuntu 20.04 OS without CUDA or GPU support. The selected images are all Ubuntu 20.04 versions without CUDA, ensuring compatibility with the specified OS version and requirements. These images are the most recent and relevant options available for Ubuntu 20.04, ensuring up-to-date security and feature support.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 85 hosts
+✓ Discovered 2 node types: compute, gpu
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The user's requirements of 4 CPU cores, 8 GB RAM, and 20 GB disk can be met by a general compute node. Since GPU is not required, there is no need to consider GPU nodes.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The user's requirements of 4 CPU cores, 8 GB RAM, and 20 GB disk can be met by a general compute node. Since GPU is not required, there is no need to consider GPU nodes.
+
+✓ Target node type: compute
+
+============================================================
+Step 5: Create Hardware Reservation (with Fallbacks)
+============================================================
+✓ AI determined duration: 48 hours
+  Reasoning: The workload requires specific software installations and configurations such as Tofino Switch SDE, BCC, and eBPF support, which can be complex and time-consuming to set up. However, the hardware requirements are relatively modest, and no GPU is required. Given these factors, a lease duration of 48 hours is appropriate to ensure sufficient time for setup, testing, and any necessary adjustments.
+
+============================================================
+Attempting Hardware Reservation (with fallbacks)
+============================================================
+Fallback chain (3 options):
+  1. Primary: compute for 48h
+  2. Fallback: compute for 24h (reduced duration)
+  3. Fallback: KVM-based VM (when bare metal unavailable)
+
+[Attempt 1/3] Primary: compute for 48h
+    ✗ Failed: ERROR: The physical:host resource type is not supported
+    Waiting 5s before next attempt...
+
+[Attempt 2/3] Fallback: compute for 24h (reduced duration)
+    ✗ Failed: ERROR: The physical:host resource type is not supported
+    Waiting 5s before next attempt...
+
+[Attempt 3/3] Fallback: KVM-based VM (when bare metal unavailable)
+    ⚠ KVM fallback (VM-based) - skipping Blazar, will use OpenStack directly
+
+============================================================
+Reservation Fallback Report
+============================================================
+Status: ✓ SUCCESS
+Message: Using KVM fallback (no Blazar lease)
+
+Successful option:
+  Fallback: KVM-based VM (when bare metal unavailable)
+  Node type: KVM (VM-based)
+  Duration: 48h
+
+Fallback chain had 3 options
+
+⚠ Using KVM (VM-based) instead of bare metal
+   This is a temporary fallback - consider retrying later for bare metal
+
+============================================================
+Step 6: Launch KVM-based VM
+============================================================
+⚠ KVM fallback mode: launching VM instead of bare metal
+   (Reservation ID not applicable for KVM)
+
+  Launching KVM VM:
+    Name: auto-server-202602050036
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: 4, RAM: 8GB)...
+  ✓ Selected flavor: m1.large
+    CPU: 4, RAM: 8192MB
+
+  ✓ KVM instance creation initiated: 5e3c51a8-9b04-4c2f-a5cd-60bc68daa069
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+Creating new floating IP...
+✓ Using floating IP: 129.114.25.50
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Server Name: auto-server-202602050036
+Server ID: 5e3c51a8-9b04-4c2f-a5cd-60bc68daa069
+Lease ID: kvm-lease
+Image: CC-Ubuntu22.04-CUDA
+Node Type (requested): compute
+Node Type (actual): kvm
+⚠ Running on KVM VM (bare metal unavailable)
+Floating IP: 129.114.25.50
+
+SSH Connection:
+  ssh ubuntu@129.114.25.50
+
+✓ Info saved to: auto-server-202602050036_info.json
+End:     2026-02-05T00:36:16Z (exit=0, duration=54s)
