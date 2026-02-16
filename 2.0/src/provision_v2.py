@@ -541,7 +541,9 @@ def main():
             print(f"\n{'='*60}")
             print("Discovering Available Resources")
             print(f"{'='*60}")
-            available_resources = resource_discovery.discover_resources(args.site)
+            available_resources = resource_discovery.discover_resources(
+                args.site, requirements=requirements
+            )
             
             if available_resources and available_resources.get('node_types'):
                 print(f"✓ Found {len(available_resources['node_types'])} node types available")

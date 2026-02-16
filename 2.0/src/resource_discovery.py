@@ -115,8 +115,58 @@ class ResourceDiscovery:
         except Exception:
             return False
     
-    def discover_resources(self, site: Optional[str] = None) -> Dict[str, Any]:
-        """Discover resources (simplified version using Blazar client)"""
+    def _is_reservable(self, host: Dict[str, Any]) -> bool:
+        """Check if host is marked as reservable (handles bool or string)."""
+        r = host.get('reservable', False)
+        if isinstance(r, bool):
+            return r
+        return str(r).lower() in ('true', '1', 'yes')
+
+    def _fit_score(self, node_type: str, requirements: Dict[str, Any]) -> float:
+        """
+        Score how well a node type matches requirements (higher = better).
+        Used so we prefer GPU when gpu_required, compute for general, and KVM is not last.
+        """
+        nt_lower = node_type.lower()
+        gpu_required = requirements.get('gpu_required', False)
+        if gpu_required and 'gpu' in nt_lower:
+            return 2.0
+        if 'compute' in nt_lower:
+            return 1.0
+        if 'kvm' in nt_lower or 'vm' in nt_lower:
+            return 0.5   # KVM / VM types: not worst, but below bare-metal compute
+        if 'gpu' in nt_lower:
+            return 0.3
+        if 'storage' in nt_lower:
+            return 0.2
+        return 0.0
+
+    def _rank_node_types(
+        self,
+        node_types: set,
+        node_type_stats: Dict[str, Dict[str, int]],
+        requirements: Optional[Dict[str, Any]] = None,
+    ) -> List[str]:
+        """
+        Sort node types by: (1) reservable count desc, (2) requirement fit desc, (3) name.
+        So we try types with more available/reservable capacity first, then by fit (e.g. GPU vs compute vs KVM).
+        """
+        req = requirements or {}
+        def sort_key(nt: str) -> tuple:
+            stats = node_type_stats.get(nt, {'total': 0, 'reservable': 0})
+            reservable = stats.get('reservable', 0)
+            total = stats.get('total', 0)
+            fit = self._fit_score(nt, req)
+            # Primary: more reservable first; secondary: total capacity; tertiary: fit; then name
+            return (-reservable, -total, -fit, nt)
+        return sorted(node_types, key=sort_key)
+
+    def discover_resources(
+        self,
+        site: Optional[str] = None,
+        requirements: Optional[Dict[str, Any]] = None,
+    ) -> Dict[str, Any]:
+        """Discover resources and return node_types ranked by availability and requirement fit."""
         if site is None:
             site = self.default_site
         
@@ -126,19 +176,33 @@ class ResourceDiscovery:
         hosts = self.list_reservation_hosts()
         print(f"✓ Found {len(hosts)} hosts")
         
-        # Extract unique node_types
+        # Per-node_type: total count and reservable count
         node_types = set()
+        node_type_stats: Dict[str, Dict[str, int]] = {}
         for host in hosts:
             node_type = host.get('node_type', '')
             if node_type:
                 node_types.add(node_type)
+                if node_type not in node_type_stats:
+                    node_type_stats[node_type] = {'total': 0, 'reservable': 0}
+                node_type_stats[node_type]['total'] += 1
+                if self._is_reservable(host):
+                    node_type_stats[node_type]['reservable'] += 1
         
-        print(f"✓ Discovered {len(node_types)} node types: {', '.join(sorted(node_types))}")
+        # Rank by availability and requirement fit (not just alphabetical)
+        ranked = self._rank_node_types(node_types, node_type_stats, requirements)
+        print(f"✓ Discovered {len(node_types)} node types (ranked by availability & fit):")
+        for nt in ranked:
+            s = node_type_stats.get(nt, {})
+            r = s.get('reservable', 0)
+            t = s.get('total', 0)
+            print(f"    {nt}: {r} reservable / {t} total")
         
         return {
             'site': site,
             'total_hosts': len(hosts),
-            'node_types': sorted(list(node_types)),
+            'node_types': ranked,
+            'node_type_stats': node_type_stats,
             'hosts': hosts
         }
     
