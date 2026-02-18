@@ -1,10 +1,7 @@
-https://github.com/iaoing/Silhouette
-https://github.com/anvil-verifier/anvil
-https://github.com/tinoryj/ELECT
-https://github.com/snu-csl/rfuse
-https://github.com/sbu-fsl/Metis
-https://github.com/facebook/zstd
-https://github.com/jqlang/jq
-https://github.com/ponylang/ponyc
-https://github.com/catchorg/Catch2
-https://github.com/fmtlib/fmt
+https://github.com/rayon-rs/rayon
+https://github.com/tokio-rs/bytes
+https://github.com/tokio-rs/tokio
+https://github.com/tokio-rs/tracing
+https://github.com/darkreader/darkreader
+https://github.com/mui/material-ui
+https://github.com/vuejs/core

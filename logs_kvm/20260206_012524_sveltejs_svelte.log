@@ -1,0 +1,166 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/sveltejs/svelte" --site tacc
+Start:   2026-02-06T01:25:24Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/svelte
+
+✓ Repository requirements analysis complete:
+  CPU: 2 cores
+  RAM: 4 GB
+  GPU: Not required
+  Disk: 10 GB
+  OS: ubuntu 20.04
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 407 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 image without CUDA or GPU support. The selected images are all based on Ubuntu 20.04 and do not include CUDA in their naming, indicating they do not have CUDA support. These images are therefore suitable for environments where CUDA and GPU support are not needed.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 310 hosts
+✓ Discovered 18 node types: compute_arm64, compute_cascadelake, compute_cascadelake_r, compute_gigaio, compute_haswell_ib, compute_icelake_r650, compute_icelake_r750, compute_liqid, compute_skylake, compute_zen3, gpu_k80, gpu_m40, gpu_mi100, gpu_p100, gpu_p100_nvlink, gpu_p100_v100, storage, storage_hierarchy
+✓ Found 18 node types available
+
+✓ AI resource selection complete
+  Node type: compute_cascadelake
+  Reasoning: The user does not require a GPU, so we should select a general compute node. The compute_cascadelake node type is suitable as it is a general-purpose compute node that can meet the user's requirements of 2 CPU cores, 4 GB RAM, and 10 GB disk space.
+✓ AI selected node type: compute_cascadelake
+  Reasoning: The user does not require a GPU, so we should select a general compute node. The compute_cascadelake node type is suitable as it is a general-purpose compute node that can meet the user's requirements of 2 CPU cores, 4 GB RAM, and 10 GB disk space.
+
+✓ Target node type: compute_cascadelake
+
+============================================================
+Step 5: Create Hardware Reservation (with Fallbacks)
+============================================================
+✓ AI determined duration: 24 hours
+  Reasoning: The workload involves setting up a development environment with Node.js and related tools, which is relatively straightforward and does not require a GPU or large resources. Therefore, a lease duration of 24 hours should be sufficient for this small workload.
+
+============================================================
+Attempting Hardware Reservation (with fallbacks)
+============================================================
+Fallback chain (13 options):
+  1. Primary: compute_cascadelake for 24h
+  2. Fallback: compute_cascadelake for 12h (reduced duration)
+  3. Alt 1: compute_icelake_r750 (24h)
+  4. Alt 2: compute_icelake_r750 (12h, reduced)
+  5. Alt 3: compute_icelake_r650 (24h)
+  6. Alt 4: compute_icelake_r650 (12h, reduced)
+  7. Alt 5: compute_cascadelake_r (24h)
+  8. Alt 6: compute_cascadelake_r (12h, reduced)
+  9. Alt 7: compute_skylake (24h)
+  10. Alt 8: compute_skylake (12h, reduced)
+  11. Alt 9: compute_haswell_ib (24h)
+  12. Alt 10: compute_haswell_ib (12h, reduced)
+  13. Fallback: KVM-based VM (when bare metal unavailable)
+
+[Attempt 1/13] Primary: compute_cascadelake for 24h
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_cascadelake"]', 'start_date': datetime.datetime(2026, 2, 6, 1, 27), 'end_date': datetime.datetime(2026, 2, 7, 1, 27), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 2/13] Fallback: compute_cascadelake for 12h (reduced duration)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_cascadelake"]', 'start_date': datetime.datetime(2026, 2, 6, 1, 28), 'end_date': datetime.datetime(2026, 2, 6, 13, 28), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 3/13] Alt 1: compute_icelake_r750 (24h)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_icelake_r750"]', 'start_date': datetime.datetime(2026, 2, 6, 1, 28), 'end_date': datetime.datetime(2026, 2, 7, 1, 28), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 4/13] Alt 2: compute_icelake_r750 (12h, reduced)
+    ✗ Failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "compute_icelake_r750"]', 'start_date': datetime.datetime(2026, 2, 6, 1, 28), 'end_date': datetime.datetime(2026, 2, 6, 13, 28), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+    Waiting 5s before next attempt...
+
+[Attempt 5/13] Alt 3: compute_icelake_r650 (24h)
+    Waiting for lease activation (timeout: 300s)...
+    ✓ Lease created and ACTIVE (ID: 2a8b4ee8-e15f-4d71-a910-2ef812becd77)
+
+============================================================
+Reservation Fallback Report
+============================================================
+Status: ✓ SUCCESS
+Message: ✓ Lease created and ACTIVE (ID: 2a8b4ee8-e15f-4d71-a910-2ef812becd77)
+
+Successful option:
+  Alt 3: compute_icelake_r650 (24h)
+  Node type: compute_icelake_r650
+  Duration: 24h
+
+Fallback chain had 13 options
+
+✓ Reservation successful: compute_icelake_r650
+
+============================================================
+Step 6: Launch Bare Metal Server
+============================================================
+
+============================================================
+Step 6: Launch Bare Metal Server
+============================================================
+
+Launching server:
+  Name: auto-server-202602060128
+  Image ID: c82b931e-4cf8-4366-9878-1ae941f24348
+  Key: my-key
+  Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
+  Reservation ID: 80c63a6f-3dee-4ee2-8193-ebaf029adfe4
+
+✓ Server creation initiated: 5a531d0e-9bf5-4e9e-9126-0f408759f203
+
+Waiting for server to become ACTIVE...
+(This may take 10-30 minutes for bare metal)
+  Status: BUILD
+  Status: ACTIVE
+
+✓ Server is ACTIVE
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+Creating new floating IP...
+✓ Using floating IP: 129.114.108.127
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Server Name: auto-server-202602060128
+Server ID: 5a531d0e-9bf5-4e9e-9126-0f408759f203
+Lease ID: 2a8b4ee8-e15f-4d71-a910-2ef812becd77
+Reservation ID: 80c63a6f-3dee-4ee2-8193-ebaf029adfe4
+Image: CC-Ubuntu22.04-CUDA
+Node Type (requested): compute_cascadelake
+Node Type (actual): compute_icelake_r650
+Floating IP: 129.114.108.127
+
+SSH Connection:
+  ssh ubuntu@129.114.108.127
+
+✓ Info saved to: auto-server-202602060128_info.json
+End:     2026-02-06T01:37:18Z (exit=0, duration=714s)

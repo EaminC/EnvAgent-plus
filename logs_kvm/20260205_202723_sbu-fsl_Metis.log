@@ -1,5 +1,5 @@
-Command: python 2.0/src/provision_v2.py --repo "https://github.com/anvil-verifier/anvil" --site tacc
-Start:   2026-02-05T19:52:49Z
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/sbu-fsl/Metis" --site tacc
+Start:   2026-02-05T20:27:23Z
 
 ============================================================
 Automated Hardware Provisioning Tool v2.0
@@ -11,14 +11,14 @@ Automated Hardware Provisioning Tool v2.0
 ============================================================
 Step 1: Repository Analysis
 ============================================================
-✓ Repository cloned to: /tmp/anvil
+✓ Repository cloned to: /tmp/Metis
 
 ✓ Repository requirements analysis complete:
-  CPU: 2 cores
-  RAM: 4 GB
+  CPU: 4 cores
+  RAM: 8 GB
   GPU: Not required
-  Disk: 10 GB
-  OS: ubuntu 20.04
+  Disk: 50 GB
+  OS: ubuntu 22.04
   CUDA: Not required
 
 ============================================================
@@ -26,9 +26,10 @@ Step 2: Image Selection
 ============================================================
 ✓ Found 407 available CC-* images
 ✓ AI Stage 1: Selected 5 candidates
-  Reasoning: The requirements specify an Ubuntu 20.04 image without CUDA or GPU support. The selected images are all Ubuntu 20.04 versions without any CUDA designation, ensuring they meet the requirement of not having CUDA support. These images are also the most recent non-CUDA Ubuntu 20.04 versions available, ensuring they are up-to-date and suitable for general use without GPU dependencies.
-⚠ No candidates found, using fallback selection
-✓ Fallback image: CC-Ubuntu22.04-CUDA
+  Reasoning: The requirements specify an Ubuntu 22.04 image without CUDA or GPU support. The selected images are all based on Ubuntu 22.04 and do not have CUDA in their names, indicating they do not include CUDA support. These images meet the criteria of being the correct OS version and not having unnecessary CUDA support, making them suitable candidates.
+
+✓ Final Selection: CC-Ubuntu22.04
+  Image ID: 14af624e-2629-4fb5-8ee6-f94ea5bf5195
 
 ============================================================
 Step 3: SSH Key Management
@@ -51,9 +52,9 @@ Discovering resources at tacc site...
 
 ✓ AI resource selection complete
   Node type: compute_cascadelake
-  Reasoning: The user does not require a GPU, so a general compute node is suitable. The compute_cascadelake node type is selected as it is a general-purpose compute node that can meet the user's requirements of 2 CPU cores, 4 GB RAM, and 10 GB disk space.
+  Reasoning: The user requires a node with 4 CPU cores, 8 GB RAM, and 50 GB disk space without a GPU. Among the available compute node types, 'compute_cascadelake' is a general-purpose compute node that can satisfy these requirements. It is suitable for workloads that do not require GPU acceleration.
 ✓ AI selected node type: compute_cascadelake
-  Reasoning: The user does not require a GPU, so a general compute node is suitable. The compute_cascadelake node type is selected as it is a general-purpose compute node that can meet the user's requirements of 2 CPU cores, 4 GB RAM, and 10 GB disk space.
+  Reasoning: The user requires a node with 4 CPU cores, 8 GB RAM, and 50 GB disk space without a GPU. Among the available compute node types, 'compute_cascadelake' is a general-purpose compute node that can satisfy these requirements. It is suitable for workloads that do not require GPU acceleration.
 
 ✓ Target node type: compute_cascadelake
 
@@ -61,7 +62,7 @@ Discovering resources at tacc site...
 Step 5: Create Hardware Reservation (with Fallbacks)
 ============================================================
 ✓ AI determined duration: 48 hours
-  Reasoning: The workload involves setting up a Rust programming environment, installing the Verus tool, and accessing a Kubernetes cluster. While these tasks are not overly complex, they do require some setup time and testing. Given the modest resource requirements and the specific software setup, a 48-hour lease duration is appropriate to ensure ample time for configuration and any troubleshooting that may arise.
+  Reasoning: The workload involves setting up a specific Linux environment with multiple kernel versions and installing specialized tools like SPIN model checker and Swarm Verification, along with specific Python packages. These requirements suggest a moderately complex setup, but not overly complex since it doesn't involve GPU or CUDA dependencies. A 48-hour lease should provide sufficient time to configure the environment and perform necessary tasks.
 
 ============================================================
 Attempting Hardware Reservation (with fallbacks)
@@ -83,13 +84,13 @@ Fallback chain (13 options):
 
 [Attempt 1/13] Primary: compute_cascadelake for 48h
     Waiting for lease activation (timeout: 300s)...
-    ✓ Lease created and ACTIVE (ID: 41ad4108-f39c-4caf-8105-94bc870f1513)
+    ✓ Lease created and ACTIVE (ID: c93ee35f-539a-46a2-baba-18d01fb26f40)
 
 ============================================================
 Reservation Fallback Report
 ============================================================
 Status: ✓ SUCCESS
-Message: ✓ Lease created and ACTIVE (ID: 41ad4108-f39c-4caf-8105-94bc870f1513)
+Message: ✓ Lease created and ACTIVE (ID: c93ee35f-539a-46a2-baba-18d01fb26f40)
 
 Successful option:
   Primary: compute_cascadelake for 48h
@@ -109,13 +110,13 @@ Step 6: Launch Bare Metal Server
 ============================================================
 
 Launching server:
-  Name: auto-server-202602051955
-  Image ID: c82b931e-4cf8-4366-9878-1ae941f24348
+  Name: auto-server-202602052029
+  Image ID: 14af624e-2629-4fb5-8ee6-f94ea5bf5195
   Key: my-key
   Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
-  Reservation ID: b66ae172-f7c5-4953-912b-8275d15b3d60
+  Reservation ID: 5fc3046a-38f9-442b-bc0a-795aca6aa08a
 
-✓ Server creation initiated: 51960efc-bb26-4212-b0d5-3a6d700e1f09
+✓ Server creation initiated: d0a027b7-e9e8-4113-b6ad-6161c24be716
 
 Waiting for server to become ACTIVE...
 (This may take 10-30 minutes for bare metal)
@@ -128,23 +129,23 @@ Waiting for server to become ACTIVE...
 Step 7: Assign Floating IP
 ============================================================
 Creating new floating IP...
-✓ Using floating IP: 129.114.109.5
+✓ Using floating IP: 129.114.108.64
 ✓ Floating IP attached
 
 ============================================================
 ✓ Provisioning Complete!
 ============================================================
-Server Name: auto-server-202602051955
-Server ID: 51960efc-bb26-4212-b0d5-3a6d700e1f09
-Lease ID: 41ad4108-f39c-4caf-8105-94bc870f1513
-Reservation ID: b66ae172-f7c5-4953-912b-8275d15b3d60
-Image: CC-Ubuntu22.04-CUDA
+Server Name: auto-server-202602052029
+Server ID: d0a027b7-e9e8-4113-b6ad-6161c24be716
+Lease ID: c93ee35f-539a-46a2-baba-18d01fb26f40
+Reservation ID: 5fc3046a-38f9-442b-bc0a-795aca6aa08a
+Image: CC-Ubuntu22.04
 Node Type (requested): compute_cascadelake
 Node Type (actual): compute_cascadelake
-Floating IP: 129.114.109.5
+Floating IP: 129.114.108.64
 
 SSH Connection:
-  ssh ubuntu@129.114.109.5
+  ssh ubuntu@129.114.108.64
 
-✓ Info saved to: auto-server-202602051955_info.json
-End:     2026-02-05T20:04:23Z (exit=0, duration=694s)
+✓ Info saved to: auto-server-202602052029_info.json
+End:     2026-02-05T20:36:47Z (exit=0, duration=564s)

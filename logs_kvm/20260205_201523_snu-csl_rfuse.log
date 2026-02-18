@@ -1,5 +1,5 @@
-Command: python 2.0/src/provision_v2.py --repo "https://github.com/anvil-verifier/anvil" --site tacc
-Start:   2026-02-05T19:52:49Z
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/snu-csl/rfuse" --site tacc
+Start:   2026-02-05T20:15:23Z
 
 ============================================================
 Automated Hardware Provisioning Tool v2.0
@@ -11,13 +11,13 @@ Automated Hardware Provisioning Tool v2.0
 ============================================================
 Step 1: Repository Analysis
 ============================================================
-✓ Repository cloned to: /tmp/anvil
+✓ Repository cloned to: /tmp/rfuse
 
 ✓ Repository requirements analysis complete:
-  CPU: 2 cores
-  RAM: 4 GB
+  CPU: 80 cores
+  RAM: 256 GB
   GPU: Not required
-  Disk: 10 GB
+  Disk: None GB
   OS: ubuntu 20.04
   CUDA: Not required
 
@@ -26,7 +26,7 @@ Step 2: Image Selection
 ============================================================
 ✓ Found 407 available CC-* images
 ✓ AI Stage 1: Selected 5 candidates
-  Reasoning: The requirements specify an Ubuntu 20.04 image without CUDA or GPU support. The selected images are all Ubuntu 20.04 versions without any CUDA designation, ensuring they meet the requirement of not having CUDA support. These images are also the most recent non-CUDA Ubuntu 20.04 versions available, ensuring they are up-to-date and suitable for general use without GPU dependencies.
+  Reasoning: The requirements specify an Ubuntu 20.04 image without CUDA or GPU support. The selected images are all Ubuntu 20.04 without any CUDA or GPU indications in their names. These images meet the OS type and version requirements while ensuring no unnecessary CUDA support is included.
 ⚠ No candidates found, using fallback selection
 ✓ Fallback image: CC-Ubuntu22.04-CUDA
 
@@ -50,55 +50,55 @@ Discovering resources at tacc site...
 ✓ Found 18 node types available
 
 ✓ AI resource selection complete
-  Node type: compute_cascadelake
-  Reasoning: The user does not require a GPU, so a general compute node is suitable. The compute_cascadelake node type is selected as it is a general-purpose compute node that can meet the user's requirements of 2 CPU cores, 4 GB RAM, and 10 GB disk space.
-✓ AI selected node type: compute_cascadelake
-  Reasoning: The user does not require a GPU, so a general compute node is suitable. The compute_cascadelake node type is selected as it is a general-purpose compute node that can meet the user's requirements of 2 CPU cores, 4 GB RAM, and 10 GB disk space.
+  Node type: compute_icelake_r750
+  Reasoning: The user's requirements specify 80 CPU cores and 256 GB of RAM without the need for a GPU. Among the available compute node types, 'compute_icelake_r750' is likely to have a high core count and sufficient RAM capacity, making it suitable for the user's needs.
+✓ AI selected node type: compute_icelake_r750
+  Reasoning: The user's requirements specify 80 CPU cores and 256 GB of RAM without the need for a GPU. Among the available compute node types, 'compute_icelake_r750' is likely to have a high core count and sufficient RAM capacity, making it suitable for the user's needs.
 
-✓ Target node type: compute_cascadelake
+✓ Target node type: compute_icelake_r750
 
 ============================================================
 Step 5: Create Hardware Reservation (with Fallbacks)
 ============================================================
-✓ AI determined duration: 48 hours
-  Reasoning: The workload involves setting up a Rust programming environment, installing the Verus tool, and accessing a Kubernetes cluster. While these tasks are not overly complex, they do require some setup time and testing. Given the modest resource requirements and the specific software setup, a 48-hour lease duration is appropriate to ensure ample time for configuration and any troubleshooting that may arise.
+✓ AI determined duration: 72 hours
+  Reasoning: The requirements include a high number of CPU cores (80) and a large amount of RAM (256 GB), along with specific hardware and software configurations such as PCIe Gen 4.0 NVMe SSD, a specific Linux kernel version, and per-core ring channel configuration. These factors indicate a complex setup that may require additional time for configuration and testing, thus a lease duration of 72 hours is appropriate.
 
 ============================================================
 Attempting Hardware Reservation (with fallbacks)
 ============================================================
 Fallback chain (13 options):
-  1. Primary: compute_cascadelake for 48h
-  2. Fallback: compute_cascadelake for 24h (reduced duration)
-  3. Alt 1: compute_icelake_r750 (48h)
-  4. Alt 2: compute_icelake_r750 (24h, reduced)
-  5. Alt 3: compute_icelake_r650 (48h)
-  6. Alt 4: compute_icelake_r650 (24h, reduced)
-  7. Alt 5: compute_cascadelake_r (48h)
-  8. Alt 6: compute_cascadelake_r (24h, reduced)
-  9. Alt 7: compute_skylake (48h)
-  10. Alt 8: compute_skylake (24h, reduced)
-  11. Alt 9: compute_haswell_ib (48h)
-  12. Alt 10: compute_haswell_ib (24h, reduced)
+  1. Primary: compute_icelake_r750 for 72h
+  2. Fallback: compute_icelake_r750 for 36h (reduced duration)
+  3. Alt 1: compute_icelake_r650 (72h)
+  4. Alt 2: compute_icelake_r650 (36h, reduced)
+  5. Alt 3: compute_cascadelake_r (72h)
+  6. Alt 4: compute_cascadelake_r (36h, reduced)
+  7. Alt 5: compute_cascadelake (72h)
+  8. Alt 6: compute_cascadelake (36h, reduced)
+  9. Alt 7: compute_skylake (72h)
+  10. Alt 8: compute_skylake (36h, reduced)
+  11. Alt 9: compute_haswell_ib (72h)
+  12. Alt 10: compute_haswell_ib (36h, reduced)
   13. Fallback: KVM-based VM (when bare metal unavailable)
 
-[Attempt 1/13] Primary: compute_cascadelake for 48h
+[Attempt 1/13] Primary: compute_icelake_r750 for 72h
     Waiting for lease activation (timeout: 300s)...
-    ✓ Lease created and ACTIVE (ID: 41ad4108-f39c-4caf-8105-94bc870f1513)
+    ✓ Lease created and ACTIVE (ID: 5dd21e56-bc67-4e4b-bfe7-6b497a322949)
 
 ============================================================
 Reservation Fallback Report
 ============================================================
 Status: ✓ SUCCESS
-Message: ✓ Lease created and ACTIVE (ID: 41ad4108-f39c-4caf-8105-94bc870f1513)
+Message: ✓ Lease created and ACTIVE (ID: 5dd21e56-bc67-4e4b-bfe7-6b497a322949)
 
 Successful option:
-  Primary: compute_cascadelake for 48h
-  Node type: compute_cascadelake
-  Duration: 48h
+  Primary: compute_icelake_r750 for 72h
+  Node type: compute_icelake_r750
+  Duration: 72h
 
 Fallback chain had 13 options
 
-✓ Reservation successful: compute_cascadelake
+✓ Reservation successful: compute_icelake_r750
 
 ============================================================
 Step 6: Launch Bare Metal Server
@@ -109,13 +109,13 @@ Step 6: Launch Bare Metal Server
 ============================================================
 
 Launching server:
-  Name: auto-server-202602051955
+  Name: auto-server-202602052018
   Image ID: c82b931e-4cf8-4366-9878-1ae941f24348
   Key: my-key
   Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
-  Reservation ID: b66ae172-f7c5-4953-912b-8275d15b3d60
+  Reservation ID: f0f05e41-d4af-4471-9e7c-5c45ffe8a15f
 
-✓ Server creation initiated: 51960efc-bb26-4212-b0d5-3a6d700e1f09
+✓ Server creation initiated: 9c316f26-8d56-4f4f-aed7-c9e90f63fffa
 
 Waiting for server to become ACTIVE...
 (This may take 10-30 minutes for bare metal)
@@ -128,23 +128,23 @@ Waiting for server to become ACTIVE...
 Step 7: Assign Floating IP
 ============================================================
 Creating new floating IP...
-✓ Using floating IP: 129.114.109.5
+✓ Using floating IP: 129.114.108.159
 ✓ Floating IP attached
 
 ============================================================
 ✓ Provisioning Complete!
 ============================================================
-Server Name: auto-server-202602051955
-Server ID: 51960efc-bb26-4212-b0d5-3a6d700e1f09
-Lease ID: 41ad4108-f39c-4caf-8105-94bc870f1513
-Reservation ID: b66ae172-f7c5-4953-912b-8275d15b3d60
+Server Name: auto-server-202602052018
+Server ID: 9c316f26-8d56-4f4f-aed7-c9e90f63fffa
+Lease ID: 5dd21e56-bc67-4e4b-bfe7-6b497a322949
+Reservation ID: f0f05e41-d4af-4471-9e7c-5c45ffe8a15f
 Image: CC-Ubuntu22.04-CUDA
-Node Type (requested): compute_cascadelake
-Node Type (actual): compute_cascadelake
-Floating IP: 129.114.109.5
+Node Type (requested): compute_icelake_r750
+Node Type (actual): compute_icelake_r750
+Floating IP: 129.114.108.159
 
 SSH Connection:
-  ssh ubuntu@129.114.109.5
+  ssh ubuntu@129.114.108.159
 
-✓ Info saved to: auto-server-202602051955_info.json
-End:     2026-02-05T20:04:23Z (exit=0, duration=694s)
+✓ Info saved to: auto-server-202602052018_info.json
+End:     2026-02-05T20:27:18Z (exit=0, duration=715s)
