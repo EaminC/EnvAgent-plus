@@ -559,15 +559,31 @@ def main():
                     print(f"  Reasoning: {selection.get('reasoning', 'N/A')}")
                 except Exception as e:
                     print(f"⚠ AI selection failed: {e}")
-                    # Fallback: pick from available node types
+                    # Fallback: pick from available node types (ranked by availability & fit)
+                    ranked_types = available_resources.get('node_types', [])
+                    
+                    if not ranked_types:
+                        raise Exception("No ranked node types available after discovery")
+                    
+                    # Try to find type matching requirements
+                    node_type = None
                     if requirements.get('gpu_required'):
-                        # Try to find a GPU node type
-                        gpu_types = [nt for nt in available_resources['node_types'] if 'gpu' in nt.lower()]
-                        node_type = gpu_types[0] if gpu_types else list(available_resources['node_types'])[0]
+                        # Find first GPU type in ranked list
+                        for nt in ranked_types:
+                            if nt and isinstance(nt, str) and 'gpu' in nt.lower():
+                                node_type = nt
+                                break
                     else:
-                        # Pick first compute node type
-                        compute_types = [nt for nt in available_resources['node_types'] if 'compute' in nt.lower()]
-                        node_type = compute_types[0] if compute_types else list(available_resources['node_types'])[0]
+                        # Find first compute type in ranked list
+                        for nt in ranked_types:
+                            if nt and isinstance(nt, str) and 'compute' in nt.lower():
+                                node_type = nt
+                                break
+                    
+                    # If no match found, use first ranked type
+                    if not node_type:
+                        node_type = ranked_types[0]
+                    
                     print(f"✓ Fallback node type: {node_type}")
             else:
                 # No discovery data, use hard-coded fallback

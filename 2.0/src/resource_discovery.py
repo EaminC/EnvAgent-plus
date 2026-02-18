@@ -116,29 +116,69 @@ class ResourceDiscovery:
             return False
     
     def _is_reservable(self, host: Dict[str, Any]) -> bool:
-        """Check if host is marked as reservable (handles bool or string)."""
+        """Check if host is marked as reservable (handles bool or string).
+        
+        Safely handles:
+        - host["reservable"] as bool, int, string ("True", "true", "1"), None, or missing
+        - Invalid values default to False
+        - Never raises KeyError
+        """
+        if not isinstance(host, dict):
+            return False
+        
         r = host.get('reservable', False)
+        
+        # Handle None
+        if r is None:
+            return False
+        
+        # Handle bool
         if isinstance(r, bool):
             return r
-        return str(r).lower() in ('true', '1', 'yes')
+        
+        # Handle int
+        if isinstance(r, int):
+            return r != 0
+        
+        # Handle string
+        if isinstance(r, str):
+            return r.lower() in ('true', '1', 'yes')
+        
+        # Every other type is invalid → False
+        return False
 
     def _fit_score(self, node_type: str, requirements: Dict[str, Any]) -> float:
         """
         Score how well a node type matches requirements (higher = better).
-        Used so we prefer GPU when gpu_required, compute for general, and KVM is not last.
+        Returns exactly: 2.0 (GPU+required), 1.0 (compute), 0.5 (KVM/VM), 
+        0.3 (GPU, not required), 0.2 (storage), 0.0 (else).
+        
+        Safely handles None, missing, or invalid node_type/requirements.
         """
-        nt_lower = node_type.lower()
-        gpu_required = requirements.get('gpu_required', False)
+        # Safely handle None or invalid node_type
+        if node_type is None or not isinstance(node_type, str):
+            return 0.0
+        
+        nt_lower = node_type.strip().lower()
+        if not nt_lower:
+            return 0.0
+        
+        # Safely get requirements dict
+        req = requirements if isinstance(requirements, dict) else {}
+        gpu_required = req.get('gpu_required', False)
+        
+        # Apply scoring rules in order of priority
         if gpu_required and 'gpu' in nt_lower:
             return 2.0
         if 'compute' in nt_lower:
             return 1.0
         if 'kvm' in nt_lower or 'vm' in nt_lower:
-            return 0.5   # KVM / VM types: not worst, but below bare-metal compute
+            return 0.5   # KVM / VM types: below bare-metal compute
         if 'gpu' in nt_lower:
             return 0.3
         if 'storage' in nt_lower:
             return 0.2
+        
         return 0.0
 
     def _rank_node_types(
@@ -148,18 +188,41 @@ class ResourceDiscovery:
         requirements: Optional[Dict[str, Any]] = None,
     ) -> List[str]:
         """
-        Sort node types by: (1) reservable count desc, (2) requirement fit desc, (3) name.
-        So we try types with more available/reservable capacity first, then by fit (e.g. GPU vs compute vs KVM).
+        Sort node types by explicit priority tuple:
+        (1) reservable count DESC, (2) total count DESC, (3) fit score DESC, (4) name ASC.
+        
+        This ensures types with more available capacity are tried first,
+        then by requirement fit (GPU vs compute vs KVM).
+        
+        Safely handles None, missing, or invalid node_type entries.
         """
-        req = requirements or {}
+        req = requirements if isinstance(requirements, dict) else {}
+        
+        # Filter: keep only valid string node_types
+        valid_types = []
+        for nt in node_types:
+            if nt is None:
+                continue
+            if not isinstance(nt, str):
+                continue
+            nt_stripped = nt.strip()
+            if not nt_stripped:
+                continue
+            valid_types.append(nt_stripped)
+        
+        # Define sort key: explicit tuple for clarity
         def sort_key(nt: str) -> tuple:
-            stats = node_type_stats.get(nt, {'total': 0, 'reservable': 0})
-            reservable = stats.get('reservable', 0)
-            total = stats.get('total', 0)
+            stats = node_type_stats.get(nt, {})
+            reservable = max(0, stats.get('reservable', 0))
+            total = max(0, stats.get('total', 0))
             fit = self._fit_score(nt, req)
-            # Primary: more reservable first; secondary: total capacity; tertiary: fit; then name
-            return (-reservable, -total, -fit, nt)
-        return sorted(node_types, key=sort_key)
+            
+            # Tuple: (-reservable, -total, -fit, name)
+            # Negatives make DESC; name is ASC
+            return (-reservable, -total, -fit, nt.lower())
+        
+        # Sort explicitly and return
+        return sorted(valid_types, key=sort_key, reverse=False)
 
     def discover_resources(
         self,
@@ -173,31 +236,47 @@ class ResourceDiscovery:
         print(f"\nDiscovering resources at {site} site...")
         
         # Get all hosts
-        hosts = self.list_reservation_hosts()
+        try:
+            hosts = self.list_reservation_hosts()
+        except Exception as e:
+            print(f"⚠ Warning: Failed to list hosts: {e}")
+            hosts = []
+        
         print(f"✓ Found {len(hosts)} hosts")
         
         # Per-node_type: total count and reservable count
         node_types = set()
         node_type_stats: Dict[str, Dict[str, int]] = {}
+        
         for host in hosts:
             node_type = host.get('node_type', '')
-            if node_type:
-                node_types.add(node_type)
-                if node_type not in node_type_stats:
-                    node_type_stats[node_type] = {'total': 0, 'reservable': 0}
-                node_type_stats[node_type]['total'] += 1
-                if self._is_reservable(host):
-                    node_type_stats[node_type]['reservable'] += 1
+            # Skip empty or invalid node_type
+            if not node_type or not isinstance(node_type, str) or not node_type.strip():
+                continue
+            
+            node_type = node_type.strip()
+            node_types.add(node_type)
+            
+            if node_type not in node_type_stats:
+                node_type_stats[node_type] = {'total': 0, 'reservable': 0}
+            
+            node_type_stats[node_type]['total'] += 1
+            if self._is_reservable(host):
+                node_type_stats[node_type]['reservable'] += 1
         
         # Rank by availability and requirement fit (not just alphabetical)
         ranked = self._rank_node_types(node_types, node_type_stats, requirements)
+        
+        # Defensive logging: always show ranking
         print(f"✓ Discovered {len(node_types)} node types (ranked by availability & fit):")
         for nt in ranked:
-            s = node_type_stats.get(nt, {})
-            r = s.get('reservable', 0)
-            t = s.get('total', 0)
-            print(f"    {nt}: {r} reservable / {t} total")
+            s = node_type_stats.get(nt, {'total': 0, 'reservable': 0})
+            reservable = s.get('reservable', 0)
+            total = s.get('total', 0)
+            fit = self._fit_score(nt, requirements or {})
+            print(f"    {nt}: {reservable} reservable / {total} total | fit_score: {fit:.1f}")
         
+        # Always return a valid dict (never None)
         return {
             'site': site,
             'total_hosts': len(hosts),
@@ -332,4 +411,3 @@ Select the most suitable node type. If GPU is required, prioritize GPU nodes. Re
         
         print(f"\n✓ Found {len(available_hosts)} available hosts")
         return available_hosts
-
