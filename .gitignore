@@ -14,3 +14,7 @@ envboot/__pycache__/...
 2.0/api/forge.py
 
 test_logs
+
+
+CHI-251467-openrc-2.sh
+CHI-251467-openrc-kvm.sh
