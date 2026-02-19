@@ -227,15 +227,124 @@ def get_network_id(os_conn, network_name: str = "sharednet1"):
     return network.id
 
 
-def create_lease_with_ai(ai_client: AIClient, requirements: dict, 
-                         node_type: str, lease_name: str, duration_hours: int = None,
-                         filter_expression: str = None, start_delay_minutes: int = 2):
-    """Create Blazar lease with AI-determined duration."""
-    import json  # For JSON encoding resource_properties
+def attempt_lease_with_fallbacks(ai_client: AIClient, requirements: dict,
+                                  available_resources: dict, lease_name_base: str,
+                                  duration_hours: int = None, start_delay_minutes: int = 2):
+    """Try lease creation with fallback chain through ranked node types."""
     
     print(f"\n{'='*60}")
-    print("Step 5: Create Hardware Reservation")
+    print("Step 5: Create Hardware Reservation (with fallbacks)")
     print(f"{'='*60}")
+    
+    ranked_types = available_resources.get('node_types', [])
+    node_type_stats = available_resources.get('node_type_stats', {})
+    
+    if not ranked_types:
+        raise Exception("No node types available for fallback")
+    
+    # Filter types based on requirements
+    gpu_required = requirements.get('gpu_required', False)
+    
+    if gpu_required:
+        # Try GPU types first, then fallback to compute/KVM for CPU-runnable workloads
+        gpu_types = [nt for nt in ranked_types if 'gpu' in nt.lower()]
+        compute_types = [nt for nt in ranked_types if 'compute' in nt.lower()]
+        kvm_types = [nt for nt in ranked_types if 'kvm' in nt.lower() or 'vm' in nt.lower()]
+        
+        # Build tiered fallback: GPU → compute → KVM
+        candidate_types = gpu_types + compute_types + kvm_types
+        
+        print(f"\n→ GPU required: Tiered fallback strategy:")
+        print(f"   Tier 1 (GPU): {len(gpu_types)} types")
+        print(f"   Tier 2 (Compute): {len(compute_types)} types")
+        print(f"   Tier 3 (KVM/VM): {len(kvm_types)} types")
+        print(f"   Total: {len(candidate_types)} attempts")
+    else:
+        # Try compute types first, then KVM, skip storage
+        compute_types = [nt for nt in ranked_types if 'compute' in nt.lower()]
+        kvm_types = [nt for nt in ranked_types if 'kvm' in nt.lower() or 'vm' in nt.lower()]
+        other_types = [nt for nt in ranked_types 
+                       if 'compute' not in nt.lower() 
+                       and 'kvm' not in nt.lower() 
+                       and 'vm' not in nt.lower()
+                       and 'storage' not in nt.lower()]
+        candidate_types = compute_types + kvm_types + other_types
+        print(f"\n→ Trying {len(candidate_types)} node types (compute → KVM → others)")
+    
+    if not candidate_types:
+        print("⚠ No matching types found, trying all ranked types")
+        candidate_types = ranked_types
+    
+    # Try each candidate type
+    last_error = None
+    current_tier = None
+    
+    for idx, node_type in enumerate(candidate_types, 1):
+        # Determine tier for progress display
+        if gpu_required:
+            if 'gpu' in node_type.lower():
+                tier = "GPU (Tier 1)"
+            elif 'compute' in node_type.lower():
+                tier = "Compute (Tier 2 - degraded)"
+            elif 'kvm' in node_type.lower() or 'vm' in node_type.lower():
+                tier = "KVM/VM (Tier 3 - CPU fallback)"
+            else:
+                tier = "Other"
+            
+            # Show tier transition
+            if tier != current_tier:
+                if current_tier is not None:
+                    print(f"\n→ Switching to: {tier}")
+                current_tier = tier
+        
+        stats = node_type_stats.get(node_type, {})
+        reservable = stats.get('reservable', 0)
+        total = stats.get('total', 0)
+        
+        tier_label = f" [{tier}]" if gpu_required else ""
+        print(f"\n[{idx}/{len(candidate_types)}] Attempting: {node_type}{tier_label} ({reservable} reservable / {total} total)")
+        
+        lease_name = f"{lease_name_base}-{node_type}"
+        
+        try:
+            lease_id, reservation_id = create_lease_with_ai(
+                ai_client, requirements, node_type, lease_name,
+                duration_hours=duration_hours,
+                filter_expression=None,
+                start_delay_minutes=start_delay_minutes
+            )
+            print(f"✓ SUCCESS: Lease created with {node_type}")
+            return lease_id, reservation_id, node_type
+        
+        except Exception as e:
+            error_msg = str(e)
+            last_error = error_msg
+            
+            # Show concise error
+            if "Not enough resources" in error_msg:
+                print(f"  ✗ No capacity available for {node_type}")
+            elif "ERROR state" in error_msg:
+                print(f"  ✗ Lease entered ERROR state for {node_type}")
+            else:
+                print(f"  ✗ Failed: {error_msg[:100]}")
+            
+            # Continue to next type
+            if idx < len(candidate_types):
+                print(f"  → Trying next option...")
+                import time
+                time.sleep(2)  # Brief pause between attempts
+            continue
+    
+    # All attempts failed
+    print(f"\n✗ All {len(candidate_types)} fallback options exhausted")
+    raise Exception(f"All fallback attempts failed. Last error: {last_error}")
+
+
+def create_lease_with_ai(ai_client: AIClient, requirements: dict,
+                         node_type: str, lease_name: str, duration_hours: int = None,
+                         filter_expression: str = None, start_delay_minutes: int = 2):
+    """Create Blazar lease with AI-determined duration (single attempt)."""
+    import json  # For JSON encoding resource_properties
     
     # AI determines duration
     current_time = datetime.now()
@@ -593,16 +702,27 @@ def main():
                 else:
                     node_type = "compute_cascadelake_r640"
         
-        print(f"\n✓ Target node type: {node_type}")
+        # Step 5: Create lease with fallback chain
+        lease_name_base = args.lease_name or f"auto-{datetime.now().strftime('%Y%m%d%H%M')}"
         
-        # Step 5: Create lease
-        lease_name = args.lease_name or f"auto-{node_type}-{datetime.now().strftime('%Y%m%d%H%M')}"
-        lease_id, reservation_id = create_lease_with_ai(
-            ai_client, requirements, node_type, lease_name,
-            duration_hours=args.lease_duration,
-            filter_expression=filter_expression,
-            start_delay_minutes=args.start_delay_minutes
-        )
+        # Use fallback chain if we have discovery data
+        if available_resources and available_resources.get('node_types'):
+            lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+                ai_client, requirements, available_resources, lease_name_base,
+                duration_hours=args.lease_duration,
+                start_delay_minutes=args.start_delay_minutes
+            )
+            print(f"\n✓ Final node type: {node_type}")
+        else:
+            # No discovery data, single attempt with specified node_type
+            print(f"\n✓ Target node type: {node_type}")
+            lease_name = f"{lease_name_base}-{node_type}"
+            lease_id, reservation_id = create_lease_with_ai(
+                ai_client, requirements, node_type, lease_name,
+                duration_hours=args.lease_duration,
+                filter_expression=filter_expression,
+                start_delay_minutes=args.start_delay_minutes
+            )
         
         # Step 6: Launch server
         server_name = args.server_name or f"auto-server-{datetime.now().strftime('%Y%m%d%H%M')}"

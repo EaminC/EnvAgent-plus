@@ -1,5 +1,5 @@
-Command: python 2.0/src/provision_v2.py --repo "https://github.com/PriorLabs/TabPFN" --site tacc
-Start:   2026-02-18T23:54:51Z
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/yrcong/RelTR" --site tacc
+Start:   2026-02-19T00:15:34Z
 Traceback (most recent call last):
   File "2.0/src/provision_v2.py", line 299, in create_lease_with_ai
     lease = blazar.lease.create(
@@ -9,7 +9,7 @@ Traceback (most recent call last):
     return self.request(url, 'POST', **kwargs)
   File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/blazarclient/base.py", line 135, in request
     raise exception.BlazarClientException(msg, code=resp.status_code)
-blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_k80"]', 'start_date': datetime.datetime(2026, 2, 18, 23, 57), 'end_date': datetime.datetime(2026, 2, 20, 23, 57), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+blazarclient.exception.BlazarClientException: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100"]', 'start_date': datetime.datetime(2026, 2, 19, 0, 18), 'end_date': datetime.datetime(2026, 2, 21, 0, 18), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
 
 During handling of the above exception, another exception occurred:
 
@@ -18,7 +18,7 @@ Traceback (most recent call last):
     lease_id, reservation_id = create_lease_with_ai(
   File "2.0/src/provision_v2.py", line 346, in create_lease_with_ai
     raise Exception(f"Lease creation failed: {str(e)}")
-Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_k80"]', 'start_date': datetime.datetime(2026, 2, 18, 23, 57), 'end_date': datetime.datetime(2026, 2, 20, 23, 57), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+Exception: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100"]', 'start_date': datetime.datetime(2026, 2, 19, 0, 18), 'end_date': datetime.datetime(2026, 2, 21, 0, 18), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
 
 ============================================================
 Automated Hardware Provisioning Tool v2.0
@@ -30,14 +30,14 @@ Automated Hardware Provisioning Tool v2.0
 ============================================================
 Step 1: Repository Analysis
 ============================================================
-✓ Repository cloned to: /tmp/TabPFN
+✓ Repository cloned to: /tmp/RelTR
 
 ✓ Repository requirements analysis complete:
-  CPU: 2 cores
-  RAM: 8 GB
+  CPU: 8 cores
+  RAM: 16 GB
   GPU: Required
   GPU Memory: 8 GB
-  Disk: None GB
+  Disk: 50 GB
   OS: ubuntu 20.04
   CUDA: Required
 
@@ -46,7 +46,7 @@ Step 2: Image Selection
 ============================================================
 ✓ Found 407 available CC-* images
 ✓ AI Stage 1: Selected 5 candidates
-  Reasoning: The requirements specify an Ubuntu 20.04 OS with CUDA support, which implies the need for GPU capabilities. The selected images are all based on Ubuntu 20.04 and include CUDA, meeting both the OS version and CUDA requirements. These images are: CC-Ubuntu20.04-CUDA (ID: 91d8e584-bc97-4e81-a1e5-cf858ac3afd7), CC-Ubuntu20.04-CUDA11 (ID: a5ed16a4-16fb-4b63-8e62-ad5989bec58a), CC-Ubuntu20.04-CUDA-20241101 (ID: a8fddebf-0e01-47f1-ae35-cc7b1dd99ccc), CC-Ubuntu20.04-CUDA-20241028 (ID: 714e046e-2d0a-4306-b1e3-2a0a99eb4d36), and CC-Ubuntu20.04-CUDA-20241022 (ID: 5b9fcdd3-739b-4f83-9c9f-fc03c4926120).
+  Reasoning: The requirements specify an Ubuntu 20.04 operating system with CUDA support. The available images that meet these criteria are: CC-Ubuntu20.04-CUDA (ID: 91d8e584-bc97-4e81-a1e5-cf858ac3afd7), CC-Ubuntu20.04-CUDA11 (ID: a5ed16a4-16fb-4b63-8e62-ad5989bec58a), and several dated versions of CC-Ubuntu20.04-CUDA from 2024 and 2023 (IDs: a8fddebf-0e01-47f1-ae35-cc7b1dd99ccc, 714e046e-2d0a-4306-b1e3-2a0a99eb4d36, 5b9fcdd3-739b-4f83-9c9f-fc03c4926120). These images ensure compatibility with the specified OS version and CUDA requirement.
 ⚠ No candidates found, using fallback selection
 ✓ Fallback image: CC-Ubuntu22.04-CUDA
 
@@ -88,25 +88,25 @@ Discovering resources at tacc site...
 ✓ Found 18 node types available
 
 ✓ AI resource selection complete
-  Node type: gpu_k80
-  Reasoning: The user requires a node with GPU capabilities and 8 GB of GPU memory. Among the available GPU nodes, the 'gpu_k80' node type is the most suitable as it provides GPU capabilities. The other available GPU models (M40, P100) are not explicitly listed as node types, so 'gpu_k80' is selected as it matches the user's GPU requirement.
-✓ AI selected node type: gpu_k80
-  Reasoning: The user requires a node with GPU capabilities and 8 GB of GPU memory. Among the available GPU nodes, the 'gpu_k80' node type is the most suitable as it provides GPU capabilities. The other available GPU models (M40, P100) are not explicitly listed as node types, so 'gpu_k80' is selected as it matches the user's GPU requirement.
+  Node type: gpu_p100
+  Reasoning: The user requires a GPU node with at least 8 GB GPU memory. Among the available GPU nodes, gpu_p100 has the highest reservable count of 15, ensuring a higher success rate for lease creation compared to other GPU options.
+✓ AI selected node type: gpu_p100
+  Reasoning: The user requires a GPU node with at least 8 GB GPU memory. Among the available GPU nodes, gpu_p100 has the highest reservable count of 15, ensuring a higher success rate for lease creation compared to other GPU options.
 
-✓ Target node type: gpu_k80
+✓ Target node type: gpu_p100
 
 ============================================================
 Step 5: Create Hardware Reservation
 ============================================================
 ✓ AI determined duration: 48 hours
-  Reasoning: The requirements specify a need for a GPU with 16GB VRAM, which is not directly available based on the specified 8GB GPU memory requirement. This indicates a potential need for resource adjustments or additional configuration time. Additionally, the use of PyTorch and CUDA support suggests a machine learning or deep learning task, which typically requires more time for setup, training, and testing. Therefore, a lease duration of 48 hours is recommended to accommodate these needs and ensure sufficient time for the task completion.
+  Reasoning: The requirements suggest a setup for machine learning or deep learning tasks, which typically involve training models that can take a significant amount of time. The need for a GPU with CUDA, along with specific versions of PyTorch and torchvision, indicates that the tasks are likely computationally intensive. A 48-hour lease provides sufficient time for setting up the environment, running experiments, and making adjustments if necessary.
 
 Creating lease:
-  Name: auto-gpu_k80-202602182355
-  Node Type: gpu_k80
-  Start: 2026-02-18 23:57
-  End: 2026-02-20 23:57
+  Name: auto-gpu_p100-202602190016
+  Node Type: gpu_p100
+  Start: 2026-02-19 00:18
+  End: 2026-02-21 00:18
 
 
-✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_k80"]', 'start_date': datetime.datetime(2026, 2, 18, 23, 57), 'end_date': datetime.datetime(2026, 2, 20, 23, 57), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
-End:     2026-02-18T23:55:31Z (exit=1, duration=40s)
+✗ ERROR: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu_p100"]', 'start_date': datetime.datetime(2026, 2, 19, 0, 18), 'end_date': datetime.datetime(2026, 2, 21, 0, 18), 'project_id': '5b86b66c9be14a228da46d3ab15ef166', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+End:     2026-02-19T00:16:11Z (exit=1, duration=37s)
