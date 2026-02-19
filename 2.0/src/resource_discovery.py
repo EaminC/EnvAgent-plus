@@ -315,16 +315,18 @@ class ResourceDiscovery:
                                   available_resources: Dict[str, Any]) -> Dict[str, Any]:
         """Use AI to select resources based on requirements"""
         
-        hosts = available_resources.get('hosts', [])
-        properties = self.extract_resource_properties(hosts)
+        # Build resource information showing capacity (ranked by availability)
+        ranked_types = available_resources.get('node_types', [])
+        node_type_stats = available_resources.get('node_type_stats', {})
         
-        # Build resource information
-        resource_info = f"""
-Available node types: {', '.join(sorted(properties['node_types']))}
-Available GPU models: {', '.join(sorted(properties['gpu_models'])) if properties['gpu_models'] else 'None'}
-Available architectures: {', '.join(sorted(properties['architectures']))}
-Total hosts: {len(hosts)}
-"""
+        resource_info = "Available node types (ranked by capacity & fit):\n"
+        for nt in ranked_types:
+            stats = node_type_stats.get(nt, {'total': 0, 'reservable': 0})
+            reservable = stats.get('reservable', 0)
+            total = stats.get('total', 0)
+            resource_info += f"  - {nt}: {reservable} reservable / {total} total\n"
+        
+        resource_info += f"\nTotal hosts: {available_resources.get('total_hosts', 0)}"
         
         system_prompt = """You are a cloud computing resource management expert.
 Your task is to select the most suitable node type from available resources based on user hardware requirements.
@@ -334,10 +336,16 @@ Chameleon node type naming conventions:
 - gpu_*: GPU nodes (e.g., gpu_rtx_6000, gpu_a100_pcie)
 - storage_*: Storage-optimized nodes
 
+CRITICAL SELECTION RULE:
+When multiple node types match requirements, ALWAYS prefer the one with HIGHER reservable count.
+Higher availability = higher success rate for lease creation.
+
+Example: If gpu_p100 has 15 reservable and gpu_k80 has 2 reservable, choose gpu_p100.
+
 Return JSON format:
 {
     "node_type": "selected node type (exact match from available list)",
-    "reasoning": "selection rationale",
+    "reasoning": "selection rationale (mention capacity advantage)",
     "filter_expression": "JSON string format: [\\"=\\", \\"$node_type\\", \\"gpu_rtx_6000\\"]"
 }
 
@@ -353,7 +361,9 @@ IMPORTANT: Use the EXACT node_type string from the available list. Do not abbrev
 Available resources:
 {resource_info}
 
-Select the most suitable node type. If GPU is required, prioritize GPU nodes. Return the EXACT node_type string from the available list."""
+Select the node type with HIGHEST reservable count that matches requirements.
+Prioritize availability to maximize success rate.
+Return the EXACT node_type string from the available list."""
         
         try:
             response = self.ai_client.ask_with_context(system_prompt, user_prompt, temperature=0.3)

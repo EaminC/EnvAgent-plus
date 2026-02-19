@@ -1,0 +1,6 @@
+repo_url,exit_code,start_time,end_time,duration_seconds,log_path
+https://github.com/yrcong/RelTR,1,2026-02-18T23:50:07Z,2026-02-18T23:52:13Z,126,logs_kvm/20260218_235007_yrcong_RelTR.log
+https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch,1,2026-02-18T23:52:18Z,2026-02-18T23:54:08Z,110,logs_kvm/20260218_235218_rahulvigneswaran_Lottery-Ticket-Hypothesis-in-Pytorch.log
+https://github.com/henryzhongsc/gnn_editing,1,2026-02-18T23:54:13Z,2026-02-18T23:54:46Z,33,logs_kvm/20260218_235413_henryzhongsc_gnn_editing.log
+https://github.com/PriorLabs/TabPFN,1,2026-02-18T23:54:51Z,2026-02-18T23:55:31Z,40,logs_kvm/20260218_235451_PriorLabs_TabPFN.log
+https://github.com/fmi-basel/neural-decoding-RSNN,1,2026-02-18T23:55:36Z,2026-02-18T23:55:57Z,21,logs_kvm/20260218_235536_fmi-basel_neural-decoding-RSNN.log
