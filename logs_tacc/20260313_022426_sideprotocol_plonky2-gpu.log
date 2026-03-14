@@ -1,0 +1,157 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/sideprotocol/plonky2-gpu" --site tacc
+Start:   2026-03-13T02:24:26Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/plonky2-gpu
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 12 GB
+  Disk: None GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 407 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify Ubuntu 20.04 with CUDA support. The selected images are all based on Ubuntu 20.04 and include CUDA support. These images are suitable for environments where GPU support is necessary, fulfilling the requirement for CUDA and GPU capabilities.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 312 hosts
+✓ Discovered 19 node types (ranked by availability & fit):
+    compute_cascadelake_r: 56 reservable / 56 total | fit_score: 1.0
+    compute_icelake_r650: 50 reservable / 52 total | fit_score: 1.0
+    compute_zen3: 32 reservable / 32 total | fit_score: 1.0
+    compute_skylake: 28 reservable / 32 total | fit_score: 1.0
+    compute_cascadelake: 24 reservable / 24 total | fit_score: 1.0
+    compute_icelake_r750: 18 reservable / 20 total | fit_score: 1.0
+    compute_haswell_ib: 17 reservable / 17 total | fit_score: 1.0
+    gpu_p100: 15 reservable / 15 total | fit_score: 2.0
+    storage: 13 reservable / 21 total | fit_score: 0.2
+    gpu_mi100: 8 reservable / 8 total | fit_score: 2.0
+    compute_arm64: 8 reservable / 8 total | fit_score: 1.0
+    compute_liqid: 8 reservable / 8 total | fit_score: 1.0
+    compute_gigaio: 6 reservable / 6 total | fit_score: 1.0
+    gpu_p100_nvlink: 4 reservable / 4 total | fit_score: 2.0
+    gpu_h100: 2 reservable / 2 total | fit_score: 2.0
+    gpu_k80: 2 reservable / 2 total | fit_score: 2.0
+    gpu_m40: 2 reservable / 2 total | fit_score: 2.0
+    storage_hierarchy: 2 reservable / 2 total | fit_score: 0.2
+    gpu_p100_v100: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 19 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_p100
+  Reasoning: The gpu_p100 node type matches the user's requirement for a GPU with at least 12 GB of memory. It has the highest reservable count among GPU nodes, with 15 reservable, ensuring higher availability and a greater success rate for lease creation.
+✓ AI selected node type: gpu_p100
+  Reasoning: The gpu_p100 node type matches the user's requirement for a GPU with at least 12 GB of memory. It has the highest reservable count among GPU nodes, with 15 reservable, ensuring higher availability and a greater success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ GPU required: Tiered fallback strategy:
+   Tier 1 (GPU): 7 types
+   Tier 2 (Compute): 10 types
+   Tier 3 (KVM/VM): 0 types
+   Total: 17 attempts
+
+[1/17] Attempting: gpu_p100 [GPU (Tier 1)] (15 reservable / 15 total)
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements specify a high-performance GPU (NVIDIA 2080 Ti) and CUDA 12+, which are typically used for intensive computational tasks such as machine learning, data analysis, or rendering. These tasks often require extended processing time. Given the high-performance nature of the resources and the potential complexity of the tasks, a lease duration of 48 hours is recommended to ensure sufficient time for completion and any necessary adjustments.
+
+Creating lease:
+  Name: auto-202603130224-gpu_p100
+  Node Type: gpu_p100
+  Start: 2026-03-13 02:26
+  End: 2026-03-15 02:26
+
+✓ Lease created: 8f59388d-6134-4f4a-8065-3465c7ff7777
+
+Waiting for lease to activate...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+✓ Lease is ACTIVE
+✓ Reservation ID: d753c133-35b7-4edc-a80c-845adffbc2cb
+✓ SUCCESS: Lease created with gpu_p100
+
+✓ Final node type: gpu_p100
+
+============================================================
+Step 6: Launch Bare Metal Server
+============================================================
+
+Launching server:
+  Name: auto-server-202603130224
+  Image ID: c82b931e-4cf8-4366-9878-1ae941f24348
+  Key: my-key
+  Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
+  Reservation ID: d753c133-35b7-4edc-a80c-845adffbc2cb
+
+✓ Server creation initiated: c78b9aab-c41b-43eb-af3c-2786e842c550
+
+Waiting for server to become ACTIVE...
+(This may take 10-30 minutes for bare metal)
+  Status: BUILD
+  Status: ACTIVE
+
+✓ Server is ACTIVE
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+Creating new floating IP...
+✓ Using floating IP: 129.114.108.68
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: Bare Metal (Blazar)
+Server Name: auto-server-202603130224
+Server ID: c78b9aab-c41b-43eb-af3c-2786e842c550
+Lease ID: 8f59388d-6134-4f4a-8065-3465c7ff7777
+Reservation ID: d753c133-35b7-4edc-a80c-845adffbc2cb
+Image: CC-Ubuntu22.04-CUDA
+Node Type: gpu_p100
+Floating IP: 129.114.108.68
+
+SSH Connection:
+  ssh ubuntu@129.114.108.68
+
+✓ Info saved to: auto-server-202603130224_info.json
+End:     2026-03-13T02:36:22Z (exit=0, duration=716s)

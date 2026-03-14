@@ -1,0 +1,150 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/uiuc-arc/probfuzz" --site tacc
+Start:   2026-02-19T06:02:26Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/probfuzz
+
+✓ Repository requirements analysis complete:
+  CPU: 2 cores
+  RAM: 4 GB
+  GPU: Not required
+  Disk: 10 GB
+  OS: ubuntu None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 407 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu OS with no specific version and no need for CUDA or GPU support. Therefore, images with Ubuntu 20.04, 22.04, and 24.04 without CUDA or ARM64 are suitable. The selected images are: CC-Ubuntu24.04 (ID: 1b993456-987a-421b-afbf-29aa618565da), CC-Ubuntu22.04 (ID: 14af624e-2629-4fb5-8ee6-f94ea5bf5195), CC-Ubuntu20.04 (ID: 819473ad-b46c-48db-a2f6-53dead8204b0), CC-Ubuntu24.04_2025-05-05 (ID: 585e8ebf-635f-4f40-9b18-6517d0620e41), and CC-Ubuntu22.04_2025-05-05 (ID: fea16673-a005-43ef-a74d-dafec5150556). These images meet the requirements and provide a variety of Ubuntu versions.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 310 hosts
+✓ Discovered 18 node types (ranked by availability & fit):
+    compute_cascadelake_r: 56 reservable / 56 total | fit_score: 1.0
+    compute_icelake_r650: 50 reservable / 52 total | fit_score: 1.0
+    compute_zen3: 32 reservable / 32 total | fit_score: 1.0
+    compute_skylake: 29 reservable / 32 total | fit_score: 1.0
+    compute_cascadelake: 24 reservable / 24 total | fit_score: 1.0
+    compute_icelake_r750: 18 reservable / 20 total | fit_score: 1.0
+    compute_haswell_ib: 17 reservable / 17 total | fit_score: 1.0
+    gpu_p100: 15 reservable / 15 total | fit_score: 0.3
+    storage: 13 reservable / 21 total | fit_score: 0.2
+    compute_arm64: 8 reservable / 8 total | fit_score: 1.0
+    compute_liqid: 8 reservable / 8 total | fit_score: 1.0
+    gpu_mi100: 8 reservable / 8 total | fit_score: 0.3
+    compute_gigaio: 6 reservable / 6 total | fit_score: 1.0
+    gpu_p100_nvlink: 4 reservable / 4 total | fit_score: 0.3
+    gpu_k80: 2 reservable / 2 total | fit_score: 0.3
+    gpu_m40: 2 reservable / 2 total | fit_score: 0.3
+    storage_hierarchy: 2 reservable / 2 total | fit_score: 0.2
+    gpu_p100_v100: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 18 node types available
+
+✓ AI resource selection complete
+  Node type: compute_cascadelake_r
+  Reasoning: The compute_cascadelake_r node type has the highest reservable count of 56, which maximizes availability and success rate for lease creation. It meets the user's requirements for CPU cores, RAM, and disk space without needing a GPU.
+✓ AI selected node type: compute_cascadelake_r
+  Reasoning: The compute_cascadelake_r node type has the highest reservable count of 56, which maximizes availability and success rate for lease creation. It meets the user's requirements for CPU cores, RAM, and disk space without needing a GPU.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 16 node types (compute → KVM → others)
+
+[1/16] Attempting: compute_cascadelake_r (56 reservable / 56 total)
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements include specific probabilistic programming libraries (Stan, Edward, Pyro) which may require additional time for setup, testing, and execution of models. These libraries are often used in research and development scenarios where experiments can run longer than typical computational tasks. Therefore, a lease duration of 48 hours is recommended to ensure sufficient time for these activities.
+
+Creating lease:
+  Name: auto-202602190602-compute_cascadelake_r
+  Node Type: compute_cascadelake_r
+  Start: 2026-02-19 06:04
+  End: 2026-02-21 06:04
+
+✓ Lease created: a5c096f8-1e1f-4799-bbbf-fd7358308ea0
+
+Waiting for lease to activate...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+✓ Lease is ACTIVE
+✓ Reservation ID: 48870c7c-4e91-4335-9f0a-a039397f45ac
+✓ SUCCESS: Lease created with compute_cascadelake_r
+
+✓ Final node type: compute_cascadelake_r
+
+============================================================
+Step 6: Launch Bare Metal Server
+============================================================
+
+Launching server:
+  Name: auto-server-202602190602
+  Image ID: c82b931e-4cf8-4366-9878-1ae941f24348
+  Key: my-key
+  Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
+  Reservation ID: 48870c7c-4e91-4335-9f0a-a039397f45ac
+
+✓ Server creation initiated: 542a392d-1e21-4fd2-9266-6f2436cfa6ab
+
+Waiting for server to become ACTIVE...
+(This may take 10-30 minutes for bare metal)
+  Status: BUILD
+  Status: ACTIVE
+
+✓ Server is ACTIVE
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+Creating new floating IP...
+✓ Using floating IP: 129.114.108.214
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: Bare Metal (Blazar)
+Server Name: auto-server-202602190602
+Server ID: 542a392d-1e21-4fd2-9266-6f2436cfa6ab
+Lease ID: a5c096f8-1e1f-4799-bbbf-fd7358308ea0
+Reservation ID: 48870c7c-4e91-4335-9f0a-a039397f45ac
+Image: CC-Ubuntu22.04-CUDA
+Node Type: compute_cascadelake_r
+Floating IP: 129.114.108.214
+
+SSH Connection:
+  ssh ubuntu@129.114.108.214
+
+✓ Info saved to: auto-server-202602190602_info.json
+End:     2026-02-19T06:13:23Z (exit=0, duration=657s)

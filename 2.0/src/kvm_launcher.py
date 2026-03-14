@@ -145,7 +145,20 @@ def launch_kvm_instance(
                 print("\n  ✓ KVM instance is ACTIVE")
                 return server_id, server_info
             elif status == 'ERROR':
-                raise Exception("KVM instance entered ERROR state")
+                # Extract fault details from Nova
+                fault_msg = "Unknown error"
+                try:
+                    if hasattr(server_info, 'fault'):
+                        fault = server_info.fault
+                        if isinstance(fault, dict):
+                            fault_msg = fault.get('message', 'No message provided')
+                            fault_code = fault.get('code', 'N/A')
+                            print(f"\n  ✗ Nova Fault Code: {fault_code}")
+                            print(f"  ✗ Nova Fault Message: {fault_msg}")
+                except Exception as e:
+                    print(f"  ⚠ Could not extract fault details: {e}")
+                
+                raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
             
             time.sleep(10)
         

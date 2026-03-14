@@ -1,0 +1,234 @@
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/fmi-basel/neural-decoding-RSNN" --site tacc
+Start:   2026-02-19T03:22:29Z
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/neural-decoding-RSNN
+
+✓ Repository requirements analysis complete:
+  CPU: 4 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 20 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 407 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 operating system with CUDA support and GPU capabilities. The selected images are all based on Ubuntu 20.04 and include CUDA support, which is necessary for GPU operations. These images are the best matches for the given requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at tacc site...
+✓ Found 310 hosts
+✓ Discovered 18 node types (ranked by availability & fit):
+    compute_cascadelake_r: 56 reservable / 56 total | fit_score: 1.0
+    compute_icelake_r650: 50 reservable / 52 total | fit_score: 1.0
+    compute_zen3: 32 reservable / 32 total | fit_score: 1.0
+    compute_skylake: 29 reservable / 32 total | fit_score: 1.0
+    compute_cascadelake: 24 reservable / 24 total | fit_score: 1.0
+    compute_icelake_r750: 18 reservable / 20 total | fit_score: 1.0
+    compute_haswell_ib: 17 reservable / 17 total | fit_score: 1.0
+    gpu_p100: 15 reservable / 15 total | fit_score: 2.0
+    storage: 13 reservable / 21 total | fit_score: 0.2
+    gpu_mi100: 8 reservable / 8 total | fit_score: 2.0
+    compute_arm64: 8 reservable / 8 total | fit_score: 1.0
+    compute_liqid: 8 reservable / 8 total | fit_score: 1.0
+    compute_gigaio: 6 reservable / 6 total | fit_score: 1.0
+    gpu_p100_nvlink: 4 reservable / 4 total | fit_score: 2.0
+    gpu_k80: 2 reservable / 2 total | fit_score: 2.0
+    gpu_m40: 2 reservable / 2 total | fit_score: 2.0
+    storage_hierarchy: 2 reservable / 2 total | fit_score: 0.2
+    gpu_p100_v100: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 18 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_p100
+  Reasoning: The gpu_p100 node type meets the user's GPU requirement with sufficient GPU memory and has the highest reservable count among GPU nodes, ensuring higher availability and a greater success rate for lease creation.
+✓ AI selected node type: gpu_p100
+  Reasoning: The gpu_p100 node type meets the user's GPU requirement with sufficient GPU memory and has the highest reservable count among GPU nodes, ensuring higher availability and a greater success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ GPU required: Tiered fallback strategy:
+   Tier 1 (GPU): 6 types
+   Tier 2 (Compute): 10 types
+   Tier 3 (KVM/VM): 0 types
+   Total: 16 attempts
+
+[1/16] Attempting: gpu_p100 [GPU (Tier 1)] (15 reservable / 15 total)
+✓ AI determined duration: 72 hours
+  Reasoning: The requirements include a specific GPU model (NVIDIA RTX A4000 or equivalent) and a specific library commit, which suggests a need for a specialized setup. Additionally, the inclusion of CUDA and a specific Python version indicates that this environment might be used for machine learning or data processing tasks, which can often take several days to complete. Therefore, a 72-hour lease duration is appropriate to ensure sufficient time for setup, execution, and any necessary troubleshooting.
+
+Creating lease:
+  Name: auto-202602190323-gpu_p100
+  Node Type: gpu_p100
+  Start: 2026-02-19 03:25
+  End: 2026-02-22 03:25
+  ✗ No capacity available for gpu_p100
+  → Trying next option...
+
+[2/16] Attempting: gpu_mi100 [GPU (Tier 1)] (8 reservable / 8 total)
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements specify the need for a GPU with specific capabilities (NVIDIA RTX A4000 or equivalent) and a specific library commit, which suggests a potentially complex setup and testing phase. Additionally, CUDA and a specific Python version are required, indicating a likely machine learning or data-intensive task. Given these factors, a 48-hour lease provides sufficient time for setup, execution, and any necessary troubleshooting or iterative development.
+
+Creating lease:
+  Name: auto-202602190323-gpu_mi100
+  Node Type: gpu_mi100
+  Start: 2026-02-19 03:25
+  End: 2026-02-21 03:25
+  ✗ No capacity available for gpu_mi100
+  → Trying next option...
+
+[3/16] Attempting: gpu_p100_nvlink [GPU (Tier 1)] (4 reservable / 4 total)
+✓ AI determined duration: 72 hours
+  Reasoning: The requirements specify a need for a specific GPU model (NVIDIA RTX A4000 or equivalent) and a specific commit of a library, which may take additional time to configure and test. Additionally, the use of CUDA and a specific Python version suggests a complex setup potentially involving machine learning or data processing tasks. Given these factors, a longer lease duration of 72 hours is recommended to ensure sufficient time for setup, testing, and execution of tasks.
+
+Creating lease:
+  Name: auto-202602190323-gpu_p100_nvlink
+  Node Type: gpu_p100_nvlink
+  Start: 2026-02-19 03:25
+  End: 2026-02-22 03:25
+  ✗ No capacity available for gpu_p100_nvlink
+  → Trying next option...
+
+[4/16] Attempting: gpu_k80 [GPU (Tier 1)] (2 reservable / 2 total)
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements include a specific GPU model (NVIDIA RTX A4000 or equivalent) and a specific commit of the stork library, which may take additional time to configure and test. Additionally, CUDA compatibility and specific Python version requirements suggest a complex setup that might require more than the default time to ensure everything is functioning correctly. Therefore, a 48-hour lease duration is recommended to allow for setup, testing, and any potential troubleshooting.
+
+Creating lease:
+  Name: auto-202602190323-gpu_k80
+  Node Type: gpu_k80
+  Start: 2026-02-19 03:25
+  End: 2026-02-21 03:25
+  ✗ No capacity available for gpu_k80
+  → Trying next option...
+
+[5/16] Attempting: gpu_m40 [GPU (Tier 1)] (2 reservable / 2 total)
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements include a specific GPU model (NVIDIA RTX A4000 or equivalent) and a specific commit of the stork library, which may require additional time for setup and testing. Additionally, CUDA support is needed, which can also involve extra configuration. Therefore, a 48-hour lease provides a buffer for these tasks, ensuring adequate time for setup, testing, and any troubleshooting that might be necessary.
+
+Creating lease:
+  Name: auto-202602190323-gpu_m40
+  Node Type: gpu_m40
+  Start: 2026-02-19 03:25
+  End: 2026-02-21 03:25
+  ✗ No capacity available for gpu_m40
+  → Trying next option...
+
+[6/16] Attempting: gpu_p100_v100 [GPU (Tier 1)] (1 reservable / 1 total)
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements include a specific GPU model (NVIDIA RTX A4000 or equivalent) and a specific commit of the stork library, which may require additional time for setup and testing. Additionally, CUDA compatibility and a specific Python version are needed, which could involve further configuration and validation. Given these complex requirements, a 48-hour lease duration allows sufficient time for setup, testing, and any necessary troubleshooting.
+
+Creating lease:
+  Name: auto-202602190323-gpu_p100_v100
+  Node Type: gpu_p100_v100
+  Start: 2026-02-19 03:26
+  End: 2026-02-21 03:26
+  ✗ No capacity available for gpu_p100_v100
+  → Trying next option...
+
+→ Switching to: Compute (Tier 2 - degraded)
+
+[7/16] Attempting: compute_cascadelake_r [Compute (Tier 2 - degraded)] (56 reservable / 56 total)
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements include a specific GPU model (NVIDIA RTX A4000 or equivalent) and a specific commit of the stork library, which may require additional time for setup and testing. Additionally, the need for CUDA and a specific Python version suggests a development or testing environment that might require more than a standard 24-hour period to ensure all dependencies and configurations are correctly implemented and tested.
+
+Creating lease:
+  Name: auto-202602190323-compute_cascadelake_r
+  Node Type: compute_cascadelake_r
+  Start: 2026-02-19 03:26
+  End: 2026-02-21 03:26
+
+✓ Lease created: 68e8f666-1325-4411-b4bf-77421a0dc08f
+
+Waiting for lease to activate...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: PENDING, waiting...
+  Status: STARTING, waiting...
+✓ Lease is ACTIVE
+✓ Reservation ID: dc14d6ec-dff4-416a-8078-3441668a893a
+✓ SUCCESS: Lease created with compute_cascadelake_r
+
+✓ Final node type: compute_cascadelake_r
+
+============================================================
+Step 6: Launch Bare Metal Server
+============================================================
+
+Launching server:
+  Name: auto-server-202602190323
+  Image ID: c82b931e-4cf8-4366-9878-1ae941f24348
+  Key: my-key
+  Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
+  Reservation ID: dc14d6ec-dff4-416a-8078-3441668a893a
+
+✓ Server creation initiated: cfb8a449-5b4a-4756-a321-874abc685f84
+
+Waiting for server to become ACTIVE...
+(This may take 10-30 minutes for bare metal)
+  Status: BUILD
+  Status: ACTIVE
+
+✓ Server is ACTIVE
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+Creating new floating IP...
+✓ Using floating IP: 129.114.109.32
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: Bare Metal (Blazar)
+Server Name: auto-server-202602190323
+Server ID: cfb8a449-5b4a-4756-a321-874abc685f84
+Lease ID: 68e8f666-1325-4411-b4bf-77421a0dc08f
+Reservation ID: dc14d6ec-dff4-416a-8078-3441668a893a
+Image: CC-Ubuntu22.04-CUDA
+Node Type: compute_cascadelake_r
+Floating IP: 129.114.109.32
+
+SSH Connection:
+  ssh ubuntu@129.114.109.32
+
+✓ Info saved to: auto-server-202602190323_info.json
+End:     2026-02-19T03:35:27Z (exit=0, duration=778s)

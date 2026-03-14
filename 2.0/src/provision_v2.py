@@ -29,6 +29,7 @@ from ai_client import AIClient
 from repo_analyzer import RepoAnalyzer
 from image_selector import ImageSelector
 from resource_discovery import ResourceDiscovery
+from kvm_launcher import select_kvm_flavor, launch_kvm_instance, get_kvm_connection_info
 
 
 def check_openstack_credentials():
@@ -335,9 +336,10 @@ def attempt_lease_with_fallbacks(ai_client: AIClient, requirements: dict,
                 time.sleep(2)  # Brief pause between attempts
             continue
     
-    # All attempts failed
-    print(f"\n✗ All {len(candidate_types)} fallback options exhausted")
-    raise Exception(f"All fallback attempts failed. Last error: {last_error}")
+    # All Blazar bare-metal attempts failed
+    print(f"\n✗ All {len(candidate_types)} Blazar fallback options exhausted")
+    print(f"\n→ Attempting Tier 4: KVM VM (Direct Nova)")
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
 
 
 def create_lease_with_ai(ai_client: AIClient, requirements: dict,
@@ -702,33 +704,72 @@ def main():
                 else:
                     node_type = "compute_cascadelake_r640"
         
-        # Step 5: Create lease with fallback chain
+        # Step 5: Create lease with fallback chain (including KVM VMs as Tier 4)
         lease_name_base = args.lease_name or f"auto-{datetime.now().strftime('%Y%m%d%H%M')}"
-        
-        # Use fallback chain if we have discovery data
-        if available_resources and available_resources.get('node_types'):
-            lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
-                ai_client, requirements, available_resources, lease_name_base,
-                duration_hours=args.lease_duration,
-                start_delay_minutes=args.start_delay_minutes
-            )
-            print(f"\n✓ Final node type: {node_type}")
-        else:
-            # No discovery data, single attempt with specified node_type
-            print(f"\n✓ Target node type: {node_type}")
-            lease_name = f"{lease_name_base}-{node_type}"
-            lease_id, reservation_id = create_lease_with_ai(
-                ai_client, requirements, node_type, lease_name,
-                duration_hours=args.lease_duration,
-                filter_expression=filter_expression,
-                start_delay_minutes=args.start_delay_minutes
-            )
-        
-        # Step 6: Launch server
         server_name = args.server_name or f"auto-server-{datetime.now().strftime('%Y%m%d%H%M')}"
-        server_id, server_info = launch_server_with_sdk(
-            os_conn, server_name, image_id, key_name, network_id, reservation_id
-        )
+        
+        # Initialize provisioning result variables
+        lease_id = None
+        reservation_id = None
+        server_id = None
+        server_info = None
+        is_kvm_fallback = False
+        
+        # Try bare-metal with Blazar
+        try:
+            # Use fallback chain if we have discovery data
+            if available_resources and available_resources.get('node_types'):
+                lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+                    ai_client, requirements, available_resources, lease_name_base,
+                    duration_hours=args.lease_duration,
+                    start_delay_minutes=args.start_delay_minutes
+                )
+                print(f"\n✓ Final node type: {node_type}")
+            else:
+                # No discovery data, single attempt with specified node_type
+                print(f"\n✓ Target node type: {node_type}")
+                lease_name = f"{lease_name_base}-{node_type}"
+                lease_id, reservation_id = create_lease_with_ai(
+                    ai_client, requirements, node_type, lease_name,
+                    duration_hours=args.lease_duration,
+                    filter_expression=filter_expression,
+                    start_delay_minutes=args.start_delay_minutes
+                )
+            
+            # Step 6: Launch bare-metal server with reservation
+            server_id, server_info = launch_server_with_sdk(
+                os_conn, server_name, image_id, key_name, network_id, reservation_id
+            )
+            
+        except Exception as blazar_error:
+            # All Blazar attempts failed - try Tier 4: KVM VMs via Nova
+            print(f"\n{'='*60}")
+            print("TIER 4 FALLBACK: KVM Virtual Machines")
+            print(f"{'='*60}")
+            print(f"Blazar bare-metal exhausted: {str(blazar_error)[:200]}")
+            print(f"\n→ Switching to direct Nova VM launch (no reservation needed)")
+            
+            try:
+                # Extract resource requirements for flavor selection
+                cpu_cores = requirements.get('cpu_cores', 4)
+                ram_gb = requirements.get('ram_gb', 16)
+                
+                # Launch KVM VM directly
+                server_id, server_info = launch_kvm_instance(
+                    os_conn, server_name, image_id, key_name, network_id,
+                    cpu_cores=cpu_cores, ram_gb=ram_gb
+                )
+                
+                node_type = "kvm_vm_fallback"
+                is_kvm_fallback = True
+                print(f"\n✓ KVM VM fallback successful")
+                
+            except Exception as kvm_error:
+                print(f"\n✗ KVM VM fallback also failed: {str(kvm_error)}")
+                print(f"\n✗ All provisioning tiers exhausted:")
+                print(f"   Tier 1-3 (Blazar bare-metal): {str(blazar_error)[:150]}")
+                print(f"   Tier 4 (KVM VMs): {str(kvm_error)[:150]}")
+                raise Exception(f"Complete provisioning failure across all tiers")
         
         # Step 7: Floating IP
         floating_ip = None
@@ -739,10 +780,13 @@ def main():
         print(f"\n{'='*60}")
         print("✓ Provisioning Complete!")
         print(f"{'='*60}")
+        print(f"Provisioning Type: {'KVM VM (Tier 4 Fallback)' if is_kvm_fallback else 'Bare Metal (Blazar)'}")
         print(f"Server Name: {server_name}")
         print(f"Server ID: {server_id}")
-        print(f"Lease ID: {lease_id}")
-        print(f"Reservation ID: {reservation_id}")
+        if lease_id:
+            print(f"Lease ID: {lease_id}")
+        if reservation_id:
+            print(f"Reservation ID: {reservation_id}")
         print(f"Image: {image_name}")
         print(f"Node Type: {node_type}")
         
@@ -762,6 +806,7 @@ def main():
         output_file = f"{server_name}_info.json"
         with open(output_file, 'w') as f:
             json.dump({
+                'provisioning_type': 'kvm_vm' if is_kvm_fallback else 'bare_metal',
                 'server_name': server_name,
                 'server_id': server_id,
                 'lease_id': lease_id,
