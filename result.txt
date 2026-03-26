@@ -1,0 +1,253 @@
+(base) cc@envagentplus2:~$ bash ~/EnvAgent-plus/EnvGym/EnvBench/scripts/plonky2-gpu/envbench.sh
+/home/cc/EnvAgent-plus/EnvGym/EnvBench/scripts/plonky2-gpu/envbench.sh: line 20: cd: /home/cc/EnvAgent-plus/EnvGym/EnvBench/scripts/plonky2-gpu/../../../../plonky2-gpu: No such file or directory
+==========================================
+plonky2-gpu Environment Benchmark Test
+==========================================
+
+1) Checking required software...
+--------------------------------
+[PASS] Bash is installed
+[PASS] Git is installed
+[PASS] curl is installed
+[PASS] Rust compiler is installed
+[PASS] Cargo is installed
+[PASS] Python 3 is installed
+[PASS] pkg-config is installed
+[WARN] CMake is not installed (optional)
+[WARN] Ninja is not installed (optional)
+[PASS] jq is installed
+
+2) Checking Rust toolchain...
+-----------------------------
+[INFO] rustc version: rustc 1.94.0 (4a4ef493e 2026-03-02)
+[PASS] Rust version is acceptable (>= 1.70)
+[INFO] cargo version: cargo 1.94.0 (85eff7c80 2026-01-15)
+
+3) Checking hardware/GPU visibility...
+--------------------------------------
+[WARN] NVIDIA GPU tool not found
+[WARN] CUDA compiler (nvcc) is not installed
+[WARN] ROCm tool (rocm-smi) is not installed
+
+4) Checking project structure...
+-------------------------------
+[FAIL] Workspace Cargo.toml missing
+[FAIL] Directory 'plonky2' missing
+[FAIL] Directory 'starky' missing
+[FAIL] Directory 'field' missing
+[FAIL] Directory 'util' missing
+[FAIL] Directory 'u32' missing
+[FAIL] Directory 'waksman' missing
+[FAIL] File 'plonky2/Cargo.toml' missing
+[FAIL] File 'starky/Cargo.toml' missing
+[FAIL] File 'field/Cargo.toml' missing
+
+5) Checking runnable build environment...
+-----------------------------------------
+[FAIL] cargo metadata failed (workspace/deps issue)
+[WARN] cargo check -p plonky2 failed in offline mode
+[FAIL] cargo check -p plonky2 failed
+
+6) Collecting hardware report...
+--------------------------------
+[INFO] Hardware snapshot written to /envgym/hardware.txt
+
+==========================================
+Test Results Summary
+==========================================
+PASS: 9
+FAIL: 12
+WARN: 6
+[INFO] Results written to /envgym/envbench.json
+[INFO] Text report written to /envgym/report.txt
+[WARN] Environment is not fully complete; see failures above.
+(base) cc@envagentplus2:~$ (base) cc@envagentplus2:~/EnvAgent-plus$ cd ~
+bash: syntax error near unexpected token `cc@envagentplus2:~/EnvAgent-plus$'
+(base) cc@envagentplus2:~$ (base) cc@envagentplus2:~$ bash ~/EnvAgent-plus/EnvGym/EnvBench/scripts/plonky2-gpu/envbench.sh
+bash: syntax error near unexpected token `cc@envagentplus2:~$'
+(base) cc@envagentplus2:~$ /home/cc/EnvAgent-plus/EnvGym/EnvBench/scripts/plonky2-gpu/envbench.sh: line 20: cd: /home/cc/EnvAgent-plus/EnvGym/EnvBench/scripts/plonky2-gpu/../../../../plonky2-gpu: No such file or directory
+bash: /home/cc/EnvAgent-plus/EnvGym/EnvBench/scripts/plonky2-gpu/envbench.sh:: No such file or directory
+(base) cc@envagentplus2:~$ ==========================================
+==========================================: command not found
+(base) cc@envagentplus2:~$ plonky2-gpu Environment Benchmark Test
+plonky2-gpu: command not found
+(base) cc@envagentplus2:~$ ==========================================
+==========================================: command not found
+(base) cc@envagentplus2:~$ 
+(base) cc@envagentplus2:~$ 1) Checking required software...
+bash: syntax error near unexpected token `)'
+(base) cc@envagentplus2:~$ --------------------------------
+--------------------------------: command not found
+(base) cc@envagentplus2:~$ [PASS] Bash is installed
+[PASS]: command not found
+(base) cc@envagentplus2:~$ [PASS] Git is installed
+[PASS]: command not found
+(base) cc@envagentplus2:~$ [PASS] curl is installed
+[PASS]: command not found
+(base) cc@envagentplus2:~$ [PASS] Rust compiler is installed
+[PASS]: command not found
+(base) cc@envagentplus2:~$ [PASS] Cargo is installed
+[PASS]: command not found
+(base) cc@envagentplus2:~$ [PASS] Python 3 is installed
+[PASS]: command not found
+(base) cc@envagentplus2:~$ [PASS] pkg-config is installed
+[PASS]: command not found
+(base) cc@envagentplus2:~$ [WARN] CMake is not installed (optional)
+bash: syntax error near unexpected token `('
+(base) cc@envagentplus2:~$ [WARN] Ninja is not installed (optional)
+bash: syntax error near unexpected token `('
+(base) cc@envagentplus2:~$ [PASS] jq is installed
+[PASS]: command not found
+(base) cc@envagentplus2:~$ 
+(base) cc@envagentplus2:~$ 2) Checking Rust toolchain...
+bash: syntax error near unexpected token `)'
+(base) cc@envagentplus2:~$ -----------------------------
+-----------------------------: command not found
+(base) cc@envagentplus2:~$ [INFO] rustc version: rustc 1.94.0 (4a4ef493e 2026-03-02)
+bash: syntax error near unexpected token `('
+(base) cc@envagentplus2:~$ [PASS] Rust version is acceptable (>= 1.70)
+bash: syntax error near unexpected token `('
+(base) cc@envagentplus2:~$ [INFO] cargo version: cargo 1.94.0 (85eff7c80 2026-01-15)
+bash: syntax error near unexpected token `('
+(base) cc@envagentplus2:~$ 
+(base) cc@envagentplus2:~$ 3) Checking hardware/GPU visibility...
+bash: syntax error near unexpected token `)'
+(base) cc@envagentplus2:~$ --------------------------------------
+--------------------------------------: command not found
+(base) cc@envagentplus2:~$ [WARN] NVIDIA GPU tool not found
+[WARN]: command not found
+(base) cc@envagentplus2:~$ [WARN] CUDA compiler (nvcc) is not installed
+bash: syntax error near unexpected token `('
+(base) cc@envagentplus2:~$ [WARN] ROCm tool (rocm-smi) is not installed
+bash: syntax error near unexpected token `('
+(base) cc@envagentplus2:~$ 
+(base) cc@envagentplus2:~$ 4) Checking project structure...
+bash: syntax error near unexpected token `)'
+(base) cc@envagentplus2:~$ -------------------------------
+-------------------------------: command not found
+(base) cc@envagentplus2:~$ [FAIL] Workspace Cargo.toml missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] Directory 'plonky2' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] Directory 'starky' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] Directory 'field' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] Directory 'util' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] Directory 'u32' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] Directory 'waksman' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] File 'plonky2/Cargo.toml' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] File 'starky/Cargo.toml' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ [FAIL] File 'field/Cargo.toml' missing
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ 
+(base) cc@envagentplus2:~$ 5) Checking runnable build environment...
+bash: syntax error near unexpected token `)'
+(base) cc@envagentplus2:~$ -----------------------------------------
+-----------------------------------------: command not found
+(base) cc@envagentplus2:~$ [FAIL] cargo metadata failed (workspace/deps issue)
+bash: syntax error near unexpected token `('
+(base) cc@envagentplus2:~$ [WARN] cargo check -p plonky2 failed in offline mode
+[WARN]: command not found
+(base) cc@envagentplus2:~$ [FAIL] cargo check -p plonky2 failed
+[FAIL]: command not found
+(base) cc@envagentplus2:~$ 
+(base) cc@envagentplus2:~$ 6) Collecting hardware report...
+bash: syntax error near unexpected token `)'
+(base) cc@envagentplus2:~$ --------------------------------
+--------------------------------: command not found
+(base) cc@envagentplus2:~$ [INFO] Hardware snapshot written to /envgym/hardware.txt
+[INFO]: command not found
+(base) cc@envagentplus2:~$ 
+(base) cc@envagentplus2:~$ ==========================================
+==========================================: command not found
+(base) cc@envagentplus2:~$ Test Results Summary
+
+Command 'Test' not found, did you mean:
+
+  command 'test' from deb coreutils (8.30-3ubuntu2)
+
+Try: sudo apt install <deb name>
+
+(base) cc@envagentplus2:~$ ==========================================
+==========================================: command not found
+(base) cc@envagentplus2:~$ PASS: 9
+PASS:: command not found
+(base) cc@envagentplus2:~$ FAIL: 12
+FAIL:: command not found
+(base) cc@envagentplus2:~$ WARN: 6
+WARN:: command not found
+(base) cc@envagentplus2:~$ [INFO] Results written to /envgym/envbench.json
+[INFO]: command not found
+(base) cc@envagentplus2:~$ [INFO] Text report written to /envgym/report.txt
+[INFO]: command not found
+(base) cc@envagentplus2:~$ [WARN] Environment is not fully complete; see failures above.^C
+(base) cc@envagentplus2:~$ 
+(base) cc@envagentplus2:~$ mv ~/plonky2-gpu ~/EnvAgent-plus/
+(base) cc@envagentplus2:~$ bash ~/EnvAgent-plus/EnvGym/EnvBench/scripts/plonky2-gpu/envbench.sh
+==========================================
+plonky2-gpu Environment Benchmark Test
+==========================================
+
+1) Checking required software...
+--------------------------------
+[PASS] Bash is installed
+[PASS] Git is installed
+[PASS] curl is installed
+[PASS] Rust compiler is installed
+[PASS] Cargo is installed
+[PASS] Python 3 is installed
+[PASS] pkg-config is installed
+[WARN] CMake is not installed (optional)
+[WARN] Ninja is not installed (optional)
+[PASS] jq is installed
+
+2) Checking Rust toolchain...
+-----------------------------
+[INFO] rustc version: rustc 1.94.0 (4a4ef493e 2026-03-02)
+[PASS] Rust version is acceptable (>= 1.70)
+[INFO] cargo version: cargo 1.94.0 (85eff7c80 2026-01-15)
+
+3) Checking hardware/GPU visibility...
+--------------------------------------
+[WARN] NVIDIA GPU tool not found
+[WARN] CUDA compiler (nvcc) is not installed
+[WARN] ROCm tool (rocm-smi) is not installed
+
+4) Checking project structure...
+-------------------------------
+[PASS] Workspace Cargo.toml found
+[PASS] Directory 'plonky2' exists
+[PASS] Directory 'starky' exists
+[PASS] Directory 'field' exists
+[PASS] Directory 'util' exists
+[PASS] Directory 'u32' exists
+[PASS] Directory 'waksman' exists
+[PASS] File 'plonky2/Cargo.toml' exists
+[PASS] File 'starky/Cargo.toml' exists
+[PASS] File 'field/Cargo.toml' exists
+
+5) Checking runnable build environment...
+-----------------------------------------
+[PASS] cargo metadata works
+[WARN] cargo check -p plonky2 failed in offline mode
+[FAIL] cargo check -p plonky2 failed
+
+6) Collecting hardware report...
+--------------------------------
+[INFO] Hardware snapshot written to /home/cc/EnvAgent-plus/plonky2-gpu/envgym/hardware.txt
+
+==========================================
+Test Results Summary
+==========================================
+PASS: 20
+FAIL: 1
+WARN: 6
+[INFO] Results written to /home/cc/EnvAgent-plus/plonky2-gpu/envgym/envbench.json
+[INFO] Text report written to /home/cc/EnvAgent-plus/plonky2-gpu/envgym/report.txt
+[WARN] Environment is not fully complete; see failures above.
