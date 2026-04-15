@@ -1,3 +1,0 @@
-Command: python 2.0/src/provision_v2.py --repo "https://github.com/nlohmann/json" --site tacc
-Start:   2026-02-19T00:38:33Z
-End:     2026-02-19T00:50:19Z (exit=0, duration=706s)
