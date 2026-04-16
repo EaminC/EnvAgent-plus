@@ -1,0 +1,223 @@
+https://github.com/NVIDIA/tao_tutorials
+```json
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 16
+}
+```
+==================================================
+https://github.com/NVIDIA-NeMo/Gym
+```json
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 16
+}
+```
+==================================================
+https://github.com/mariocandela/ai-avatar
+I'll analyze the ai-avatar repository to estimate hardware requirements.
+
+Based on the repository (ai-avatar by mariocandela), which appears to be an AI avatar application using language models and potentially image/video generation:
+
+- It likely uses LLM integration (ollama/similar)
+- Avatar generation capabilities
+- Web-based interface
+
+```json
+{
+  "cpu": 4,
+  "ram": 16,
+  "disk": 20,
+  "gpu": false,
+  "gpu_memory": 0
+}
+```
+==================================================
+https://github.com/snel-repo/Kilosort4
+Looking at the Kilosort4 repository, I'll analyze the hardware requirements based on the codebase, documentation, and typical usage patterns for spike sorting software.
+
+Key considerations:
+- Kilosort4 is a GPU-accelerated spike sorting algorithm
+- It processes large neural recording datasets
+- The README and docs mention GPU requirements
+- Typical electrophysiology recordings can be tens of GB
+- PyTorch is used for GPU computation
+
+Based on the repository's requirements, documentation, and typical Kilosort usage patterns:
+
+```json
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 8
+}
+```
+==================================================
+https://github.com/nyu-systems/CLM-GS
+I'll analyze the CLM-GS repository to extract hardware requirements.
+
+Based on the repository name "CLM-GS" (likely Causal Language Model with Gaussian Splatting or similar), and typical NYU systems research projects involving large language models and/or 3D Gaussian Splatting:
+
+Key considerations:
+- Language model training/inference typically requires significant GPU memory
+- Gaussian Splatting requires GPU for rendering
+- Research ML workloads typically need substantial RAM
+- Model checkpoints and datasets require significant disk space
+
+Estimating based on typical requirements for such systems research projects:
+
+```json
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 24
+}
+```
+==================================================
+https://github.com/TIO-IKIM/CellViT-plus-plus
+```json
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 24
+}
+```
+==================================================
+https://github.com/NVIDIA/tao_tutorials
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 16
+}
+==================================================
+https://github.com/NVIDIA-NeMo/Gym
+{
+  "cpu": 16,
+  "ram": 64,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 40
+}
+==================================================
+https://github.com/mariocandela/ai-avatar
+{
+  "cpu": 4,
+  "ram": 8,
+  "disk": 20,
+  "gpu": true,
+  "gpu_memory": 8
+}
+==================================================
+https://github.com/snel-repo/Kilosort4
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 8
+}
+==================================================
+https://github.com/nyu-systems/CLM-GS
+{
+  "cpu": 16,
+  "ram": 64,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 24
+}
+==================================================
+https://github.com/TIO-IKIM/CellViT-plus-plus
+{
+  "cpu": 16,
+  "ram": 64,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 24
+}
+==================================================
+https://github.com/TIO-IKIM/CellViT-Inference
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 16
+}
+==================================================
+https://github.com/sideprotocol/plonky2-gpu
+{
+  "cpu": 16,
+  "ram": 64,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 16
+}
+==================================================
+https://github.com/SVRTK/svrtk-docker-gpu
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 16
+}
+==================================================
+https://github.com/PluralisResearch/node0
+{
+  "cpu": 4,
+  "ram": 8,
+  "disk": 50,
+  "gpu": false,
+  "gpu_memory": 0
+}
+==================================================
+https://github.com/EsmaeilNarimissa/SciDOCX
+{
+  "cpu": 4,
+  "ram": 16,
+  "disk": 20,
+  "gpu": false,
+  "gpu_memory": 0
+}
+==================================================
+https://github.com/perslev/U-Time
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 100,
+  "gpu": true,
+  "gpu_memory": 8
+}
+==================================================
+https://github.com/nesaorg/bootstrap
+{
+  "cpu": 8,
+  "ram": 16,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 8
+}
+==================================================
+https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast
+{
+  "cpu": 8,
+  "ram": 32,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 24
+}
+==================================================

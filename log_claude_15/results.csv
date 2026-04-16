@@ -1,0 +1,15 @@
+repo,cpu,ram,disk,gpu,gpu_memory
+https://github.com/NVIDIA/tao_tutorials,8,32,100,True,16
+https://github.com/NVIDIA-NeMo/Gym,16,64,100,True,40
+https://github.com/mariocandela/ai-avatar,4,8,20,True,8
+https://github.com/snel-repo/Kilosort4,8,32,50,True,8
+https://github.com/nyu-systems/CLM-GS,16,64,100,True,24
+https://github.com/TIO-IKIM/CellViT-plus-plus,16,64,100,True,24
+https://github.com/TIO-IKIM/CellViT-Inference,8,32,50,True,16
+https://github.com/sideprotocol/plonky2-gpu,16,64,50,True,16
+https://github.com/SVRTK/svrtk-docker-gpu,8,32,50,True,16
+https://github.com/PluralisResearch/node0,4,8,50,False,0
+https://github.com/EsmaeilNarimissa/SciDOCX,4,16,20,False,0
+https://github.com/perslev/U-Time,8,32,100,True,8
+https://github.com/nesaorg/bootstrap,8,16,50,True,8
+https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast,8,32,50,True,24
