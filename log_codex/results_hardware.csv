@@ -1,0 +1,15 @@
+repo,cpu,ram,disk,gpu,gpu_memory
+tao_tutorials,4,16,50,True,8
+NeMo-Gym,4,16,20,True,8
+ai-avatar,4,8,10,True,4
+Kilosort4,4,16,10,True,8
+CLM-GS,4,16,50,True,8
+CellViT-plus-plus,4,16,20,True,8
+CellViT-Inference,4,8,10,True,8
+plonky2-gpu,4,8,10,True,4
+svrtk-docker-gpu,4,8,20,True,4
+node0,4,8,20,False,0
+SciDOCX,2,4,10,False,0
+U-Time,4,8,10,True,4
+bootstrap,2,4,10,False,0
+pdf-to-podcast,4,16,20,True,8
