@@ -1,5 +1,5 @@
-Command: python 2.0/src/provision_v2.py --repo "https://github.com/perslev/U-Time" --site tacc
-Start:   2026-04-15T22:10:48Z
+Command: python 2.0/src/provision_v2.py --repo "https://github.com/Kong/insomnia" --site tacc
+Start:   2026-04-16T00:02:04Z
 
 ============================================================
 Automated Hardware Provisioning Tool v2.0
@@ -11,23 +11,22 @@ Automated Hardware Provisioning Tool v2.0
 ============================================================
 Step 1: Repository Analysis
 ============================================================
-✓ Repository cloned to: /tmp/U-Time
+✓ Repository cloned to: /tmp/insomnia
 
 ✓ Repository requirements analysis complete:
-  CPU: 4 cores
-  RAM: 8 GB
-  GPU: Required
-  GPU Memory: None GB
-  Disk: 4096 GB
-  OS: linux None
-  CUDA: Required
+  CPU: 2 cores
+  RAM: 4 GB
+  GPU: Not required
+  Disk: 10 GB
+  OS: ubuntu 20.04
+  CUDA: Not required
 
 ============================================================
 Step 2: Image Selection
 ============================================================
 ✓ Found 415 available CC-* images
 ✓ AI Stage 1: Selected 5 candidates
-  Reasoning: The requirement specifies that the operating system should be Linux with CUDA support, and GPU support is implied. Therefore, images with 'CUDA' in their names are suitable. The selected images are: 'CC-Ubuntu24.04-CUDA', 'CC-Ubuntu22.04-CUDA', 'CC-Ubuntu20.04-CUDA', 'CC-Ubuntu20.04-CUDA11', and 'CC-Ubuntu20.04-CUDA-20241101'. These images provide a range of Ubuntu versions with CUDA support, ensuring compatibility with various CUDA-dependent applications.
+  Reasoning: The requirements specify an Ubuntu 20.04 image without CUDA or GPU support. The selected images are all based on Ubuntu 20.04 and do not have CUDA in their names, indicating they do not include CUDA support. These images meet the specified OS type and version requirements while ensuring no unnecessary CUDA support is included.
 ⚠ No candidates found, using fallback selection
 ✓ Fallback image: CC-Ubuntu22.04-CUDA
 
@@ -55,47 +54,43 @@ Discovering resources at tacc site...
     compute_cascadelake: 24 reservable / 24 total | fit_score: 1.0
     compute_icelake_r750: 17 reservable / 20 total | fit_score: 1.0
     compute_haswell_ib: 17 reservable / 17 total | fit_score: 1.0
-    gpu_p100: 15 reservable / 15 total | fit_score: 2.0
+    gpu_p100: 15 reservable / 15 total | fit_score: 0.3
     storage: 13 reservable / 21 total | fit_score: 0.2
-    gpu_mi100: 8 reservable / 8 total | fit_score: 2.0
     compute_arm64: 8 reservable / 8 total | fit_score: 1.0
     compute_liqid: 8 reservable / 8 total | fit_score: 1.0
+    gpu_mi100: 8 reservable / 8 total | fit_score: 0.3
     compute_gigaio: 6 reservable / 6 total | fit_score: 1.0
-    gpu_p100_nvlink: 4 reservable / 4 total | fit_score: 2.0
-    gpu_h100: 2 reservable / 2 total | fit_score: 2.0
-    gpu_k80: 2 reservable / 2 total | fit_score: 2.0
-    gpu_m40: 2 reservable / 2 total | fit_score: 2.0
+    gpu_p100_nvlink: 3 reservable / 4 total | fit_score: 0.3
+    gpu_h100: 2 reservable / 2 total | fit_score: 0.3
+    gpu_k80: 2 reservable / 2 total | fit_score: 0.3
+    gpu_m40: 2 reservable / 2 total | fit_score: 0.3
     storage_hierarchy: 1 reservable / 2 total | fit_score: 0.2
-    gpu_p100_v100: 1 reservable / 1 total | fit_score: 2.0
+    gpu_p100_v100: 1 reservable / 1 total | fit_score: 0.3
 ✓ Found 19 node types available
 
 ✓ AI resource selection complete
-  Node type: gpu_p100
-  Reasoning: The user requires a GPU node. Among the available GPU nodes, gpu_p100 has the highest reservable count of 15, which maximizes the success rate for lease creation.
-✓ AI selected node type: gpu_p100
-  Reasoning: The user requires a GPU node. Among the available GPU nodes, gpu_p100 has the highest reservable count of 15, which maximizes the success rate for lease creation.
+  Node type: compute_cascadelake_r
+  Reasoning: The compute_cascadelake_r node type has the highest reservable count of 55, which maximizes the success rate for lease creation. It meets the user's requirements for CPU cores, RAM, and disk space without needing a GPU.
+✓ AI selected node type: compute_cascadelake_r
+  Reasoning: The compute_cascadelake_r node type has the highest reservable count of 55, which maximizes the success rate for lease creation. It meets the user's requirements for CPU cores, RAM, and disk space without needing a GPU.
 
 ============================================================
 Step 5: Create Hardware Reservation (with fallbacks)
 ============================================================
 
-→ GPU required: Tiered fallback strategy:
-   Tier 1 (GPU): 7 types
-   Tier 2 (Compute): 10 types
-   Tier 3 (KVM/VM): 0 types
-   Total: 17 attempts
+→ Trying 17 node types (compute → KVM → others)
 
-[1/17] Attempting: gpu_p100 [GPU (Tier 1)] (15 reservable / 15 total)
-✓ AI determined duration: 72 hours
-  Reasoning: The requirements indicate a need for a GPU with specific CUDA and cuDNN versions, which suggests the workload may involve machine learning or deep learning tasks. These tasks can be computationally intensive and time-consuming, especially if they involve training models or processing large datasets. Additionally, the large disk space requirement of 4096 GB implies handling substantial data, which further supports the likelihood of a lengthy processing time. Given these factors, a lease duration of 72 hours is recommended to ensure sufficient time for setup, execution, and any necessary adjustments or iterations.
+[1/17] Attempting: compute_cascadelake_r (55 reservable / 56 total)
+✓ AI determined duration: 48 hours
+  Reasoning: The requirements suggest a development or testing environment for a Node.js application, given the need for Node.js >= 24 and npm >= 11. The inclusion of specific libraries like libfontconfig-dev and libcurl-devel indicates potential testing across different environments or dependencies for building or running applications. Such tasks typically require more than a day to set up, test, and potentially troubleshoot, especially if the user is working on cross-platform compatibility or specific build processes. Therefore, a 48-hour lease provides ample time for setup, testing, and any necessary adjustments.
 
 Creating lease:
-  Name: auto-202604152211-gpu_p100
-  Node Type: gpu_p100
-  Start: 2026-04-15 22:13
-  End: 2026-04-18 22:13
+  Name: auto-202604160003-compute_cascadelake_r
+  Node Type: compute_cascadelake_r
+  Start: 2026-04-16 00:05
+  End: 2026-04-18 00:05
 
-✓ Lease created: 21c93126-80ec-43f7-9f7b-4df93bcfbc09
+✓ Lease created: 204e9360-1bce-4af2-8d7f-5d7918dc66f1
 
 Waiting for lease to activate...
   Status: PENDING, waiting...
@@ -104,25 +99,26 @@ Waiting for lease to activate...
   Status: PENDING, waiting...
   Status: PENDING, waiting...
   Status: PENDING, waiting...
+  Status: PENDING, waiting...
   Status: STARTING, waiting...
 ✓ Lease is ACTIVE
-✓ Reservation ID: a6884e7a-67c2-4edf-9d52-4eadd4764c90
-✓ SUCCESS: Lease created with gpu_p100
+✓ Reservation ID: 4dc24c3b-06da-4d3c-b300-a207b5e2da21
+✓ SUCCESS: Lease created with compute_cascadelake_r
 
-✓ Final node type: gpu_p100
+✓ Final node type: compute_cascadelake_r
 
 ============================================================
 Step 6: Launch Bare Metal Server
 ============================================================
 
 Launching server:
-  Name: auto-server-202604152211
+  Name: auto-server-202604160003
   Image ID: 07263122-bade-4d24-a776-46f4f1c2e26a
   Key: my-key
   Network ID: 1a03cf65-8fd6-4fce-94fd-bbaabe68a8e1
-  Reservation ID: a6884e7a-67c2-4edf-9d52-4eadd4764c90
+  Reservation ID: 4dc24c3b-06da-4d3c-b300-a207b5e2da21
 
-✓ Server creation initiated: 99f8c212-bc6c-4238-9fff-ebaa90f2cc7e
+✓ Server creation initiated: 58d352a5-cde2-45b5-a52c-86dc1d807e43
 
 Waiting for server to become ACTIVE...
 (This may take 10-30 minutes for bare metal)
@@ -135,23 +131,23 @@ Waiting for server to become ACTIVE...
 Step 7: Assign Floating IP
 ============================================================
 Creating new floating IP...
-✓ Using floating IP: 129.114.109.42
+✓ Using floating IP: 129.114.108.164
 ✓ Floating IP attached
 
 ============================================================
 ✓ Provisioning Complete!
 ============================================================
 Provisioning Type: Bare Metal (Blazar)
-Server Name: auto-server-202604152211
-Server ID: 99f8c212-bc6c-4238-9fff-ebaa90f2cc7e
-Lease ID: 21c93126-80ec-43f7-9f7b-4df93bcfbc09
-Reservation ID: a6884e7a-67c2-4edf-9d52-4eadd4764c90
+Server Name: auto-server-202604160003
+Server ID: 58d352a5-cde2-45b5-a52c-86dc1d807e43
+Lease ID: 204e9360-1bce-4af2-8d7f-5d7918dc66f1
+Reservation ID: 4dc24c3b-06da-4d3c-b300-a207b5e2da21
 Image: CC-Ubuntu22.04-CUDA
-Node Type: gpu_p100
-Floating IP: 129.114.109.42
+Node Type: compute_cascadelake_r
+Floating IP: 129.114.108.164
 
 SSH Connection:
-  ssh ubuntu@129.114.109.42
+  ssh ubuntu@129.114.108.164
 
-✓ Info saved to: auto-server-202604152211_info.json
-End:     2026-04-15T22:24:00Z (exit=0, duration=792s)
+✓ Info saved to: auto-server-202604160003_info.json
+End:     2026-04-16T00:12:55Z (exit=0, duration=651s)

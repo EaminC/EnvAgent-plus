@@ -1,0 +1,22 @@
+Repo: https://github.com/yrcong/RelTR
+```json
+{
+  "cpu": 8,
+  "ram": 16,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 8
+}
+```
+==================================================
+Repo: https://github.com/yrcong/RelTR
+```json
+{
+  "cpu": 8,
+  "ram": 16,
+  "disk": 50,
+  "gpu": true,
+  "gpu_memory": 8
+}
+```
+==================================================

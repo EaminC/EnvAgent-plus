@@ -1,0 +1,627 @@
+https://github.com/yrcong/RelTR
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 20,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 20,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/henryzhongsc/gnn_editing
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 20,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/yrcong/RelTR
+```json
+{
+  "CPU": 8,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 20,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/henryzhongsc/gnn_editing
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 20,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/PriorLabs/TabPFN
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 10,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/fmi-basel/neural-decoding-RSNN
+```json
+{
+    "CPU": 4,
+    "RAM": 16,
+    "Disk": 20,
+    "GPU": true,
+    "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/peng-gao-lab/p4control
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/RutgersCSSystems/crossprefetch-asplos24-artifacts
+```json
+{
+  "CPU": 8,
+  "RAM": 32,
+  "Disk": 100,
+  "GPU": true,
+  "GPU memory": 8
+}
+```
+==================================================
+https://github.com/wenxiwang/SymMC-Tool
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/sumonbis/Fairify
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/EngineeringSoftware/exli
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/uiuc-arc/sixthsense
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/uiuc-arc/probfuzz
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/seal-research/gluetest
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/uiuc-arc/flex
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/xlab-uiuc/acto
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/wonglkd/Baleen-FAST24
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/iaoing/Silhouette
+```json
+{
+    "CPU": 4,
+    "RAM": 8,
+    "Disk": 20,
+    "GPU": true,
+    "GPU_memory": 4
+}
+```
+==================================================
+https://github.com/anvil-verifier/anvil
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/tinoryj/ELECT
+```json
+{
+    "CPU": 4,
+    "RAM": 16,
+    "Disk": 50,
+    "GPU": true,
+    "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/snu-csl/rfuse
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/sbu-fsl/Metis
+```json
+{
+  "CPU": 4,
+  "RAM": 16,
+  "Disk": 50,
+  "GPU": true,
+  "GPU_memory": 8
+}
+```
+==================================================
+https://github.com/facebook/zstd
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 2,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/jqlang/jq
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/ponylang/ponyc
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/catchorg/Catch2
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 5,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/fmtlib/fmt
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU memory": 0
+}
+```
+==================================================
+https://github.com/nlohmann/json
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/simdjson/simdjson
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 2,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/yhirose/cpp-httplib
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/cli/cli
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 2,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/grpc/grpc-go
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU memory": 0
+}
+```
+==================================================
+https://github.com/zeromicro/go-zero
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/alibaba/fastjson2
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 10,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/elastic/logstash
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/mockito/mockito
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 5,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/anuraghazra/github-readme-stats
+```json
+{
+  "CPU": 2,
+  "RAM": 2,
+  "Disk": 5,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/axios/axios
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/expressjs/express
+```json
+{
+  "CPU": 2,
+  "RAM": 2,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/iamkun/dayjs
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/Kong/insomnia
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/sveltejs/svelte
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/BurntSushi/ripgrep
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/clap-rs/clap
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 2,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/nushell/nushell
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 10,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/serde-rs/serde
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/sharkdp/bat
+```json
+{
+  "CPU": 1,
+  "RAM": 1,
+  "Disk": 0.1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/sharkdp/fd
+```json
+{
+  "CPU": 1,
+  "RAM": 1,
+  "Disk": 0.1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/rayon-rs/rayon
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 2,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/tokio-rs/bytes
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/tokio-rs/tokio
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 10,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/tokio-rs/tracing
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 1,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/darkreader/darkreader
+```json
+{
+  "CPU": 2,
+  "RAM": 4,
+  "Disk": 5,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/mui/material-ui
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
+https://github.com/vuejs/core
+```json
+{
+  "CPU": 4,
+  "RAM": 8,
+  "Disk": 20,
+  "GPU": false,
+  "GPU_memory": 0
+}
+```
+==================================================
