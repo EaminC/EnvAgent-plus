@@ -15,3 +15,5 @@ envboot/__pycache__/...
 
 test_logs
 EnvGym/
+RelTR/
+core/
