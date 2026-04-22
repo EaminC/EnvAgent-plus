@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.1,
+  "peak_disk_mb": 35955.41,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11583.18,
+  "repo_name": "svrtk-docker-gpu",
+  "repo_path": "/home/cc/EnvAgent-plus/svrtk-docker-gpu",
+  "runtime": 1.029,
+  "status": "ok",
+  "timed_out": false
+}

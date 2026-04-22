@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 2.9,
+  "peak_disk_mb": 32422.96,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12848.81,
+  "repo_name": "Baleen-FAST24",
+  "repo_path": "/home/cc/EnvAgent-plus/Baleen-FAST24",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

@@ -1,0 +1,15 @@
+run_label,repo_name,repo_path,status,exit_code,timed_out,runtime,peak_cpu_percent,peak_ram_mb,peak_disk_mb,peak_gpu_util_percent,peak_gpu_memory_mb
+hardware_14,tao_tutorials,/home/cc/EnvAgent-plus/tao_tutorials,ok,0,False,1.03,0.2,11575.24,35389.76,0.0,0.0
+hardware_14,Gym,/home/cc/EnvAgent-plus/Gym,ok,0,False,1.03,0.1,11574.77,35463.96,0.0,0.0
+hardware_14,ai-avatar,/home/cc/EnvAgent-plus/ai-avatar,ok,0,False,1.029,0.1,11576.92,35490.83,0.0,0.0
+hardware_14,Kilosort4,/home/cc/EnvAgent-plus/Kilosort4,ok,0,False,1.029,0.1,11578.52,35493.24,0.0,0.0
+hardware_14,CLM-GS,/home/cc/EnvAgent-plus/CLM-GS,ok,0,False,1.031,0.1,11580.59,35508.77,0.0,0.0
+hardware_14,CellViT-plus-plus,/home/cc/EnvAgent-plus/CellViT-plus-plus,ok,0,False,1.031,0.3,11579.34,35924.23,0.0,0.0
+hardware_14,CellViT-Inference,/home/cc/EnvAgent-plus/CellViT-Inference,ok,0,False,1.031,0.0,11583.01,35954.83,0.0,0.0
+hardware_14,plonky2-gpu,/home/cc/EnvAgent-plus/plonky2-gpu,ok,0,False,1.028,0.1,11581.2,35954.83,0.0,0.0
+hardware_14,svrtk-docker-gpu,/home/cc/EnvAgent-plus/svrtk-docker-gpu,ok,0,False,1.029,0.1,11583.18,35955.41,0.0,0.0
+hardware_14,node0,/home/cc/EnvAgent-plus/node0,ok,0,False,1.029,0.0,11580.77,35958.19,0.0,0.0
+hardware_14,SciDOCX,/home/cc/EnvAgent-plus/SciDOCX,ok,0,False,1.029,0.1,11581.09,35958.74,0.0,0.0
+hardware_14,U-Time,/home/cc/EnvAgent-plus/U-Time,ok,0,False,1.027,0.1,11585.35,35970.6,0.0,0.0
+hardware_14,bootstrap,/home/cc/EnvAgent-plus/bootstrap,ok,0,False,1.025,0.2,11584.96,35979.04,0.0,0.0
+hardware_14,pdf-to-podcast,/home/cc/EnvAgent-plus/pdf-to-podcast,ok,0,False,1.029,0.1,11586.74,36031.69,0.0,0.0

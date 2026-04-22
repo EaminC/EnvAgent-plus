@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 1.7,
+  "peak_disk_mb": 34083.08,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11661.13,
+  "repo_name": "jq",
+  "repo_path": "/home/cc/EnvAgent-plus/jq",
+  "runtime": 1.027,
+  "status": "ok",
+  "timed_out": false
+}

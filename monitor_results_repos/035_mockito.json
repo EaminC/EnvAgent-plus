@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.1,
+  "peak_disk_mb": 34528.84,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11524.96,
+  "repo_name": "mockito",
+  "repo_path": "/home/cc/EnvAgent-plus/mockito",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

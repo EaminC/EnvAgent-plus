@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.8,
+  "peak_disk_mb": 32057.88,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12204.34,
+  "repo_name": "exli",
+  "repo_path": "/home/cc/EnvAgent-plus/exli",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

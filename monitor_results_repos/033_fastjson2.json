@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.1,
+  "peak_disk_mb": 34468.07,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11525.6,
+  "repo_name": "fastjson2",
+  "repo_path": "/home/cc/EnvAgent-plus/fastjson2",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

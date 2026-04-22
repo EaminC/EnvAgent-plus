@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 3.5,
+  "peak_disk_mb": 30125.06,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11846.46,
+  "repo_name": "neural-decoding-RSNN",
+  "repo_path": "/home/cc/EnvAgent-plus/neural-decoding-RSNN",
+  "runtime": 1.032,
+  "status": "ok",
+  "timed_out": false
+}

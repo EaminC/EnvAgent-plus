@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 1.9,
+  "peak_disk_mb": 31944.84,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12187.25,
+  "repo_name": "SymMC-Tool",
+  "repo_path": "/home/cc/EnvAgent-plus/SymMC-Tool",
+  "runtime": 1.031,
+  "status": "ok",
+  "timed_out": false
+}

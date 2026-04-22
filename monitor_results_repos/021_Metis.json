@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.4,
+  "peak_disk_mb": 34063.12,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11731.57,
+  "repo_name": "Metis",
+  "repo_path": "/home/cc/EnvAgent-plus/Metis",
+  "runtime": 1.029,
+  "status": "ok",
+  "timed_out": false
+}

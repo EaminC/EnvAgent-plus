@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 2.8,
+  "peak_disk_mb": 32058.98,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12254.56,
+  "repo_name": "probfuzz",
+  "repo_path": "/home/cc/EnvAgent-plus/probfuzz",
+  "runtime": 1.029,
+  "status": "ok",
+  "timed_out": false
+}

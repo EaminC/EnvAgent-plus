@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.7,
+  "peak_disk_mb": 32429.84,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12860.07,
+  "repo_name": "Silhouette",
+  "repo_path": "/home/cc/EnvAgent-plus/Silhouette",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

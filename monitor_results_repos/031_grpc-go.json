@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 20.0,
+  "peak_disk_mb": 34252.92,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11521.01,
+  "repo_name": "grpc-go",
+  "repo_path": "/home/cc/EnvAgent-plus/grpc-go",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

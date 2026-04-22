@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.8,
+  "peak_disk_mb": 31620.77,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12145.09,
+  "repo_name": "crossprefetch-asplos24-artifacts",
+  "repo_path": "/home/cc/EnvAgent-plus/crossprefetch-asplos24-artifacts",
+  "runtime": 1.031,
+  "status": "ok",
+  "timed_out": false
+}

@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 3.4,
+  "peak_disk_mb": 30126.46,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11959.76,
+  "repo_name": "p4control",
+  "repo_path": "/home/cc/EnvAgent-plus/p4control",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

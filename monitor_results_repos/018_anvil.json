@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.4,
+  "peak_disk_mb": 32440.67,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12864.71,
+  "repo_name": "anvil",
+  "repo_path": "/home/cc/EnvAgent-plus/anvil",
+  "runtime": 1.031,
+  "status": "ok",
+  "timed_out": false
+}

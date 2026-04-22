@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.4,
+  "peak_disk_mb": 34098.42,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11513.88,
+  "repo_name": "ponyc",
+  "repo_path": "/home/cc/EnvAgent-plus/ponyc",
+  "runtime": 1.028,
+  "status": "ok",
+  "timed_out": false
+}

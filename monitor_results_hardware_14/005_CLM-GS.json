@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.1,
+  "peak_disk_mb": 35508.77,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11580.59,
+  "repo_name": "CLM-GS",
+  "repo_path": "/home/cc/EnvAgent-plus/CLM-GS",
+  "runtime": 1.031,
+  "status": "ok",
+  "timed_out": false
+}

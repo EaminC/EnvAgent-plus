@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.2,
+  "peak_disk_mb": 34537.75,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11526.98,
+  "repo_name": "express",
+  "repo_path": "/home/cc/EnvAgent-plus/express",
+  "runtime": 1.029,
+  "status": "ok",
+  "timed_out": false
+}

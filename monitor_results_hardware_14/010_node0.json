@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.0,
+  "peak_disk_mb": 35958.19,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11580.77,
+  "repo_name": "node0",
+  "repo_path": "/home/cc/EnvAgent-plus/node0",
+  "runtime": 1.029,
+  "status": "ok",
+  "timed_out": false
+}

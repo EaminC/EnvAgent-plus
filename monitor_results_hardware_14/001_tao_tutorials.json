@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.2,
+  "peak_disk_mb": 35389.76,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11575.24,
+  "repo_name": "tao_tutorials",
+  "repo_path": "/home/cc/EnvAgent-plus/tao_tutorials",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

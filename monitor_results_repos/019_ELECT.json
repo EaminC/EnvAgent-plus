@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.3,
+  "peak_disk_mb": 32583.99,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12866.23,
+  "repo_name": "ELECT",
+  "repo_path": "/home/cc/EnvAgent-plus/ELECT",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}

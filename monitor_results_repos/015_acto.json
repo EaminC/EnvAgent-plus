@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 3.8,
+  "peak_disk_mb": 32411.68,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 12846.6,
+  "repo_name": "acto",
+  "repo_path": "/home/cc/EnvAgent-plus/acto",
+  "runtime": 1.032,
+  "status": "ok",
+  "timed_out": false
+}

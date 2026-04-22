@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 3.2,
+  "peak_disk_mb": 29846.9,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11301.55,
+  "repo_name": "Lottery-Ticket-Hypothesis-in-Pytorch",
+  "repo_path": "/home/cc/EnvAgent-plus/Lottery-Ticket-Hypothesis-in-Pytorch",
+  "runtime": 1.031,
+  "status": "ok",
+  "timed_out": false
+}

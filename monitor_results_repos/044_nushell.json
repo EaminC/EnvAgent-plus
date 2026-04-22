@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.0,
+  "peak_disk_mb": 34668.16,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11526.77,
+  "repo_name": "nushell",
+  "repo_path": "/home/cc/EnvAgent-plus/nushell",
+  "runtime": 1.031,
+  "status": "ok",
+  "timed_out": false
+}

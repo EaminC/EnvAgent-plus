@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 0.1,
+  "peak_disk_mb": 34542.03,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11528.32,
+  "repo_name": "dayjs",
+  "repo_path": "/home/cc/EnvAgent-plus/dayjs",
+  "runtime": 1.031,
+  "status": "ok",
+  "timed_out": false
+}

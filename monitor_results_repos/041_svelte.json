@@ -1,0 +1,13 @@
+{
+  "exit_code": 0,
+  "peak_cpu_percent": 20.0,
+  "peak_disk_mb": 34631.18,
+  "peak_gpu_memory_mb": 0.0,
+  "peak_gpu_util_percent": 0.0,
+  "peak_ram_mb": 11529.82,
+  "repo_name": "svelte",
+  "repo_path": "/home/cc/EnvAgent-plus/svelte",
+  "runtime": 1.03,
+  "status": "ok",
+  "timed_out": false
+}
