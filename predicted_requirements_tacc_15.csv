@@ -1,0 +1,14 @@
+repo,cpu,ram,disk,gpu,gpu_memory,os,cuda,start_time,end_time,duration_seconds,log_file
+https://github.com/EsmaeilNarimissa/SciDOCX,8,16,10,True,6,ubuntu None,Required,2026-03-13T03:01:59Z,2026-03-13T03:13:49Z,710,logs_tacc_15/20260313_030159_EsmaeilNarimissa_SciDOCX.log
+https://github.com/mariocandela/ai-avatar,,,,False,,None None,Not required,2026-03-11T21:37:33Z,2026-03-11T21:47:23Z,590,logs_tacc_15/20260311_213733_mariocandela_ai-avatar.log
+https://github.com/nesaorg/bootstrap,,,,False,,None None,Not required,2026-03-13T03:47:34Z,2026-03-13T04:01:23Z,829,logs_tacc_15/20260313_034734_nesaorg_bootstrap.log
+https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast,8,64,100,True,,ubuntu 20.04 or 22.04,Required,2026-03-13T04:01:28Z,2026-03-13T04:12:23Z,655,logs_tacc_15/20260313_040128_NVIDIA-AI-Blueprints_pdf-to-podcast.log
+https://github.com/NVIDIA-NeMo/Gym,,8,5,False,,ubuntu 20.04,Not required,2026-03-11T21:26:56Z,2026-03-11T21:37:28Z,632,logs_tacc_15/20260311_212656_NVIDIA-NeMo_Gym.log
+https://github.com/NVIDIA/tao_tutorials,8,16,100,True,16,ubuntu 22.04,Required,2026-03-11T21:12:37Z,2026-03-11T21:26:51Z,854,logs_tacc_15/20260311_211237_NVIDIA_tao_tutorials.log
+https://github.com/nyu-systems/CLM-GS,8,128,500,True,24,ubuntu 20.04,Required,2026-03-11T22:01:37Z,2026-03-11T22:14:43Z,786,logs_tacc_15/20260311_220137_nyu-systems_CLM-GS.log
+https://github.com/PluralisResearch/node0,,32,80,True,16,ubuntu 22.04,Required,2026-03-13T02:49:20Z,2026-03-13T03:01:54Z,754,logs_tacc_15/20260313_024920_PluralisResearch_node0.log
+https://github.com/sideprotocol/plonky2-gpu,8,16,,True,12,ubuntu 20.04,Required,2026-03-13T02:24:26Z,2026-03-13T02:36:22Z,716,logs_tacc_15/20260313_022426_sideprotocol_plonky2-gpu.log
+https://github.com/snel-repo/Kilosort4,4,8,,True,8,ubuntu 20.04,Required,2026-03-11T21:47:28Z,2026-03-11T22:01:32Z,844,logs_tacc_15/20260311_214728_snel-repo_Kilosort4.log
+https://github.com/SVRTK/svrtk-docker-gpu,6,16,30,True,12,ubuntu 20.04,Required,2026-03-13T02:36:27Z,2026-03-13T02:49:15Z,768,logs_tacc_15/20260313_023627_SVRTK_svrtk-docker-gpu.log
+https://github.com/TIO-IKIM/CellViT-Inference,16,32,30,True,24,ubuntu None,Required,2026-03-13T02:12:29Z,2026-03-13T02:24:21Z,712,logs_tacc_15/20260313_021229_TIO-IKIM_CellViT-Inference.log
+https://github.com/TIO-IKIM/CellViT-plus-plus,16,32,30,True,24,ubuntu 20.04,Required,2026-03-13T01:59:42Z,2026-03-13T02:12:24Z,762,logs_tacc_15/20260313_015942_TIO-IKIM_CellViT-plus-plus.log

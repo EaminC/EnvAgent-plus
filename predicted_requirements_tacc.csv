@@ -1,0 +1,57 @@
+repo,cpu,ram,disk,gpu,gpu_memory,os,cuda,start_time,end_time,duration_seconds,log_file
+https://github.com/alibaba/fastjson2,2,4,1,False,,ubuntu 20.04,Not required,2026-04-15T22:24:05Z,2026-04-15T22:34:26Z,621,logs_tacc/20260415_222405_alibaba_fastjson2.log
+https://github.com/anuraghazra/github-readme-stats,2,2,1,False,,ubuntu 20.04,Not required,2026-04-15T23:17:57Z,2026-04-15T23:28:57Z,660,logs_tacc/20260415_231757_anuraghazra_github-readme-stats.log
+https://github.com/anvil-verifier/anvil,4,8,20,False,,ubuntu 20.04,Not required,2026-02-19T07:06:26Z,2026-02-19T07:16:28Z,602,logs_tacc/20260219_070626_anvil-verifier_anvil.log
+https://github.com/axios/axios,2,4,1,False,,ubuntu 20.04,Not required,2026-04-15T23:29:02Z,2026-04-15T23:39:45Z,643,logs_tacc/20260415_232902_axios_axios.log
+https://github.com/BurntSushi/ripgrep,2,2,1,False,,ubuntu 20.04,Not required,2026-04-16T00:24:27Z,2026-04-16T00:34:56Z,629,logs_tacc/20260416_002427_BurntSushi_ripgrep.log
+https://github.com/catchorg/Catch2,2,2,1,False,,ubuntu 20.04,Not required,2026-02-19T15:46:29Z,2026-02-19T15:58:27Z,718,logs_tacc/20260219_154629_catchorg_Catch2.log
+https://github.com/clap-rs/clap,,,,False,,None None,Not required,2026-04-16T00:35:01Z,2026-04-16T00:45:57Z,656,logs_tacc/20260416_003501_clap-rs_clap.log
+https://github.com/cli/cli,1,1,1,False,,None None,Not required,2026-02-19T16:47:01Z,2026-02-19T16:57:23Z,622,logs_tacc/20260219_164701_cli_cli.log
+https://github.com/darkreader/darkreader,2,4,5,False,,ubuntu 20.04,Not required,2026-04-16T02:33:55Z,2026-04-16T02:43:51Z,596,logs_tacc/20260416_023355_darkreader_darkreader.log
+https://github.com/elastic/logstash,2,4,10,False,,ubuntu 20.04,Not required,2026-04-15T22:34:31Z,2026-04-15T23:07:39Z,1988,logs_tacc/20260415_223431_elastic_logstash.log
+https://github.com/EngineeringSoftware/exli,2,4,10,False,,ubuntu 22.04,Not required,2026-02-19T04:20:27Z,2026-02-19T04:31:18Z,651,logs_tacc/20260219_042027_EngineeringSoftware_exli.log
+https://github.com/expressjs/express,2,2,1,False,,ubuntu 20.04,Not required,2026-04-15T23:39:50Z,2026-04-15T23:50:55Z,665,logs_tacc/20260415_233950_expressjs_express.log
+https://github.com/facebook/zstd,4,4,1,False,,ubuntu 24.04,Not required,2026-02-19T15:11:26Z,2026-02-19T15:23:53Z,747,logs_tacc/20260219_151126_facebook_zstd.log
+https://github.com/fmi-basel/neural-decoding-RSNN,4,16,20,True,8,ubuntu 20.04,Required,2026-02-19T03:22:29Z,2026-02-19T03:35:27Z,778,logs_tacc/20260219_032229_fmi-basel_neural-decoding-RSNN.log
+https://github.com/fmtlib/fmt,1,1,1,False,,ubuntu 20.04,Not required,2026-02-19T15:58:32Z,2026-02-19T16:10:23Z,711,logs_tacc/20260219_155832_fmtlib_fmt.log
+https://github.com/grpc/grpc-go,1,1,,False,,None None,Not required,2026-02-19T19:37:46Z,2026-02-19T19:48:26Z,640,logs_tacc/20260219_193746_grpc_grpc-go.log
+https://github.com/henryzhongsc/gnn_editing,4,16,20,True,8,ubuntu 20.04,Required,2026-02-19T02:57:58Z,2026-02-19T03:09:21Z,683,logs_tacc/20260219_025758_henryzhongsc_gnn_editing.log
+https://github.com/iamkun/dayjs,1,1,1,False,,ubuntu 20.04,Not required,2026-04-15T23:51:00Z,2026-04-16T00:01:59Z,659,logs_tacc/20260415_235100_iamkun_dayjs.log
+https://github.com/iaoing/Silhouette,1,4,30,False,,ubuntu 22.x,Not required,2026-02-19T06:55:30Z,2026-02-19T07:06:21Z,651,logs_tacc/20260219_065530_iaoing_Silhouette.log
+https://github.com/jqlang/jq,1,1,1,False,,debian 12-slim,Not required,2026-02-19T15:23:58Z,2026-02-19T15:35:13Z,675,logs_tacc/20260219_152358_jqlang_jq.log
+https://github.com/Kong/insomnia,2,4,10,False,,ubuntu 20.04,Not required,2026-04-16T00:02:04Z,2026-04-16T00:12:55Z,651,logs_tacc/20260416_000204_Kong_insomnia.log
+https://github.com/mockito/mockito,2,4,2,False,,ubuntu 20.04,Not required,2026-04-15T23:07:44Z,2026-04-15T23:17:52Z,608,logs_tacc/20260415_230744_mockito_mockito.log
+https://github.com/mui/material-ui,2,4,10,False,,ubuntu 20.04,Not required,2026-04-16T02:43:56Z,2026-04-16T02:54:55Z,659,logs_tacc/20260416_024356_mui_material-ui.log
+https://github.com/nlohmann/json,1,1,1,False,,ubuntu None,Not required,2026-02-19T16:10:28Z,2026-02-19T16:22:23Z,715,logs_tacc/20260219_161028_nlohmann_json.log
+https://github.com/nushell/nushell,2,2,1,False,,ubuntu None,Not required,2026-04-16T00:46:02Z,2026-04-16T01:19:30Z,2008,logs_tacc/20260416_004602_nushell_nushell.log
+https://github.com/peng-gao-lab/p4control,4,8,20,False,,ubuntu 20.04,Not required,2026-02-19T03:35:32Z,2026-02-19T03:46:21Z,649,logs_tacc/20260219_033532_peng-gao-lab_p4control.log
+https://github.com/perslev/U-Time,4,8,4096,True,,linux None,Required,2026-04-15T22:10:48Z,2026-04-15T22:24:00Z,792,logs_tacc/20260415_221048_perslev_U-Time.log
+https://github.com/ponylang/ponyc,2,4,10,False,,linux None,Not required,2026-02-19T15:35:18Z,2026-02-19T15:46:23Z,665,logs_tacc/20260219_153518_ponylang_ponyc.log
+https://github.com/PriorLabs/TabPFN,4,8,,True,8,ubuntu None,Required,2026-02-19T03:09:26Z,2026-02-19T03:22:24Z,778,logs_tacc/20260219_030926_PriorLabs_TabPFN.log
+https://github.com/rahulvigneswaran/Lottery-Ticket-Hypothesis-in-Pytorch,4,8,10,True,4,ubuntu 20.04,Required,2026-02-19T02:46:04Z,2026-02-19T02:57:53Z,709,logs_tacc/20260219_024604_rahulvigneswaran_Lottery-Ticket-Hypothesis-in-Pytorch.log
+https://github.com/rayon-rs/rayon,1,1,,False,,None None,Not required,2026-04-16T01:53:00Z,2026-04-16T02:03:51Z,651,logs_tacc/20260416_015300_rayon-rs_rayon.log
+https://github.com/RutgersCSSystems/crossprefetch-asplos24-artifacts,128,64,350,False,,ubuntu None,Not required,2026-02-19T03:46:26Z,2026-02-19T03:58:28Z,722,logs_tacc/20260219_034626_RutgersCSSystems_crossprefetch-asplos24-artifacts.log
+https://github.com/sbu-fsl/Metis,4,8,50,False,,ubuntu 22.04,Not required,2026-02-19T15:01:12Z,2026-02-19T15:11:21Z,609,logs_tacc/20260219_150112_sbu-fsl_Metis.log
+https://github.com/seal-research/gluetest,2,4,10,False,,ubuntu 20.04,Not required,2026-02-19T06:13:28Z,2026-02-19T06:24:23Z,655,logs_tacc/20260219_061328_seal-research_gluetest.log
+https://github.com/serde-rs/serde,1,1,1,False,,ubuntu 20.04,Not required,2026-04-16T01:19:35Z,2026-04-16T01:30:54Z,679,logs_tacc/20260416_011935_serde-rs_serde.log
+https://github.com/sharkdp/bat,1,1,1,False,,ubuntu 20.04,Not required,2026-04-16T01:30:59Z,2026-04-16T01:41:55Z,656,logs_tacc/20260416_013059_sharkdp_bat.log
+https://github.com/sharkdp/fd,1,1,1,False,,ubuntu 20.04,Not required,2026-04-16T01:42:00Z,2026-04-16T01:52:55Z,655,logs_tacc/20260416_014200_sharkdp_fd.log
+https://github.com/sideprotocol/plonky2-gpu,8,16,,True,12,None None,Required,2026-04-01T23:45:02Z,2026-04-01T23:54:54Z,592,logs_tacc/20260401_234502_sideprotocol_plonky2-gpu.log
+https://github.com/simdjson/simdjson,2,2,1,False,,ubuntu 20.04,Not required,2026-02-19T16:22:28Z,2026-02-19T16:34:48Z,740,logs_tacc/20260219_162228_simdjson_simdjson.log
+https://github.com/snu-csl/rfuse,80,256,,False,,ubuntu 20.04.5,Not required,2026-02-19T07:28:27Z,2026-02-19T07:40:50Z,743,logs_tacc/20260219_072827_snu-csl_rfuse.log
+https://github.com/sumonbis/Fairify,2,4,10,False,,ubuntu 20.04,Not required,2026-02-19T04:09:24Z,2026-02-19T04:20:22Z,658,logs_tacc/20260219_040924_sumonbis_Fairify.log
+https://github.com/sveltejs/svelte,2,4,10,False,,ubuntu 20.04,Not required,2026-04-16T00:13:01Z,2026-04-16T00:24:22Z,681,logs_tacc/20260416_001301_sveltejs_svelte.log
+https://github.com/tinoryj/ELECT,4,16,100,False,,ubuntu 20.04,Not required,2026-02-19T07:16:33Z,2026-02-19T07:28:22Z,709,logs_tacc/20260219_071633_tinoryj_ELECT.log
+https://github.com/tokio-rs/bytes,,,,False,,None None,Not required,2026-04-16T02:03:56Z,2026-04-16T02:13:52Z,596,logs_tacc/20260416_020356_tokio-rs_bytes.log
+https://github.com/tokio-rs/tokio,2,2,1,False,,None None,Not required,2026-04-16T02:13:57Z,2026-04-16T02:22:28Z,511,logs_tacc/20260416_021357_tokio-rs_tokio.log
+https://github.com/tokio-rs/tracing,1,1,,False,,None None,Not required,2026-04-16T02:22:33Z,2026-04-16T02:33:50Z,677,logs_tacc/20260416_022233_tokio-rs_tracing.log
+https://github.com/uiuc-arc/flex,2,4,5,False,,ubuntu 20.04,Not required,2026-02-19T06:24:28Z,2026-02-19T06:35:21Z,653,logs_tacc/20260219_062428_uiuc-arc_flex.log
+https://github.com/uiuc-arc/probfuzz,2,4,10,False,,ubuntu None,Not required,2026-02-19T06:02:26Z,2026-02-19T06:13:23Z,657,logs_tacc/20260219_060226_uiuc-arc_probfuzz.log
+https://github.com/uiuc-arc/sixthsense,4,8,10,False,,ubuntu 18.04,Not required,2026-02-19T05:51:51Z,2026-02-19T06:02:21Z,630,logs_tacc/20260219_055150_uiuc-arc_sixthsense.log
+https://github.com/vuejs/core,2,4,10,False,,ubuntu 20.04,Not required,2026-04-16T14:44:28Z,2026-04-16T14:56:18Z,710,logs_tacc/20260416_144428_vuejs_core.log
+https://github.com/wenxiwang/SymMC-Tool,2,4,10,False,,ubuntu 20.04,Not required,2026-02-19T03:58:33Z,2026-02-19T04:09:19Z,646,logs_tacc/20260219_035833_wenxiwang_SymMC-Tool.log
+https://github.com/wonglkd/Baleen-FAST24,4,16,100,False,,ubuntu 20.04,Not required,2026-02-19T06:45:25Z,2026-02-19T06:55:25Z,600,logs_tacc/20260219_064525_wonglkd_Baleen-FAST24.log
+https://github.com/xlab-uiuc/acto,4,8,20,False,,ubuntu 20.04,Not required,2026-02-19T06:35:26Z,2026-02-19T06:45:20Z,594,logs_tacc/20260219_063526_xlab-uiuc_acto.log
+https://github.com/yhirose/cpp-httplib,1,1,1,False,,ubuntu None,Not required,2026-02-19T16:34:54Z,2026-02-19T16:46:56Z,722,logs_tacc/20260219_163454_yhirose_cpp-httplib.log
+https://github.com/yrcong/RelTR,8,16,50,True,8,ubuntu 20.04,Required,2026-02-19T02:33:10Z,2026-02-19T02:45:59Z,769,logs_tacc/20260219_023310_yrcong_RelTR.log
+https://github.com/zeromicro/go-zero,,,,False,,None None,Not required,2026-02-19T19:48:31Z,,,logs_tacc/20260219_194831_zeromicro_go-zero.log
