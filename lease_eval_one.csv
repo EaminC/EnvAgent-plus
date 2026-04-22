@@ -1,0 +1,2 @@
+repo,cpu,ram,gpu,success,failure_type
+https://github.com/NVIDIA/tao_tutorials,8,32,True,False,other_error

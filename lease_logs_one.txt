@@ -1,0 +1,22 @@
+2026-04-22 01:04:05,741 INFO Loading predictions from ./predictions_one
+2026-04-22 01:04:05,741 INFO Loaded 1 prediction objects
+2026-04-22 01:04:05,741 INFO Creating lease for repo=https://github.com/NVIDIA/tao_tutorials node_type=gpu_a100 lease=lease-eval-tao-tutorials-20260422010405
+2026-04-22 01:04:06,719 ERROR Lease FAILED repo=https://github.com/NVIDIA/tao_tutorials failure_type=other_error
+Traceback (most recent call last):
+  File "evaluate_lease_success.py", line 289, in main
+    lease_info = create_lease(
+  File "evaluate_lease_success.py", line 219, in create_lease
+    raise RuntimeError(message)
+RuntimeError: Could not recognize Fernet token (HTTP 404) (Request-ID: req-4c6a2990-e648-41ba-bafa-c1c92f9d4580)
+2026-04-22 01:04:06,720 INFO Wrote results CSV: lease_eval_one.csv
+2026-04-22 01:15:24,627 INFO Loading predictions from ./predictions_one
+2026-04-22 01:15:24,628 INFO Loaded 1 prediction objects
+2026-04-22 01:15:24,628 INFO Creating lease for repo=https://github.com/NVIDIA/tao_tutorials node_type=gpu_a100 lease=lease-eval-tao-tutorials-20260422011524
+2026-04-22 01:15:25,256 ERROR Lease FAILED repo=https://github.com/NVIDIA/tao_tutorials failure_type=other_error
+Traceback (most recent call last):
+  File "evaluate_lease_success.py", line 289, in main
+    lease_info = create_lease(
+  File "evaluate_lease_success.py", line 219, in create_lease
+    raise RuntimeError(message)
+RuntimeError: __init__() got an unexpected keyword argument 'token'
+2026-04-22 01:15:25,258 INFO Wrote results CSV: lease_eval_one.csv

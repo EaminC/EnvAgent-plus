@@ -7,7 +7,7 @@ https://github.com/nyu-systems/CLM-GS,16,64,100,True,24
 https://github.com/TIO-IKIM/CellViT-plus-plus,16,64,100,True,24
 https://github.com/TIO-IKIM/CellViT-Inference,8,32,50,True,16
 https://github.com/sideprotocol/plonky2-gpu,16,64,50,True,16
-https://github.com/SVRTK/svrtk-docker-gpu,8,32,50,True,16
+https://github.com/SVRTK/svrtk-docker-gpu,8,32,50,True,8
 https://github.com/PluralisResearch/node0,4,8,50,False,0
 https://github.com/EsmaeilNarimissa/SciDOCX,4,16,20,False,0
 https://github.com/perslev/U-Time,8,32,100,True,8

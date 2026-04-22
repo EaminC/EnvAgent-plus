@@ -4,7 +4,12 @@ import os
 import time
 
 # ===== CONFIG =====
-FORGE_API_KEY = os.getenv("FORGE_API_KEY")
+FORGE_API_KEY = os.getenv("FORGE_API_KEY") or os.getenv("ANTHROPIC_AUTH_TOKEN")
+FORGE_BASE_URL = os.getenv("FORGE_BASE_URL") or os.getenv("OPENAI_BASE_URL") or "https://api.forge.tensorblock.co/v1"
+MODEL_NAME = os.getenv("FORGE_MODEL") or "tensorblock/claude-sonnet-4-6"
+
+if not FORGE_API_KEY:
+    raise SystemExit("Missing API key. Set FORGE_API_KEY or ANTHROPIC_AUTH_TOKEN.")
 
 OUTPUT_DIR = "log_claude_15"
 CSV_FILE = os.path.join(OUTPUT_DIR, "results.csv")
@@ -31,7 +36,7 @@ repos = [
 
 # ===== CLIENT =====
 client = OpenAI(
-    base_url="https://api.forge.tensorblock.co/v1",
+    base_url=FORGE_BASE_URL,
     api_key=FORGE_API_KEY,
 )
 
@@ -47,7 +52,13 @@ def clean_json(text):
 with open(CSV_FILE, "w") as f:
     f.write("repo,cpu,ram,disk,gpu,gpu_memory\n")
 
+# Reset raw output each run to avoid mixing old results.
+with open(RAW_FILE, "w") as f:
+    f.write("")
+
 # ===== LOOP =====
+print(f"Using model: {MODEL_NAME}")
+
 for repo in repos:
     print(f"\nProcessing: {repo}")
 
@@ -76,7 +87,7 @@ If unsure, still provide a reasonable estimate.
 
     try:
         completion = client.chat.completions.create(
-            model="tensorblock/claude-sonnet-4-6",
+            model=MODEL_NAME,
             messages=[
                 {"role": "system", "content": "You extract hardware requirements."},
                 {"role": "user", "content": prompt}
