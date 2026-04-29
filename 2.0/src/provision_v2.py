@@ -570,6 +570,191 @@ def assign_floating_ip(os_conn, server_id: str):
         return None
 
 
+def _resource_to_dict(resource):
+    """Best-effort conversion of an OpenStack resource into a JSON-safe dict."""
+    if resource is None:
+        return {}
+    if isinstance(resource, dict):
+        return dict(resource)
+    if hasattr(resource, "to_dict"):
+        try:
+            return resource.to_dict()
+        except Exception:
+            pass
+
+    data = {}
+    for attr in dir(resource):
+        if attr.startswith("_"):
+            continue
+        try:
+            value = getattr(resource, attr)
+        except Exception:
+            continue
+        if callable(value):
+            continue
+        data[attr] = value
+    return data
+
+
+def _first_value(mapping, keys, default="unknown"):
+    """Return the first non-empty value for a list of keys."""
+    if not isinstance(mapping, dict):
+        return default
+    for key in keys:
+        value = mapping.get(key)
+        if value not in (None, "", [], {}, ()):
+            return value
+    return default
+
+
+def _find_baremetal_node(os_conn, server_id: str, server_host: str = None):
+    """Try to locate the backing bare metal node for an active server."""
+    baremetal = getattr(os_conn, "baremetal", None)
+    if baremetal is None:
+        return {}
+
+    finder_names = ("get_node", "find_node")
+    for method_name in finder_names:
+        method = getattr(baremetal, method_name, None)
+        if not callable(method):
+            continue
+        for candidate in (server_id, server_host):
+            if not candidate:
+                continue
+            try:
+                node = method(candidate)
+                if node:
+                    return _resource_to_dict(node)
+            except Exception:
+                continue
+
+    list_method = getattr(baremetal, "nodes", None)
+    if not callable(list_method):
+        list_method = getattr(baremetal, "list_nodes", None)
+    if callable(list_method):
+        try:
+            try:
+                nodes = list_method(details=True)
+            except TypeError:
+                nodes = list_method()
+        except Exception:
+            nodes = []
+
+        if nodes is None:
+            nodes = []
+        try:
+            iterable = list(nodes)
+        except TypeError:
+            iterable = [nodes]
+
+        for node in iterable:
+            node_dict = _resource_to_dict(node)
+            values = [
+                str(node_dict.get("uuid", "")),
+                str(node_dict.get("id", "")),
+                str(node_dict.get("name", "")),
+                str(node_dict.get("instance_uuid", "")),
+            ]
+            instance_info = node_dict.get("instance_info")
+            if isinstance(instance_info, dict):
+                values.append(str(instance_info.get("image_source", "")))
+            if server_id in values or (server_host and server_host in values):
+                return node_dict
+
+    return {}
+
+
+def build_provision_snapshot(os_conn, server_info, server_id: str, server_name: str,
+                             image_name: str, image_id: str, node_type: str,
+                             reservation_id: str = None, lease_id: str = None,
+                             resource_properties: str = None):
+    """Capture a durable snapshot of the active server and reservation state."""
+    server_raw = _resource_to_dict(server_info)
+    server_host = _first_value(server_raw, [
+        "OS-EXT-SRV-ATTR:host",
+        "os-extended-server-attributes:host",
+        "host",
+        "hypervisor_hostname",
+        "OS-EXT-SRV-ATTR:hypervisor_hostname",
+        "instance_name",
+        "OS-EXT-SRV-ATTR:instance_name",
+    ])
+
+    flavor_details = {}
+    flavor_value = server_raw.get("flavor")
+    flavor_id = None
+    if isinstance(flavor_value, dict):
+        flavor_id = flavor_value.get("id") or flavor_value.get("uuid")
+    elif flavor_value not in (None, ""):
+        flavor_id = flavor_value
+
+    if flavor_id:
+        try:
+            flavor = os_conn.compute.find_flavor(flavor_id)
+            if flavor:
+                flavor_details = _resource_to_dict(flavor)
+        except Exception:
+            flavor_details = {}
+
+    lease_raw = {}
+    reservation_raw = {}
+    if lease_id:
+        try:
+            lease = blz().lease.get(lease_id)
+            lease_raw = _resource_to_dict(lease)
+            if reservation_id:
+                reservations = lease_raw.get("reservations") or []
+                if not isinstance(reservations, list):
+                    reservations = [reservations]
+                for reservation in reservations:
+                    reservation_dict = _resource_to_dict(reservation)
+                    candidate_ids = [
+                        str(reservation_dict.get("id", "")),
+                        str(reservation_dict.get("reservation_id", "")),
+                        str(reservation_dict.get("reservation", "")),
+                    ]
+                    if reservation_id in candidate_ids:
+                        reservation_raw = reservation_dict
+                        break
+        except Exception:
+            lease_raw = {}
+            reservation_raw = {}
+
+    baremetal_node_raw = _find_baremetal_node(os_conn, server_id, server_host)
+
+    return {
+        "captured_at": datetime.utcnow().isoformat() + "Z",
+        "provisioning_type": "kvm_vm" if node_type == "kvm_vm_fallback" else "bare_metal",
+        "lease_id": lease_id or "",
+        "reservation_id": reservation_id or "",
+        "server_id": server_id,
+        "server_name": server_name,
+        "selected_node_type": node_type,
+        "resource_properties": resource_properties or "unknown",
+        "lease_raw": lease_raw,
+        "reservation_raw": reservation_raw,
+        "server_raw": server_raw,
+        "server_attributes": {
+            "host": server_host,
+            "hypervisor_hostname": _first_value(server_raw, ["hypervisor_hostname", "OS-EXT-SRV-ATTR:hypervisor_hostname"]),
+            "instance_name": _first_value(server_raw, ["instance_name", "OS-EXT-SRV-ATTR:instance_name"]),
+        },
+        "flavor_details": flavor_details,
+        "baremetal_node_raw": baremetal_node_raw,
+        "image_name": image_name,
+        "image_id": image_id,
+        "addresses": server_raw.get("addresses", {}),
+        "summary": {
+            "actual_host": server_host,
+            "actual_flavor": _first_value(flavor_details, ["name", "original_name"]),
+            "actual_flavor_id": _first_value(flavor_details, ["id", "uuid"]),
+            "actual_vcpus": _first_value(flavor_details, ["vcpus"]),
+            "actual_ram_mb": _first_value(flavor_details, ["ram"]),
+            "actual_disk_gb": _first_value(flavor_details, ["disk"]),
+        },
+    }
+
+
 def main():
     parser = argparse.ArgumentParser(
         description='Automated Hardware Provisioning Tool v2.0',
@@ -714,6 +899,7 @@ def main():
         server_id = None
         server_info = None
         is_kvm_fallback = False
+        provision_snapshot = {}
         
         # Try bare-metal with Blazar
         try:
@@ -740,6 +926,18 @@ def main():
             server_id, server_info = launch_server_with_sdk(
                 os_conn, server_name, image_id, key_name, network_id, reservation_id
             )
+            provision_snapshot = build_provision_snapshot(
+                os_conn,
+                server_info,
+                server_id,
+                server_name,
+                image_name,
+                image_id,
+                node_type,
+                reservation_id=reservation_id,
+                lease_id=lease_id,
+                resource_properties=(filter_expression or json.dumps(["=", "$node_type", node_type]))
+            )
             
         except Exception as blazar_error:
             # All Blazar attempts failed - try Tier 4: KVM VMs via Nova
@@ -762,6 +960,18 @@ def main():
                 
                 node_type = "kvm_vm_fallback"
                 is_kvm_fallback = True
+                provision_snapshot = build_provision_snapshot(
+                    os_conn,
+                    server_info,
+                    server_id,
+                    server_name,
+                    image_name,
+                    image_id,
+                    node_type,
+                    reservation_id=None,
+                    lease_id=None,
+                    resource_properties="unknown"
+                )
                 print(f"\n✓ KVM VM fallback successful")
                 
             except Exception as kvm_error:
@@ -817,6 +1027,7 @@ def main():
                 'node_type': node_type,
                 'key_name': key_name,
                 'network_id': network_id,
+                'provision_snapshot': provision_snapshot,
             }, f, indent=2)
         
         print(f"\n✓ Info saved to: {output_file}")

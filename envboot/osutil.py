@@ -3,18 +3,18 @@ import os
 from dotenv import load_dotenv
 from openstack import connection
 from keystoneauth1 import session as ks
-from keystoneauth1.identity.v3 import Password, OidcPassword
+from keystoneauth1.identity.v3 import Password, OidcPassword, Token
 from blazarclient import client as blazar_client
 
 def _auth_from_env():
     auth_url = os.environ["OS_AUTH_URL"]
-    username = os.environ["OS_USERNAME"]
-    password = os.environ["OS_PASSWORD"]
-
     project_id = os.environ.get("OS_PROJECT_ID")
     project_name = os.environ.get("OS_PROJECT_NAME")
+    auth_type = os.environ.get("OS_AUTH_TYPE", "").lower()
 
-    if os.environ.get("OS_AUTH_TYPE", "") == "v3oidcpassword":
+    if auth_type == "v3oidcpassword":
+        username = os.environ["OS_USERNAME"]
+        password = os.environ["OS_PASSWORD"]
         client_secret = os.environ.get("OS_CLIENT_SECRET")
         if client_secret in (None, "", "none", "None"):
             client_secret = None  # public client
@@ -35,7 +35,19 @@ def _auth_from_env():
             project_name=project_name,
             scope=scope,   
         )
+    elif auth_type == "token" or os.environ.get("OS_AUTH_TOKEN") or os.environ.get("OS_TOKEN"):
+        token = os.environ.get("OS_AUTH_TOKEN") or os.environ.get("OS_TOKEN")
+        if not token:
+            raise KeyError("OS_AUTH_TOKEN")
+        return Token(
+            auth_url=auth_url,
+            token=token,
+            project_id=project_id,
+            project_name=project_name,
+        )
     else:
+        username = os.environ["OS_USERNAME"]
+        password = os.environ["OS_PASSWORD"]
         # Legacy password flow (non-OIDC)
         return Password(
             auth_url=auth_url,
@@ -51,7 +63,8 @@ def conn():
     load_dotenv(override=False)
     auth = _auth_from_env()
     sess = ks.Session(auth=auth)
-    return connection.Connection(session=sess, region_name=os.environ.get("OS_REGION_NAME"), identity_interface="public")
+    region_name = os.environ.get("OS_REGION_NAME") or os.environ.get("OS_REGION")
+    return connection.Connection(session=sess, region_name=region_name, identity_interface="public")
 
 def blz():
     """Return an authenticated Blazar client using the same Keystone session."""

@@ -1,1 +1,14 @@
-https://github.com/vuejs/core
+https://github.com/NVIDIA/tao_tutorials
+https://github.com/NVIDIA-NeMo/Gym
+https://github.com/mariocandela/ai-avatar
+https://github.com/snel-repo/Kilosort4
+https://github.com/nyu-systems/CLM-GS
+https://github.com/TIO-IKIM/CellViT-plus-plus
+https://github.com/TIO-IKIM/CellViT-Inference
+https://github.com/sideprotocol/plonky2-gpu
+https://github.com/SVRTK/svrtk-docker-gpu
+https://github.com/PluralisResearch/node0
+https://github.com/EsmaeilNarimissa/SciDOCX
+https://github.com/perslev/U-Time
+https://github.com/nesaorg/bootstrap
+https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast

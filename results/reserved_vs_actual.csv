@@ -1,0 +1,16 @@
+run_id,repo,node_type,cpus,memory_mb,disk_gb,gpu_type,gpu_count,using_placeholder
+auto-server-202604281741_info.json,https://github.com/NVIDIA/tao_tutorials,gpu_mi100,24,512000,6400,NVIDIA MI100,4,False
+auto-server-202604281906_info.json,https://github.com/NVIDIA/tao_tutorials,gpu_k80,16,192000,4000,NVIDIA K80,2,False
+auto-server-202604281920_info.json,https://github.com/NVIDIA-NeMo/Gym,compute_cascadelake_r,48,384000,6400,unknown,0,False
+auto-server-202604281930_info.json,https://github.com/mariocandela/ai-avatar,compute_cascadelake_r,48,384000,6400,unknown,0,False
+auto-server-202604281941_info.json,https://github.com/snel-repo/Kilosort4,gpu_k80,16,192000,4000,NVIDIA K80,2,False
+auto-server-202604281955_info.json,https://github.com/nyu-systems/CLM-GS,gpu_m40,20,256000,4000,NVIDIA M40,2,False
+auto-server-202604282009_info.json,https://github.com/TIO-IKIM/CellViT-plus-plus,gpu_m40,20,256000,4000,NVIDIA M40,2,False
+auto-server-202604282023_info.json,https://github.com/TIO-IKIM/CellViT-Inference,gpu_p100,28,256000,4000,NVIDIA P100,2,False
+auto-server-202604282036_info.json,https://github.com/sideprotocol/plonky2-gpu,gpu_mi100,24,512000,6400,NVIDIA MI100,4,False
+auto-server-202604282048_info.json,https://github.com/SVRTK/svrtk-docker-gpu,compute_cascadelake_r,48,384000,6400,unknown,0,False
+auto-server-202604282100_info.json,https://github.com/PluralisResearch/node0,compute_cascadelake_r,48,384000,6400,unknown,0,False
+auto-server-202604282111_info.json,https://github.com/EsmaeilNarimissa/SciDOCX,compute_cascadelake_r,48,384000,6400,unknown,0,False
+auto-server-202604282122_info.json,https://github.com/perslev/U-Time,compute_cascadelake_r,48,384000,6400,unknown,0,False
+auto-server-202604282135_info.json,https://github.com/nesaorg/bootstrap,compute_cascadelake_r,48,384000,6400,unknown,0,False
+auto-server-202604282145_info.json,https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast,compute_cascadelake_r,48,384000,6400,unknown,0,False
