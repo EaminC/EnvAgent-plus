@@ -1,0 +1,106 @@
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/ai-avatar
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA or GPU support is not needed. Therefore, a mix of recent and stable Ubuntu and CentOS images without CUDA support were selected. These images are likely to be well-supported and versatile for general use. The selected images include the latest Ubuntu 24.04, 22.04, and 20.04 versions, as well as CentOS 9 and 8 Stream versions, which are commonly used for a variety of applications.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. The user does not require any specific hardware features that would necessitate selecting a GPU node.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. The user does not require any specific hardware features that would necessitate selecting a GPU node.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010306-20260501030632-008511
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: ebc985ac-3cfb-47ba-a972-cc5c8b60dfeb
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010306-20260501030632-008511
+Server ID: ebc985ac-3cfb-47ba-a972-cc5c8b60dfeb
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010306-20260501030632-008511_info.json

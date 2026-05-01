@@ -1,0 +1,2002 @@
+(venv) (base) cc@envagentplus2:~/EnvAgent-plus$ source /tmp/kvm_test_openrc.sh 2>/dev/null && source /home/cc/EnvAgent-plus/venv/bin/activate && python 2.0/scripts/batch_provision.py
+
+=== RUN 1/14: https://github.com/NVIDIA/tao_tutorials ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA/tao_tutorials --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA or GPU support is not required. Therefore, the selection includes a variety of recent and stable images from both Ubuntu and CentOS distributions without CUDA support. The chosen images are: CC-Ubuntu24.04 (ID: f0c599f7-6dff-4f81-acec-851bcb5995cd), CC-Ubuntu22.04 (ID: 2dbea132-b5b2-4daa-85ff-86670c79eecd), CC-Ubuntu20.04 (ID: 7580b9fb-3693-4574-b875-cfe43918b345), CC-CentOS9-Stream (ID: 4a52f0fc-3803-470d-8877-267106cd834c), and CC-CentOS8-Stream (ID: b30f74cd-a0d9-4046-a00f-21cdaf974388). These images provide a good mix of the latest Ubuntu and CentOS versions, ensuring compatibility and support for a wide range of applications.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has 79 reservable nodes, which is significantly higher than the 1 reservable node available for 'gpu'. Since the user does not require a GPU, the 'compute' node type is the most suitable choice due to its higher availability, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has 79 reservable nodes, which is significantly higher than the 1 reservable node available for 'gpu'. Since the user does not require a GPU, the 'compute' node type is the most suitable choice due to its higher availability, maximizing the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010119-20260501011930-2ef191-compute
+  Node Type: compute
+  Start: 2026-05-01 01:21
+  End: 2026-05-01 03:21
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010119-20260501011930-2ef191-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:21
+  End: 2026-05-01 03:21
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010119-20260501011930-2ef191
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: effe101f-1604-4d62-9d5e-2127a8e3ef01
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM fallback successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.131
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm_fallback
+Server Name: auto-server-202605010119-20260501011930-2ef191
+Server ID: effe101f-1604-4d62-9d5e-2127a8e3ef01
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_fallback
+Floating IP: 129.114.27.131
+
+SSH Connection:
+  ssh ubuntu@129.114.27.131
+
+✓ Info saved to: auto-server-202605010119-20260501011930-2ef191_info.json
+
+=== RUN 2/14: https://github.com/NVIDIA-NeMo/Gym ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA-NeMo/Gym --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA or GPU support is not needed. Therefore, the selection focuses on a variety of recent and stable images without CUDA support. The chosen images include a mix of Ubuntu and CentOS distributions to provide flexibility in OS choice. The selected images are: CC-CentOS9-Stream (ID: 4a52f0fc-3803-470d-8877-267106cd834c), CC-Ubuntu24.04 (ID: f0c599f7-6dff-4f81-acec-851bcb5995cd), CC-Ubuntu22.04 (ID: 2dbea132-b5b2-4daa-85ff-86670c79eecd), CC-Ubuntu20.04 (ID: 7580b9fb-3693-4574-b875-cfe43918b345), and CC-CentOS8-Stream (ID: b30f74cd-a0d9-4046-a00f-21cdaf974388). These images provide a good balance of recent updates and stability across different Linux distributions.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010120-20260501012022-3dabf1-compute
+  Node Type: compute
+  Start: 2026-05-01 01:22
+  End: 2026-05-01 03:22
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010120-20260501012022-3dabf1-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:22
+  End: 2026-05-01 03:22
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010120-20260501012022-3dabf1
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 3ca7fff1-3ae0-4cc8-8499-1b64ae815af8
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM fallback successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.214
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm_fallback
+Server Name: auto-server-202605010120-20260501012022-3dabf1
+Server ID: 3ca7fff1-3ae0-4cc8-8499-1b64ae815af8
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_fallback
+Floating IP: 129.114.27.214
+
+SSH Connection:
+  ssh ubuntu@129.114.27.214
+
+✓ Info saved to: auto-server-202605010120-20260501012022-3dabf1_info.json
+
+=== RUN 3/14: https://github.com/mariocandela/ai-avatar ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/mariocandela/ai-avatar --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type, version, or need for CUDA or GPU support. Therefore, the selection focuses on recent and stable versions of popular Linux distributions without CUDA. The chosen images include the latest versions of Ubuntu (24.04, 22.04, and 20.04) and CentOS (9-Stream and 8-Stream) to provide a variety of options for different use cases.
+
+✓ Final Selection: CC-Ubuntu24.04
+  Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, compared to the gpu node type which has only 1 reservable. Selecting compute maximizes the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, compared to the gpu node type which has only 1 reservable. Selecting compute maximizes the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010121-20260501012112-e96bc9-compute
+  Node Type: compute
+  Start: 2026-05-01 01:23
+  End: 2026-05-01 03:23
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010121-20260501012112-e96bc9-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:23
+  End: 2026-05-01 03:23
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010121-20260501012112-e96bc9
+    Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: b461b6ce-895e-481f-a04e-1013747aec18
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM fallback successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.101
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm_fallback
+Server Name: auto-server-202605010121-20260501012112-e96bc9
+Server ID: b461b6ce-895e-481f-a04e-1013747aec18
+Image: CC-Ubuntu24.04
+Node Type: kvm_vm_fallback
+Floating IP: 129.114.27.101
+
+SSH Connection:
+  ssh ubuntu@129.114.27.101
+
+✓ Info saved to: auto-server-202605010121-20260501012112-e96bc9_info.json
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010122-20260501012203-70439a
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: c7d66b69-b1ad-457e-bb8c-9f41357f64dd
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM fallback successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.25.49
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm_fallback
+Server Name: auto-server-202605010122-20260501012203-70439a
+Server ID: c7d66b69-b1ad-457e-bb8c-9f41357f64dd
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_fallback
+Floating IP: 129.114.25.49
+
+SSH Connection:
+  ssh ubuntu@129.114.25.49
+
+✓ Info saved to: auto-server-202605010122-20260501012203-70439a_info.json
+
+=== RUN 5/14: https://github.com/nyu-systems/CLM-GS ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/nyu-systems/CLM-GS --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements do not specify any particular OS type, version, or need for CUDA or GPU support. Therefore, the selected candidates are recent and stable versions of popular operating systems, Ubuntu and CentOS, which are widely used and have good community support. These images do not have CUDA, aligning with the requirement that CUDA is not needed.
+
+✓ Final Selection: CC-Ubuntu24.04
+  Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has a higher reservable count of 79 compared to the gpu node type with only 1 reservable. Selecting compute maximizes the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has a higher reservable count of 79 compared to the gpu node type with only 1 reservable. Selecting compute maximizes the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010122-20260501012252-a85ce4-compute
+  Node Type: compute
+  Start: 2026-05-01 01:24
+  End: 2026-05-01 03:24
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010122-20260501012252-a85ce4-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:25
+  End: 2026-05-01 03:25
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010122-20260501012252-a85ce4
+    Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: e40d8175-7d7a-4378-b058-24dcde3f0a19
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM fallback successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+Creating new floating IP...
+✓ Using floating IP: 129.114.27.54
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm_fallback
+Server Name: auto-server-202605010122-20260501012252-a85ce4
+Server ID: e40d8175-7d7a-4378-b058-24dcde3f0a19
+Image: CC-Ubuntu24.04
+Node Type: kvm_vm_fallback
+Floating IP: 129.114.27.54
+
+SSH Connection:
+  ssh ubuntu@129.114.27.54
+
+✓ Info saved to: auto-server-202605010122-20260501012252-a85ce4_info.json
+
+=== RUN 6/14: https://github.com/TIO-IKIM/CellViT-plus-plus ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/TIO-IKIM/CellViT-plus-plus --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1290, in main
+    lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+  File "2.0/src/provision_v2.py", line 350, in attempt_lease_with_fallbacks
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
+Exception: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu"]', 'start_date': datetime.datetime(2026, 5, 1, 1, 25), 'end_date': datetime.datetime(2026, 5, 1, 3, 25), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 161, in launch_kvm_instance
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance c4a4e4ed-9c27-4abb-8110-3eb39fde3d3d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1336, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 168, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance c4a4e4ed-9c27-4abb-8110-3eb39fde3d3d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1362, in main
+    raise Exception(f"Complete provisioning failure across all tiers")
+Exception: Complete provisioning failure across all tiers
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify that there are no constraints on OS type, OS version, CUDA, or GPU. Therefore, we can select images that are recent and do not have CUDA support, as CUDA is not required. The selected images include recent versions of Ubuntu and CentOS without CUDA support, providing a range of OS options. These images are suitable for general use without any specific hardware or software dependencies.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count with 79 reservable nodes, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count with 79 reservable nodes, maximizing the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010123-20260501012342-40a73d-compute
+  Node Type: compute
+  Start: 2026-05-01 01:25
+  End: 2026-05-01 03:25
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010123-20260501012342-40a73d-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:25
+  End: 2026-05-01 03:25
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010123-20260501012342-40a73d
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: c4a4e4ed-9c27-4abb-8110-3eb39fde3d3d
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance c4a4e4ed-9c27-4abb-8110-3eb39fde3d3d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM fallback also failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance c4a4e4ed-9c27-4abb-8110-3eb39fde3d3d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ All provisioning tiers exhausted:
+   Tier 1-3 (Blazar bare-metal): All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:h
+   Tier 4 (KVM VMs): KVM instance launch failed: KVM instance entered ERROR state: Build of instance c4a4e4ed-9c27-4abb-8110-3eb39fde3d3d aborted: Failed to allocate the n
+
+
+✗ ERROR: Complete provisioning failure across all tiers
+Final server_id: None
+Final flavor/node_type: compute
+
+=== RUN 7/14: https://github.com/TIO-IKIM/CellViT-Inference ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/TIO-IKIM/CellViT-Inference --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1290, in main
+    lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+  File "2.0/src/provision_v2.py", line 350, in attempt_lease_with_fallbacks
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
+Exception: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu"]', 'start_date': datetime.datetime(2026, 5, 1, 1, 26), 'end_date': datetime.datetime(2026, 5, 1, 3, 26), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 161, in launch_kvm_instance
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance bc4c2bca-f1ef-42f1-bafe-9f0a2737eddf aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1336, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 168, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance bc4c2bca-f1ef-42f1-bafe-9f0a2737eddf aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1362, in main
+    raise Exception(f"Complete provisioning failure across all tiers")
+Exception: Complete provisioning failure across all tiers
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type, version, or CUDA support. Therefore, the selection includes a variety of recent, non-CUDA images from both Ubuntu and CentOS distributions to provide flexibility. The chosen images are: CC-Ubuntu24.04, CC-Ubuntu22.04, CC-Ubuntu20.04, CC-CentOS9-Stream, and CC-CentOS8-Stream. These images are recent and widely used, ensuring compatibility and support for a range of applications.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010124-20260501012429-cda5cd-compute
+  Node Type: compute
+  Start: 2026-05-01 01:26
+  End: 2026-05-01 03:26
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010124-20260501012429-cda5cd-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:26
+  End: 2026-05-01 03:26
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010124-20260501012429-cda5cd
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: bc4c2bca-f1ef-42f1-bafe-9f0a2737eddf
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance bc4c2bca-f1ef-42f1-bafe-9f0a2737eddf aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM fallback also failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance bc4c2bca-f1ef-42f1-bafe-9f0a2737eddf aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ All provisioning tiers exhausted:
+   Tier 1-3 (Blazar bare-metal): All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:h
+   Tier 4 (KVM VMs): KVM instance launch failed: KVM instance entered ERROR state: Build of instance bc4c2bca-f1ef-42f1-bafe-9f0a2737eddf aborted: Failed to allocate the n
+
+
+✗ ERROR: Complete provisioning failure across all tiers
+Final server_id: None
+Final flavor/node_type: compute
+
+=== RUN 8/14: https://github.com/sideprotocol/plonky2-gpu ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/sideprotocol/plonky2-gpu --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1290, in main
+    lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+  File "2.0/src/provision_v2.py", line 350, in attempt_lease_with_fallbacks
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
+Exception: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu"]', 'start_date': datetime.datetime(2026, 5, 1, 1, 27), 'end_date': datetime.datetime(2026, 5, 1, 3, 27), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 161, in launch_kvm_instance
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance 59fb923e-1549-438c-ae86-25199b67af3e aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1336, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 168, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 59fb923e-1549-438c-ae86-25199b67af3e aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1362, in main
+    raise Exception(f"Complete provisioning failure across all tiers")
+Exception: Complete provisioning failure across all tiers
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA/GPU support is not needed. Therefore, we can select a variety of images from the available list. The selected images include the latest versions of Ubuntu (24.04, 22.04, and 20.04) and CentOS (9-Stream and 8-Stream) without CUDA support, ensuring a mix of popular and stable operating systems for general-purpose use.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, which maximizes the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, which maximizes the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010125-20260501012518-25bbe0-compute
+  Node Type: compute
+  Start: 2026-05-01 01:27
+  End: 2026-05-01 03:27
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010125-20260501012518-25bbe0-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:27
+  End: 2026-05-01 03:27
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010125-20260501012518-25bbe0
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 59fb923e-1549-438c-ae86-25199b67af3e
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance 59fb923e-1549-438c-ae86-25199b67af3e aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM fallback also failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 59fb923e-1549-438c-ae86-25199b67af3e aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ All provisioning tiers exhausted:
+   Tier 1-3 (Blazar bare-metal): All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:h
+   Tier 4 (KVM VMs): KVM instance launch failed: KVM instance entered ERROR state: Build of instance 59fb923e-1549-438c-ae86-25199b67af3e aborted: Failed to allocate the n
+
+
+✗ ERROR: Complete provisioning failure across all tiers
+Final server_id: None
+Final flavor/node_type: compute
+
+=== RUN 9/14: https://github.com/SVRTK/svrtk-docker-gpu ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/SVRTK/svrtk-docker-gpu --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1290, in main
+    lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+  File "2.0/src/provision_v2.py", line 350, in attempt_lease_with_fallbacks
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
+Exception: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu"]', 'start_date': datetime.datetime(2026, 5, 1, 1, 28), 'end_date': datetime.datetime(2026, 5, 1, 3, 28), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 161, in launch_kvm_instance
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance 060fa86f-d594-4205-bab2-8907419e556d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1336, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 168, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 060fa86f-d594-4205-bab2-8907419e556d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1362, in main
+    raise Exception(f"Complete provisioning failure across all tiers")
+Exception: Complete provisioning failure across all tiers
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements do not specify any particular OS type or version, nor do they require CUDA or GPU support. Therefore, the selection can focus on the most recent and stable versions of popular Linux distributions. Ubuntu 24.04 and 22.04 are the latest LTS versions, providing long-term support and stability. CentOS 9 Stream is a rolling-release distribution that provides a stable and up-to-date environment, making it a good candidate for general use.
+
+✓ Final Selection: CC-Ubuntu24.04
+  Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010126-20260501012612-0aedf2-compute
+  Node Type: compute
+  Start: 2026-05-01 01:28
+  End: 2026-05-01 03:28
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010126-20260501012612-0aedf2-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:28
+  End: 2026-05-01 03:28
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010126-20260501012612-0aedf2
+    Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 060fa86f-d594-4205-bab2-8907419e556d
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance 060fa86f-d594-4205-bab2-8907419e556d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM fallback also failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 060fa86f-d594-4205-bab2-8907419e556d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ All provisioning tiers exhausted:
+   Tier 1-3 (Blazar bare-metal): All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:h
+   Tier 4 (KVM VMs): KVM instance launch failed: KVM instance entered ERROR state: Build of instance 060fa86f-d594-4205-bab2-8907419e556d aborted: Failed to allocate the n
+
+
+✗ ERROR: Complete provisioning failure across all tiers
+Final server_id: None
+Final flavor/node_type: compute
+
+=== RUN 10/14: https://github.com/PluralisResearch/node0 ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/PluralisResearch/node0 --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1054, in main
+    ensure_keypair(
+  File "2.0/src/provision_v2.py", line 218, in ensure_keypair
+    kp = os_conn.compute.create_keypair(name=key_name, public_key=public_key)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/openstack/service_description.py", line 89, in __get__
+    proxy = self._make_proxy(instance)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/openstack/service_description.py", line 289, in _make_proxy
+    found_version = temp_adapter.get_api_major_version()
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/adapter.py", line 352, in get_api_major_version
+    return self.session.get_api_major_version(auth or self.auth, **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/session.py", line 1289, in get_api_major_version
+    return auth.get_api_major_version(self, **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/base.py", line 497, in get_api_major_version
+    data = get_endpoint_data(discover_versions=discover_versions)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/base.py", line 268, in get_endpoint_data
+    service_catalog = self.get_access(session).service_catalog
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/base.py", line 131, in get_access
+    self.auth_ref = self.get_auth_ref(session)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/v3/federation.py", line 62, in get_auth_ref
+    auth_ref = self.get_unscoped_auth_ref(session)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/v3/oidc.py", line 290, in get_unscoped_auth_ref
+    access_token = self._get_access_token(session, payload)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/identity/v3/oidc.py", line 217, in _get_access_token
+    op_response = session.post(access_token_endpoint,
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/session.py", line 1162, in post
+    return self.request(url, 'POST', **kwargs)
+  File "/home/cc/EnvAgent-plus/venv/lib/python3.8/site-packages/keystoneauth1/session.py", line 985, in request
+    raise exceptions.from_response(resp, method, url)
+keystoneauth1.exceptions.http.Unauthorized: Unrecognized schema in response body. (HTTP 401)
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type or version, nor do they require CUDA or GPU support. Therefore, the selection focuses on a variety of recent and stable images from both Ubuntu and CentOS distributions. The selected images are: CC-CentOS9-Stream, CC-Ubuntu24.04, CC-Ubuntu22.04, CC-Ubuntu20.04, and CC-CentOS8-Stream. These images provide a good mix of the latest stable versions of popular Linux distributions, ensuring compatibility and support for a wide range of applications.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+
+
+✗ ERROR: Unrecognized schema in response body. (HTTP 401)
+Final server_id: unknown
+Final flavor/node_type: unknown
+=== RUN 11/14: https://github.com/EsmaeilNarimissa/SciDOCX ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/EsmaeilNarimissa/SciDOCX --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1290, in main
+    lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+  File "2.0/src/provision_v2.py", line 350, in attempt_lease_with_fallbacks
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
+Exception: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu"]', 'start_date': datetime.datetime(2026, 5, 1, 1, 29), 'end_date': datetime.datetime(2026, 5, 1, 3, 29), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 161, in launch_kvm_instance
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance f8f0f3c2-6973-4e09-8d4d-10d2e6eca15d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1336, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 168, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance f8f0f3c2-6973-4e09-8d4d-10d2e6eca15d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1362, in main
+    raise Exception(f"Complete provisioning failure across all tiers")
+Exception: Complete provisioning failure across all tiers
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements do not specify any particular OS type, version, or need for CUDA or GPU. Therefore, the selection focuses on the most recent and stable versions of popular Linux distributions without CUDA. The images chosen are the latest non-CUDA versions of Ubuntu 24.04 and 22.04, and CentOS 9 Stream, which are widely used and supported, ensuring compatibility and stability for a variety of applications.
+
+✓ Final Selection: CC-Ubuntu24.04
+  Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable match.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable match.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010127-20260501012723-8966be-compute
+  Node Type: compute
+  Start: 2026-05-01 01:29
+  End: 2026-05-01 03:29
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010127-20260501012723-8966be-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:29
+  End: 2026-05-01 03:29
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010127-20260501012723-8966be
+    Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: f8f0f3c2-6973-4e09-8d4d-10d2e6eca15d
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance f8f0f3c2-6973-4e09-8d4d-10d2e6eca15d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM fallback also failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance f8f0f3c2-6973-4e09-8d4d-10d2e6eca15d aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ All provisioning tiers exhausted:
+   Tier 1-3 (Blazar bare-metal): All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:h
+   Tier 4 (KVM VMs): KVM instance launch failed: KVM instance entered ERROR state: Build of instance f8f0f3c2-6973-4e09-8d4d-10d2e6eca15d aborted: Failed to allocate the n
+
+
+✗ ERROR: Complete provisioning failure across all tiers
+Final server_id: None
+Final flavor/node_type: compute
+
+=== RUN 12/14: https://github.com/perslev/U-Time ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/perslev/U-Time --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1290, in main
+    lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+  File "2.0/src/provision_v2.py", line 350, in attempt_lease_with_fallbacks
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
+Exception: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu"]', 'start_date': datetime.datetime(2026, 5, 1, 1, 30), 'end_date': datetime.datetime(2026, 5, 1, 3, 30), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 161, in launch_kvm_instance
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance 75d28aa6-dafc-4caa-a1c9-fd1cbae393e1 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1336, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 168, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 75d28aa6-dafc-4caa-a1c9-fd1cbae393e1 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1362, in main
+    raise Exception(f"Complete provisioning failure across all tiers")
+Exception: Complete provisioning failure across all tiers
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type or version, nor do they require CUDA or GPU support. Therefore, the selection is based on providing a variety of recent and commonly used OS images. The chosen images include the latest versions of Ubuntu (24.04, 22.04, and 20.04) and CentOS (8 and 9 Stream) without CUDA support, ensuring a broad compatibility and up-to-date security features.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is suitable.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is suitable.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010128-20260501012812-2d447a-compute
+  Node Type: compute
+  Start: 2026-05-01 01:30
+  End: 2026-05-01 03:30
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010128-20260501012812-2d447a-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:30
+  End: 2026-05-01 03:30
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010128-20260501012812-2d447a
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 75d28aa6-dafc-4caa-a1c9-fd1cbae393e1
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance 75d28aa6-dafc-4caa-a1c9-fd1cbae393e1 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM fallback also failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 75d28aa6-dafc-4caa-a1c9-fd1cbae393e1 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ All provisioning tiers exhausted:
+   Tier 1-3 (Blazar bare-metal): All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:h
+   Tier 4 (KVM VMs): KVM instance launch failed: KVM instance entered ERROR state: Build of instance 75d28aa6-dafc-4caa-a1c9-fd1cbae393e1 aborted: Failed to allocate the n
+
+
+✗ ERROR: Complete provisioning failure across all tiers
+Final server_id: None
+Final flavor/node_type: compute
+
+=== RUN 13/14: https://github.com/nesaorg/bootstrap ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/nesaorg/bootstrap --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1290, in main
+    lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+  File "2.0/src/provision_v2.py", line 350, in attempt_lease_with_fallbacks
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
+Exception: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu"]', 'start_date': datetime.datetime(2026, 5, 1, 1, 31), 'end_date': datetime.datetime(2026, 5, 1, 3, 31), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 161, in launch_kvm_instance
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance eee5ddfa-d8f1-4c9b-a62b-b4a0ed8eed54 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1336, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 168, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance eee5ddfa-d8f1-4c9b-a62b-b4a0ed8eed54 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1362, in main
+    raise Exception(f"Complete provisioning failure across all tiers")
+Exception: Complete provisioning failure across all tiers
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify a particular OS type or version, nor do they require CUDA or GPU support. Therefore, the selection focuses on the most recent and stable base images without CUDA. The chosen images include the latest versions of Ubuntu (24.04, 22.04, 20.04) and CentOS (9-Stream, 8-Stream) to provide a variety of options for different Linux distributions. These images are likely to be stable and well-supported, making them suitable for a wide range of applications.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, which maximizes the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, which maximizes the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010128-20260501012859-090a51-compute
+  Node Type: compute
+  Start: 2026-05-01 01:30
+  End: 2026-05-01 03:30
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010128-20260501012859-090a51-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:31
+  End: 2026-05-01 03:31
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010128-20260501012859-090a51
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: eee5ddfa-d8f1-4c9b-a62b-b4a0ed8eed54
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance eee5ddfa-d8f1-4c9b-a62b-b4a0ed8eed54 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM fallback also failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance eee5ddfa-d8f1-4c9b-a62b-b4a0ed8eed54 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ All provisioning tiers exhausted:
+   Tier 1-3 (Blazar bare-metal): All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:h
+   Tier 4 (KVM VMs): KVM instance launch failed: KVM instance entered ERROR state: Build of instance eee5ddfa-d8f1-4c9b-a62b-b4a0ed8eed54 aborted: Failed to allocate the n
+
+
+✗ ERROR: Complete provisioning failure across all tiers
+Final server_id: None
+Final flavor/node_type: compute
+
+
+=== RUN 14/14: https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast --site KVM@TACC --skip-repo-clone --lease-duration 2
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1290, in main
+    lease_id, reservation_id, node_type = attempt_lease_with_fallbacks(
+  File "2.0/src/provision_v2.py", line 350, in attempt_lease_with_fallbacks
+    raise Exception(f"All Blazar fallback attempts failed. Last error: {last_error}")
+Exception: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties': '', 'resource_properties': '["=", "$node_type", "gpu"]', 'start_date': datetime.datetime(2026, 5, 1, 1, 31), 'end_date': datetime.datetime(2026, 5, 1, 3, 31), 'project_id': '350e72270e474aba8a9199644e0b1182', 'count_range': '1-1', 'before_end': 'default', 'on_start': 'default'}
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 161, in launch_kvm_instance
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance b4c84d32-b0f4-46af-86e5-93d3d9215877 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1336, in main
+    server_id, server_info = launch_kvm_instance(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 168, in launch_kvm_instance
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance b4c84d32-b0f4-46af-86e5-93d3d9215877 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1362, in main
+    raise Exception(f"Complete provisioning failure across all tiers")
+Exception: Complete provisioning failure across all tiers
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type or version, nor do they require CUDA or GPU support. Therefore, the selection focuses on a diverse set of recent and stable images from both Ubuntu and CentOS distributions without CUDA support. The chosen images include the latest versions of Ubuntu 24.04, 22.04, and 20.04, as well as CentOS 9 Stream and CentOS 8 Stream, providing a range of options for different use cases.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count with 79 available nodes, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count with 79 available nodes, maximizing the success rate for lease creation.
+
+============================================================
+Step 5: Create Hardware Reservation (with fallbacks)
+============================================================
+
+→ Trying 2 node types (compute → KVM → others)
+
+[1/2] Attempting: compute (79 reservable / 79 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010129-20260501012946-d15fd4-compute
+  Node Type: compute
+  Start: 2026-05-01 01:31
+  End: 2026-05-01 03:31
+  ✗ No capacity available for compute
+  → Trying next option...
+
+[2/2] Attempting: gpu (1 reservable / 1 total)
+✓ Using manual duration: 2 hours
+
+Creating lease:
+  Name: auto-202605010129-20260501012946-d15fd4-gpu
+  Node Type: gpu
+  Start: 2026-05-01 01:31
+  End: 2026-05-01 03:31
+  ✗ No capacity available for gpu
+
+✗ All 2 Blazar fallback options exhausted
+
+→ Attempting Tier 4: KVM VM (Direct Nova)
+
+============================================================
+TIER 4 FALLBACK: KVM Virtual Machines (direct Nova)
+============================================================
+Blazar bare-metal exhausted: All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:host', 'min': 1, 'max': 1, 'hypervisor_properties':
+
+→ Switching to direct Nova VM launch (no reservation needed)
+
+  Launching KVM VM:
+    Name: auto-server-202605010129-20260501012946-d15fd4
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: b4c84d32-b0f4-46af-86e5-93d3d9215877
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance b4c84d32-b0f4-46af-86e5-93d3d9215877 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM fallback also failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance b4c84d32-b0f4-46af-86e5-93d3d9215877 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ All provisioning tiers exhausted:
+   Tier 1-3 (Blazar bare-metal): All Blazar fallback attempts failed. Last error: Lease creation failed: ERROR: Not enough resources available with query {'resource_type': 'physical:h
+   Tier 4 (KVM VMs): KVM instance launch failed: KVM instance entered ERROR state: Build of instance b4c84d32-b0f4-46af-86e5-93d3d9215877 aborted: Failed to allocate the n
+
+
+✗ ERROR: Complete provisioning failure across all tiers
+Final server_id: None
+Final flavor/node_type: compute
+
+=== SUMMARY ===
+Total repos: 14
+Successes: 0
+Success rate: 0/14 = 0.00%
+{'repo': 'https://github.com/NVIDIA/tao_tutorials', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 0, 'log': '/tmp/provision_batch_logs/run_1.log'}
+{'repo': 'https://github.com/NVIDIA-NeMo/Gym', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 0, 'log': '/tmp/provision_batch_logs/run_2.log'}
+{'repo': 'https://github.com/mariocandela/ai-avatar', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 0, 'log': '/tmp/provision_batch_logs/run_3.log'}
+{'repo': 'https://github.com/snel-repo/Kilosort4', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 0, 'log': '/tmp/provision_batch_logs/run_4.log'}
+{'repo': 'https://github.com/nyu-systems/CLM-GS', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 0, 'log': '/tmp/provision_batch_logs/run_5.log'}
+{'repo': 'https://github.com/TIO-IKIM/CellViT-plus-plus', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_6.log'}
+{'repo': 'https://github.com/TIO-IKIM/CellViT-Inference', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_7.log'}
+{'repo': 'https://github.com/sideprotocol/plonky2-gpu', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_8.log'}
+{'repo': 'https://github.com/SVRTK/svrtk-docker-gpu', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_9.log'}
+{'repo': 'https://github.com/PluralisResearch/node0', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_10.log'}
+{'repo': 'https://github.com/EsmaeilNarimissa/SciDOCX', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_11.log'}
+{'repo': 'https://github.com/perslev/U-Time', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_12.log'}
+{'repo': 'https://github.com/nesaorg/bootstrap', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_13.log'}
+{'repo': 'https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast', 'success': False, 'server_id': None, 'flavor': None, 'fip': None, 'rc': 1, 'log': '/tmp/provision_batch_logs/run_14.log'}
+
+Logs saved to /tmp/provision_batch_logs

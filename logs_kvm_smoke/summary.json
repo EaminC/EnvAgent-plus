@@ -1,0 +1,56 @@
+[
+  {
+    "repo": "https://github.com/NVIDIA-NeMo/Gym",
+    "rc": 0,
+    "log": "logs_kvm_smoke/run_1.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "7c062a07-357f-40e4-b354-119fccce7ce4",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.185",
+    "info_json": "logs_kvm_smoke/run_1_info.json",
+    "hardware_validation": {
+      "predicted_cpu": 2,
+      "predicted_ram_gb": 8,
+      "predicted_disk_gb": 5,
+      "predicted_gpu_required": false,
+      "selected_flavor": "m1.large",
+      "actual_cpu": 4,
+      "actual_ram_gb": 8.0,
+      "actual_disk_gb": 40,
+      "actual_gpu_count": 0,
+      "hardware_match": true,
+      "undersized_reasons": [],
+      "gpu_warning": null
+    }
+  },
+  {
+    "repo": "https://github.com/fmi-basel/neural-decoding-RSNN",
+    "rc": 0,
+    "log": "logs_kvm_smoke/run_2.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "b06dfa6e-b4b9-46fc-a9c0-1ba189d02f78",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.185",
+    "info_json": "logs_kvm_smoke/run_2_info.json",
+    "hardware_validation": {
+      "predicted_cpu": 4,
+      "predicted_ram_gb": 16,
+      "predicted_disk_gb": 20,
+      "predicted_gpu_required": true,
+      "selected_flavor": "m1.xlarge",
+      "actual_cpu": 8,
+      "actual_ram_gb": 16.0,
+      "actual_disk_gb": 40,
+      "actual_gpu_count": 0,
+      "hardware_match": false,
+      "undersized_reasons": [
+        "GPU: Not available on KVM@TACC"
+      ],
+      "gpu_warning": "\u26a0 GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run."
+    }
+  }
+]

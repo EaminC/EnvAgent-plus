@@ -1,0 +1,117 @@
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/bootstrap
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA or GPU support is not needed. Therefore, the selection includes a variety of recent and stable images from both Ubuntu and CentOS distributions without CUDA. The chosen images are: CC-Ubuntu24.04, CC-Ubuntu22.04, CC-Ubuntu20.04, CC-CentOS9-Stream, and CC-CentOS8-Stream. These images provide a mix of the latest versions and long-term support releases, ensuring compatibility and stability for various applications.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has a higher reservable count (79) compared to the GPU node type (1). This higher availability increases the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has a higher reservable count (79) compared to the GPU node type (1). This higher availability increases the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: None cores
+  RAM: None GB
+  Disk: None GB
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010535-20260501053538-b87db5
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 2 cores, RAM: 2GB, Disk: 1GB
+     → Minimum disk required: 21GB (predicted: 1GB, image: 21GB)
+
+  ✓ Selected flavor: m1.medium (best match)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+
+  ✓ KVM instance creation initiated: beb18940-36eb-433d-a885-f612d88df162
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+Final server_id: None
+Final flavor/node_type: compute

@@ -1,0 +1,122 @@
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/CellViT-Inference
+
+✓ Repository requirements analysis complete:
+  CPU: 16 cores
+  RAM: 32 GB
+  GPU: Required
+  GPU Memory: 24 GB
+  Disk: 30 GB
+  OS: ubuntu None
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 2 candidates
+  Reasoning: The requirement specifies an Ubuntu OS with CUDA support, which is typically used for GPU computing. The available images that meet these criteria are 'CC-Ubuntu24.04-CUDA' (ID: 00109732-cbe0-4283-99f0-2456ea437509) and 'CC-Ubuntu22.04-CUDA' (ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43). These images are explicitly labeled with CUDA support and are based on Ubuntu, fulfilling both the OS type and CUDA requirements. Other images either do not specify CUDA support or are based on a different OS.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with 24 GB memory. The available node type 'gpu_rtx_6000' matches this requirement. Although there is only 1 reservable node, it is the only GPU node available, thus it is selected by default.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with 24 GB memory. The available node type 'gpu_rtx_6000' matches this requirement. Although there is only 1 reservable node, it is the only GPU node available, thus it is selected by default.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 16 cores
+  RAM: 32 GB
+  Disk: 30 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010532-20260501053204-0a4dec
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 16 cores, RAM: 32GB, Disk: 30GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 30GB (predicted: 30GB, image: 21GB)
+
+  ✓ Selected flavor: m1.xxlarge (best match)
+     Actual: 16 vCPU, 32.0GB RAM, 40GB disk
+     Undersized: GPU: Not available on KVM@TACC
+
+  ✓ KVM instance creation initiated: 7729dc51-99cd-49d7-a80b-f00b2faa9bd2
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+Final server_id: None
+Final flavor/node_type: gpu_rtx_6000

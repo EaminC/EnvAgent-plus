@@ -1,0 +1,1960 @@
+
+=== RUN 1/14: https://github.com/NVIDIA/tao_tutorials ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA/tao_tutorials --site KVM@TACC --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/tao_tutorials
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 16 GB
+  Disk: 100 GB
+  OS: ubuntu 22.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements specify an Ubuntu 22.04 operating system with CUDA support and GPU capabilities. The selected images are all based on Ubuntu 22.04 and have CUDA support, which is indicated by the '-CUDA' suffix in the image name. These images are the most suitable candidates as they meet all the specified requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU, and the only available node type with GPU is 'gpu'. Even though it has only 1 reservable, it is the only option that meets the GPU requirement.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU, and the only available node type with GPU is 'gpu'. Even though it has only 1 reservable, it is the only option that meets the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 8 cores
+  RAM: 16 GB
+  Disk: 100 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010528-20260501052817-5dd1e3
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 8 cores, RAM: 16GB, Disk: 100GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 100GB (predicted: 100GB, image: 21GB)
+
+  ⚠ No KVM flavor perfectly matches requirements
+     → Using smallest available flavor and marking as undersized
+
+  Selected flavor: m1.medium (fallback)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+     Undersized: CPU: 2 < 8, RAM: 4.0GB < 16GB, Disk: 40GB < 100GB, GPU: Not available
+
+  ✓ KVM instance creation initiated: f2889856-8561-4ca0-9081-0f1008b0b2c1
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+======================================================================
+HARDWARE VALIDATION SUMMARY
+======================================================================
+
+→ Predicted Requirements:
+  CPU:      8 cores
+  RAM:      16 GB
+  Disk:     100 GB
+  GPU:      Yes
+
+→ Actual Provisioned (Flavor: m1.medium):
+  CPU:      2 cores
+  RAM:      4.0 GB
+  Disk:     40 GB
+  GPU:      No (KVM@TACC not available)
+
+→ Match Status:
+  ⚠ MISMATCH: VM provisioned but undersized for predicted workload
+  Reasons:
+    - CPU: 2 < 8
+    - RAM: 4.0GB < 16GB
+    - Disk: 40GB < 100GB
+    - GPU: Not available
+
+⚠ ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+======================================================================
+
+
+✓ KVM VM direct launch successful
+⚠ WARNING: VM provisioned but hardware is undersized or incomplete
+   - CPU: 2 < 8
+   - RAM: 4.0GB < 16GB
+   - Disk: 40GB < 100GB
+   - GPU: Not available
+  ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.185
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010528-20260501052817-5dd1e3
+Server ID: f2889856-8561-4ca0-9081-0f1008b0b2c1
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.185
+
+SSH Connection:
+  ssh ubuntu@129.114.26.185
+⚠ Hardware Match: No (provisioned VM is undersized)
+    CPU: 2 < 8
+    RAM: 4.0GB < 16GB
+    Disk: 40GB < 100GB
+    GPU: Not available
+
+✓ Info saved to: auto-server-202605010528-20260501052817-5dd1e3_info.json
+Deleting server f2889856-8561-4ca0-9081-0f1008b0b2c1
+Delete requested for f2889856-8561-4ca0-9081-0f1008b0b2c1
+
+=== RUN 2/14: https://github.com/NVIDIA-NeMo/Gym ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA-NeMo/Gym --site KVM@TACC --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/Gym
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: 8 GB
+  GPU: Not required
+  Disk: 5 GB
+  OS: ubuntu 20.04
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 operating system without CUDA or GPU support. The selected images are all Ubuntu 20.04 versions, ensuring compatibility with the specified OS version. None of these images include CUDA, aligning with the requirement that CUDA support is not needed.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The compute node type has 79 reservable nodes, which is significantly higher than the 1 reservable GPU node. Since the user does not require a GPU, the compute node type is the most suitable choice, offering higher availability and maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The compute node type has 79 reservable nodes, which is significantly higher than the 1 reservable GPU node. Since the user does not require a GPU, the compute node type is the most suitable choice, offering higher availability and maximizing the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: None cores
+  RAM: 8 GB
+  Disk: 5 GB
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010528-20260501052856-f708f6
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 2 cores, RAM: 8GB, Disk: 5GB
+     → Minimum disk required: 21GB (predicted: 5GB, image: 21GB)
+
+  ✓ Selected flavor: m1.large (best match)
+     Actual: 4 vCPU, 8.0GB RAM, 40GB disk
+
+  ✓ KVM instance creation initiated: 6050f0b3-fc58-41c5-ad40-e3a282535683
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+======================================================================
+HARDWARE VALIDATION SUMMARY
+======================================================================
+
+→ Predicted Requirements:
+  CPU:      None cores
+  RAM:      8 GB
+  Disk:     5 GB
+  GPU:      No
+
+→ Actual Provisioned (Flavor: m1.large):
+  CPU:      4 cores
+  RAM:      8.0 GB
+  Disk:     40 GB
+  GPU:      No (KVM@TACC not available)
+
+→ Match Status:
+  ✓ MATCH: Selected flavor satisfies all predicted requirements
+
+======================================================================
+
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.236
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010528-20260501052856-f708f6
+Server ID: 6050f0b3-fc58-41c5-ad40-e3a282535683
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.27.236
+
+SSH Connection:
+  ssh ubuntu@129.114.27.236
+✓ Hardware Match: Yes (provisioned VM meets all predicted requirements)
+
+✓ Info saved to: auto-server-202605010528-20260501052856-f708f6_info.json
+Deleting server 6050f0b3-fc58-41c5-ad40-e3a282535683
+Delete requested for 6050f0b3-fc58-41c5-ad40-e3a282535683
+
+=== RUN 3/14: https://github.com/mariocandela/ai-avatar ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/mariocandela/ai-avatar --site KVM@TACC --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/ai-avatar
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA or GPU support is not needed. Therefore, the selection includes a mix of recent Ubuntu and CentOS images without CUDA support. The chosen images are: CC-Ubuntu24.04 (ID: f0c599f7-6dff-4f81-acec-851bcb5995cd), CC-Ubuntu22.04 (ID: 2dbea132-b5b2-4daa-85ff-86670c79eecd), CC-Ubuntu20.04 (ID: 7580b9fb-3693-4574-b875-cfe43918b345), CC-CentOS9-Stream (ID: 4a52f0fc-3803-470d-8877-267106cd834c), and CC-CentOS8-Stream (ID: b30f74cd-a0d9-4046-a00f-21cdaf974388). These images provide a variety of recent and stable operating systems without unnecessary CUDA support.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: None cores
+  RAM: None GB
+  Disk: None GB
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010529-20260501052933-94d9b7
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 2 cores, RAM: 2GB, Disk: 1GB
+     → Minimum disk required: 21GB (predicted: 1GB, image: 21GB)
+
+  ✓ Selected flavor: m1.medium (best match)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+
+  ✓ KVM instance creation initiated: 10b0a87e-da16-463f-a4d4-72894bbb76ea
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+======================================================================
+HARDWARE VALIDATION SUMMARY
+======================================================================
+
+→ Predicted Requirements:
+  CPU:      None cores
+  RAM:      None GB
+  Disk:     None GB
+  GPU:      No
+
+→ Actual Provisioned (Flavor: m1.medium):
+  CPU:      2 cores
+  RAM:      4.0 GB
+  Disk:     40 GB
+  GPU:      No (KVM@TACC not available)
+
+→ Match Status:
+  ✓ MATCH: Selected flavor satisfies all predicted requirements
+
+======================================================================
+
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.54
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010529-20260501052933-94d9b7
+Server ID: 10b0a87e-da16-463f-a4d4-72894bbb76ea
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.27.54
+
+SSH Connection:
+  ssh ubuntu@129.114.27.54
+✓ Hardware Match: Yes (provisioned VM meets all predicted requirements)
+
+✓ Info saved to: auto-server-202605010529-20260501052933-94d9b7_info.json
+Deleting server 10b0a87e-da16-463f-a4d4-72894bbb76ea
+Delete requested for 10b0a87e-da16-463f-a4d4-72894bbb76ea
+
+=== RUN 4/14: https://github.com/snel-repo/Kilosort4 ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/snel-repo/Kilosort4 --site KVM@TACC --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/Kilosort4
+
+✓ Repository requirements analysis complete:
+  CPU: 4 cores
+  RAM: 8 GB
+  GPU: Required
+  GPU Memory: 8 GB
+  Disk: 20 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 0 candidates
+  Reasoning: After reviewing the available images, none of them match all the specified requirements. The requirements specify an Ubuntu 20.04 operating system with CUDA support, but there are no images listed that include both Ubuntu 20.04 and CUDA. The images available either do not specify CUDA support or are for different versions of Ubuntu or other operating systems like CentOS.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU, and the only available node type with GPU is 'gpu' with 1 reservable count. Although it has the lowest availability, it is the only option that meets the GPU requirement.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU, and the only available node type with GPU is 'gpu' with 1 reservable count. Although it has the lowest availability, it is the only option that meets the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 4 cores
+  RAM: 8 GB
+  Disk: 20 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010530-20260501053012-2b67cf
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 4 cores, RAM: 8GB, Disk: 20GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 21GB (predicted: 20GB, image: 21GB)
+
+  ✓ Selected flavor: m1.large (best match)
+     Actual: 4 vCPU, 8.0GB RAM, 40GB disk
+     Undersized: GPU: Not available on KVM@TACC
+
+  ✓ KVM instance creation initiated: fab7b177-ff91-49da-be0e-0689c3fece47
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+======================================================================
+HARDWARE VALIDATION SUMMARY
+======================================================================
+
+→ Predicted Requirements:
+  CPU:      4 cores
+  RAM:      8 GB
+  Disk:     20 GB
+  GPU:      Yes
+
+→ Actual Provisioned (Flavor: m1.large):
+  CPU:      4 cores
+  RAM:      8.0 GB
+  Disk:     40 GB
+  GPU:      No (KVM@TACC not available)
+
+→ Match Status:
+  ⚠ MISMATCH: VM provisioned but undersized for predicted workload
+  Reasons:
+    - GPU: Not available on KVM@TACC
+
+⚠ ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+======================================================================
+
+
+✓ KVM VM direct launch successful
+⚠ WARNING: VM provisioned but hardware is undersized or incomplete
+   - GPU: Not available on KVM@TACC
+  ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.214
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010530-20260501053012-2b67cf
+Server ID: fab7b177-ff91-49da-be0e-0689c3fece47
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.27.214
+
+SSH Connection:
+  ssh ubuntu@129.114.27.214
+⚠ Hardware Match: No (provisioned VM is undersized)
+    GPU: Not available on KVM@TACC
+
+✓ Info saved to: auto-server-202605010530-20260501053012-2b67cf_info.json
+Deleting server fab7b177-ff91-49da-be0e-0689c3fece47
+Delete requested for fab7b177-ff91-49da-be0e-0689c3fece47
+
+=== RUN 5/14: https://github.com/nyu-systems/CLM-GS ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/nyu-systems/CLM-GS --site KVM@TACC --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/CLM-GS
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 128 GB
+  GPU: Required
+  GPU Memory: 24 GB
+  Disk: 500 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 0 candidates
+  Reasoning: The available images do not include any Ubuntu 20.04 images with CUDA support. All images with CUDA support are for Ubuntu 22.04 or 24.04, which do not meet the requirement for Ubuntu 20.04. Therefore, there are no suitable candidates that match all the specified requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The gpu_rtx_6000 node type matches the user's requirement for a GPU with at least 24 GB of memory. It is the only available GPU node type, and it has 1 reservable, which is the highest available for GPU nodes. Although the compute nodes have higher reservable counts, they do not meet the GPU requirement.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The gpu_rtx_6000 node type matches the user's requirement for a GPU with at least 24 GB of memory. It is the only available GPU node type, and it has 1 reservable, which is the highest available for GPU nodes. Although the compute nodes have higher reservable counts, they do not meet the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 8 cores
+  RAM: 128 GB
+  Disk: 500 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010530-20260501053050-ea4097
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 8 cores, RAM: 128GB, Disk: 500GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 500GB (predicted: 500GB, image: 21GB)
+
+  ⚠ No KVM flavor perfectly matches requirements
+     → Using smallest available flavor and marking as undersized
+
+  Selected flavor: m1.medium (fallback)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+     Undersized: CPU: 2 < 8, RAM: 4.0GB < 128GB, Disk: 40GB < 500GB, GPU: Not available
+
+  ✓ KVM instance creation initiated: 9c20318e-c3f9-46d8-b90e-aa333a7284ac
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+======================================================================
+HARDWARE VALIDATION SUMMARY
+======================================================================
+
+→ Predicted Requirements:
+  CPU:      8 cores
+  RAM:      128 GB
+  Disk:     500 GB
+  GPU:      Yes
+
+→ Actual Provisioned (Flavor: m1.medium):
+  CPU:      2 cores
+  RAM:      4.0 GB
+  Disk:     40 GB
+  GPU:      No (KVM@TACC not available)
+
+→ Match Status:
+  ⚠ MISMATCH: VM provisioned but undersized for predicted workload
+  Reasons:
+    - CPU: 2 < 8
+    - RAM: 4.0GB < 128GB
+    - Disk: 40GB < 500GB
+    - GPU: Not available
+
+⚠ ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+======================================================================
+
+
+✓ KVM VM direct launch successful
+⚠ WARNING: VM provisioned but hardware is undersized or incomplete
+   - CPU: 2 < 8
+   - RAM: 4.0GB < 128GB
+   - Disk: 40GB < 500GB
+   - GPU: Not available
+  ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.1
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010530-20260501053050-ea4097
+Server ID: 9c20318e-c3f9-46d8-b90e-aa333a7284ac
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.27.1
+
+SSH Connection:
+  ssh ubuntu@129.114.27.1
+⚠ Hardware Match: No (provisioned VM is undersized)
+    CPU: 2 < 8
+    RAM: 4.0GB < 128GB
+    Disk: 40GB < 500GB
+    GPU: Not available
+
+✓ Info saved to: auto-server-202605010530-20260501053050-ea4097_info.json
+Deleting server 9c20318e-c3f9-46d8-b90e-aa333a7284ac
+Delete requested for 9c20318e-c3f9-46d8-b90e-aa333a7284ac
+
+=== RUN 6/14: https://github.com/TIO-IKIM/CellViT-plus-plus ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/TIO-IKIM/CellViT-plus-plus --site KVM@TACC --lease-duration 2
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/CellViT-plus-plus
+
+✓ Repository requirements analysis complete:
+  CPU: 16 cores
+  RAM: 32 GB
+  GPU: Required
+  GPU Memory: 24 GB
+  Disk: 30 GB
+  OS: ubuntu None
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 2 candidates
+  Reasoning: The requirements specify an Ubuntu OS with CUDA support. Among the available images, only 'CC-Ubuntu24.04-CUDA' (ID: 00109732-cbe0-4283-99f0-2456ea437509) and 'CC-Ubuntu22.04-CUDA' (ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43) meet these criteria. These images are based on Ubuntu and have CUDA support, which is necessary for GPU-related tasks.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The gpu_rtx_6000 node type is selected because it matches the user's GPU requirement and has a higher reservable count compared to other GPU options. It provides the necessary GPU memory of 24 GB and ensures higher availability for lease creation.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The gpu_rtx_6000 node type is selected because it matches the user's GPU requirement and has a higher reservable count compared to other GPU options. It provides the necessary GPU memory of 24 GB and ensures higher availability for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 16 cores
+  RAM: 32 GB
+  Disk: 30 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010531-20260501053128-8c2982
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 16 cores, RAM: 32GB, Disk: 30GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 30GB (predicted: 30GB, image: 21GB)
+
+  ✓ Selected flavor: m1.xxlarge (best match)
+     Actual: 16 vCPU, 32.0GB RAM, 40GB disk
+     Undersized: GPU: Not available on KVM@TACC
+
+  ✓ KVM instance creation initiated: 170c9535-be7b-462e-a3bf-da944b6bf730
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+Final server_id: None
+Final flavor/node_type: gpu_rtx_6000
+
+=== RUN 7/14: https://github.com/TIO-IKIM/CellViT-Inference ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/TIO-IKIM/CellViT-Inference --site KVM@TACC --lease-duration 2
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/CellViT-Inference
+
+✓ Repository requirements analysis complete:
+  CPU: 16 cores
+  RAM: 32 GB
+  GPU: Required
+  GPU Memory: 24 GB
+  Disk: 30 GB
+  OS: ubuntu None
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 2 candidates
+  Reasoning: The requirement specifies an Ubuntu OS with CUDA support, which is typically used for GPU computing. The available images that meet these criteria are 'CC-Ubuntu24.04-CUDA' (ID: 00109732-cbe0-4283-99f0-2456ea437509) and 'CC-Ubuntu22.04-CUDA' (ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43). These images are explicitly labeled with CUDA support and are based on Ubuntu, fulfilling both the OS type and CUDA requirements. Other images either do not specify CUDA support or are based on a different OS.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with 24 GB memory. The available node type 'gpu_rtx_6000' matches this requirement. Although there is only 1 reservable node, it is the only GPU node available, thus it is selected by default.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The user requires a GPU with 24 GB memory. The available node type 'gpu_rtx_6000' matches this requirement. Although there is only 1 reservable node, it is the only GPU node available, thus it is selected by default.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 16 cores
+  RAM: 32 GB
+  Disk: 30 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010532-20260501053204-0a4dec
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 16 cores, RAM: 32GB, Disk: 30GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 30GB (predicted: 30GB, image: 21GB)
+
+  ✓ Selected flavor: m1.xxlarge (best match)
+     Actual: 16 vCPU, 32.0GB RAM, 40GB disk
+     Undersized: GPU: Not available on KVM@TACC
+
+  ✓ KVM instance creation initiated: 7729dc51-99cd-49d7-a80b-f00b2faa9bd2
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+Final server_id: None
+Final flavor/node_type: gpu_rtx_6000
+
+=== RUN 8/14: https://github.com/sideprotocol/plonky2-gpu ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/sideprotocol/plonky2-gpu --site KVM@TACC --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/plonky2-gpu
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 12 GB
+  Disk: None GB
+  OS: ubuntu None
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 2 candidates
+  Reasoning: The requirements specify an Ubuntu OS with CUDA support, and no specific version is required. The images that match these criteria are 'CC-Ubuntu24.04-CUDA' and 'CC-Ubuntu22.04-CUDA'. These images are based on Ubuntu and have CUDA support, which is necessary for GPU usage. No other images meet all the specified requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU with at least 12 GB of memory. Among the available resources, only the 'gpu' node type meets the GPU requirement. Although it has a lower reservable count (1 reservable), it is the only option that fits the GPU requirement.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU with at least 12 GB of memory. Among the available resources, only the 'gpu' node type meets the GPU requirement. Although it has a lower reservable count (1 reservable), it is the only option that fits the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 8 cores
+  RAM: 16 GB
+  Disk: None GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010532-20260501053238-08659b
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 8 cores, RAM: 16GB, Disk: 1GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 21GB (predicted: 1GB, image: 21GB)
+
+  ✓ Selected flavor: m1.xlarge (best match)
+     Actual: 8 vCPU, 16.0GB RAM, 40GB disk
+     Undersized: GPU: Not available on KVM@TACC
+
+  ✓ KVM instance creation initiated: f25ac765-1717-410c-9f00-002a060f2382
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+======================================================================
+HARDWARE VALIDATION SUMMARY
+======================================================================
+
+→ Predicted Requirements:
+  CPU:      8 cores
+  RAM:      16 GB
+  Disk:     None GB
+  GPU:      Yes
+
+→ Actual Provisioned (Flavor: m1.xlarge):
+  CPU:      8 cores
+  RAM:      16.0 GB
+  Disk:     40 GB
+  GPU:      No (KVM@TACC not available)
+
+→ Match Status:
+  ⚠ MISMATCH: VM provisioned but undersized for predicted workload
+  Reasons:
+    - GPU: Not available on KVM@TACC
+
+⚠ ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+======================================================================
+
+
+✓ KVM VM direct launch successful
+⚠ WARNING: VM provisioned but hardware is undersized or incomplete
+   - GPU: Not available on KVM@TACC
+  ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.101
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010532-20260501053238-08659b
+Server ID: f25ac765-1717-410c-9f00-002a060f2382
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.27.101
+
+SSH Connection:
+  ssh ubuntu@129.114.27.101
+⚠ Hardware Match: No (provisioned VM is undersized)
+    GPU: Not available on KVM@TACC
+
+✓ Info saved to: auto-server-202605010532-20260501053238-08659b_info.json
+Deleting server f25ac765-1717-410c-9f00-002a060f2382
+Delete requested for f25ac765-1717-410c-9f00-002a060f2382
+
+=== RUN 9/14: https://github.com/SVRTK/svrtk-docker-gpu ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/SVRTK/svrtk-docker-gpu --site KVM@TACC --lease-duration 2
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/svrtk-docker-gpu
+
+✓ Repository requirements analysis complete:
+  CPU: 6 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 12 GB
+  Disk: 30 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 operating system with CUDA support. However, none of the available images explicitly mention CUDA support for Ubuntu 20.04. Therefore, we selected the most recent Ubuntu 20.04 images available, which are likely to be compatible with CUDA installations. These images are 'CC-Ubuntu20.04-20230531.1', 'CC-Ubuntu20.04-20230531', and 'CC-Ubuntu20.04-20230518'. These selections are based on their recency, which suggests better support for modern CUDA installations.
+
+✓ Final Selection: CC-Ubuntu20.04-20230531.1
+  Image ID: f4c531e8-5d8b-4d3f-8692-ce2024b38af6
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU with 12 GB memory, which necessitates selecting a GPU node type. Although there is only 1 reservable GPU node available, it is the only option that satisfies the GPU requirement. The compute node type, despite having a higher reservable count, does not meet the GPU requirement.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU with 12 GB memory, which necessitates selecting a GPU node type. Although there is only 1 reservable GPU node available, it is the only option that satisfies the GPU requirement. The compute node type, despite having a higher reservable count, does not meet the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 6 cores
+  RAM: 16 GB
+  Disk: 30 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010533-20260501053317-9a9716
+    Image ID: f4c531e8-5d8b-4d3f-8692-ce2024b38af6
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 6 cores, RAM: 16GB, Disk: 30GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 30GB (predicted: 30GB, image: 7GB)
+
+  ✓ Selected flavor: m1.xlarge (best match)
+     Actual: 8 vCPU, 16.0GB RAM, 40GB disk
+     Undersized: GPU: Not available on KVM@TACC
+
+  ✓ KVM instance creation initiated: 9dc249df-e782-4f82-b36b-176f5eddf9aa
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+Final server_id: None
+Final flavor/node_type: gpu
+
+=== RUN 10/14: https://github.com/PluralisResearch/node0 ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/PluralisResearch/node0 --site KVM@TACC --lease-duration 2
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance 337e159d-a542-48d7-8ee4-7f5380bffd0b aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 337e159d-a542-48d7-8ee4-7f5380bffd0b aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 337e159d-a542-48d7-8ee4-7f5380bffd0b aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/node0
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: 32 GB
+  GPU: Required
+  GPU Memory: 16 GB
+  Disk: 80 GB
+  OS: ubuntu 22.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 1 candidates
+  Reasoning: The requirements specify an Ubuntu 22.04 operating system with CUDA support and GPU capabilities. Among the available images, only 'CC-Ubuntu22.04-CUDA (ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43)' meets all these criteria. Other images either do not have the correct OS version, lack CUDA support, or are based on a different OS entirely.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU with 16 GB of memory. The only available GPU node type has 1 reservable instance, which matches the requirement. Although it has lower availability compared to compute nodes, it is the only option that fulfills the GPU requirement.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU with 16 GB of memory. The only available GPU node type has 1 reservable instance, which matches the requirement. Although it has lower availability compared to compute nodes, it is the only option that fulfills the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: None cores
+  RAM: 32 GB
+  Disk: 80 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010533-20260501053351-4ffc03
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 2 cores, RAM: 32GB, Disk: 80GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 80GB (predicted: 80GB, image: 21GB)
+
+  ⚠ No KVM flavor perfectly matches requirements
+     → Using smallest available flavor and marking as undersized
+
+  Selected flavor: m1.medium (fallback)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+     Undersized: RAM: 4.0GB < 32GB, Disk: 40GB < 80GB, GPU: Not available
+
+  ✓ KVM instance creation initiated: 337e159d-a542-48d7-8ee4-7f5380bffd0b
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance 337e159d-a542-48d7-8ee4-7f5380bffd0b aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 337e159d-a542-48d7-8ee4-7f5380bffd0b aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 337e159d-a542-48d7-8ee4-7f5380bffd0b aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+Final server_id: None
+Final flavor/node_type: gpu
+
+=== RUN 11/14: https://github.com/EsmaeilNarimissa/SciDOCX ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/EsmaeilNarimissa/SciDOCX --site KVM@TACC --lease-duration 2
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/SciDOCX
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 6 GB
+  Disk: 10 GB
+  OS: ubuntu None
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 2 candidates
+  Reasoning: The requirements specify an Ubuntu OS with CUDA support, which implies the need for GPU capabilities. The available images that match these criteria are 'CC-Ubuntu24.04-CUDA' and 'CC-Ubuntu22.04-CUDA'. These images are based on Ubuntu and have CUDA support, making them suitable for environments where GPU processing is needed. No specific version of Ubuntu was required, so both 24.04 and 22.04 versions are valid choices.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU, and the only available GPU node type has 1 reservable count. Although it is lower than the compute node type, it is the only option that meets the GPU requirement.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU, and the only available GPU node type has 1 reservable count. Although it is lower than the compute node type, it is the only option that meets the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 8 cores
+  RAM: 16 GB
+  Disk: 10 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010534-20260501053427-b997c6
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 8 cores, RAM: 16GB, Disk: 10GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 21GB (predicted: 10GB, image: 21GB)
+
+  ✓ Selected flavor: m1.xlarge (best match)
+     Actual: 8 vCPU, 16.0GB RAM, 40GB disk
+     Undersized: GPU: Not available on KVM@TACC
+
+  ✓ KVM instance creation initiated: fcecd599-c0af-4bd5-a016-fa5bc1d20f8e
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure
+Final server_id: None
+Final flavor/node_type: gpu
+
+=== RUN 12/14: https://github.com/perslev/U-Time ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/perslev/U-Time --site KVM@TACC --lease-duration 2
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance 0c1e1955-e5f7-470a-9e41-bae75e01f958 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 0c1e1955-e5f7-470a-9e41-bae75e01f958 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 0c1e1955-e5f7-470a-9e41-bae75e01f958 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/U-Time
+
+✓ Repository requirements analysis complete:
+  CPU: 4 cores
+  RAM: 8 GB
+  GPU: Required
+  GPU Memory: None GB
+  Disk: 4096 GB
+  OS: linux None
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 2 candidates
+  Reasoning: The requirement specifies a Linux OS with CUDA support and GPU capability. The images that match these criteria are those with 'CUDA' in their name. The selected images are 'CC-Ubuntu24.04-CUDA' and 'CC-Ubuntu22.04-CUDA', as they are the only ones explicitly mentioning CUDA support, which implies GPU compatibility. Other images either do not specify CUDA support or are based on a different OS (CentOS) that does not mention CUDA in the name.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU, so a GPU node type is necessary. Although there is only 1 reservable GPU node available, it is the only option that meets the GPU requirement.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU, so a GPU node type is necessary. Although there is only 1 reservable GPU node available, it is the only option that meets the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 4 cores
+  RAM: 8 GB
+  Disk: 4096 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010535-20260501053503-bbea05
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 4 cores, RAM: 8GB, Disk: 4096GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 4096GB (predicted: 4096GB, image: 21GB)
+
+  ⚠ No KVM flavor perfectly matches requirements
+     → Using smallest available flavor and marking as undersized
+
+  Selected flavor: m1.medium (fallback)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+     Undersized: CPU: 2 < 4, RAM: 4.0GB < 8GB, Disk: 40GB < 4096GB, GPU: Not available
+
+  ✓ KVM instance creation initiated: 0c1e1955-e5f7-470a-9e41-bae75e01f958
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance 0c1e1955-e5f7-470a-9e41-bae75e01f958 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 0c1e1955-e5f7-470a-9e41-bae75e01f958 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 0c1e1955-e5f7-470a-9e41-bae75e01f958 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+Final server_id: None
+Final flavor/node_type: gpu
+
+=== RUN 13/14: https://github.com/nesaorg/bootstrap ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/nesaorg/bootstrap --site KVM@TACC --lease-duration 2
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/bootstrap
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA or GPU support is not needed. Therefore, the selection includes a variety of recent and stable images from both Ubuntu and CentOS distributions without CUDA. The chosen images are: CC-Ubuntu24.04, CC-Ubuntu22.04, CC-Ubuntu20.04, CC-CentOS9-Stream, and CC-CentOS8-Stream. These images provide a mix of the latest versions and long-term support releases, ensuring compatibility and stability for various applications.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has a higher reservable count (79) compared to the GPU node type (1). This higher availability increases the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has a higher reservable count (79) compared to the GPU node type (1). This higher availability increases the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: None cores
+  RAM: None GB
+  Disk: None GB
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010535-20260501053538-b87db5
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 2 cores, RAM: 2GB, Disk: 1GB
+     → Minimum disk required: 21GB (predicted: 1GB, image: 21GB)
+
+  ✓ Selected flavor: m1.medium (best match)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+
+  ✓ KVM instance creation initiated: beb18940-36eb-433d-a885-f612d88df162
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance beb18940-36eb-433d-a885-f612d88df162 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+Final server_id: None
+Final flavor/node_type: compute
+
+=== RUN 14/14: https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast --site KVM@TACC --lease-duration 2
+Traceback (most recent call last):
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 355, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance entered ERROR state: {fault_msg}")
+Exception: KVM instance entered ERROR state: Build of instance 9028ee2b-840c-46a6-9ec8-5998f5565344 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1491, in main
+    server_id, launch_info = launch_kvm_instance_with_requirements(
+  File "/home/cc/EnvAgent-plus/2.0/src/kvm_launcher.py", line 362, in launch_kvm_instance_with_requirements
+    raise Exception(f"KVM instance launch failed: {str(e)}")
+Exception: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 9028ee2b-840c-46a6-9ec8-5998f5565344 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "2.0/src/provision_v2.py", line 1534, in main
+    raise Exception(f"KVM@TACC provisioning failed: {str(kvm_error)}")
+Exception: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 9028ee2b-840c-46a6-9ec8-5998f5565344 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/pdf-to-podcast
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 64 GB
+  GPU: Required
+  GPU Memory: None GB
+  Disk: 100 GB
+  OS: ubuntu 20.04 or 22.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements specify an Ubuntu OS with either version 20.04 or 22.04, and CUDA support is necessary. The images that match these criteria are: 'CC-Ubuntu22.04-CUDA' (ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43), which is an Ubuntu 22.04 image with CUDA support. Additionally, 'CC-Ubuntu22.04_2024-10-22 21:58:21.883691' (ID: 8c7e0698-58dd-4366-bd71-f1b4dfea5eb8) and 'CC-Ubuntu22.04-20230531.1' (ID: ae904860-5c6b-4224-988f-36a9623f8331) are also Ubuntu 22.04 images that likely have CUDA support, as they are newer and may include updated features. These selections ensure compatibility with the specified OS versions and CUDA requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU, and the only available node type with a GPU is 'gpu' with 1 reservable. There are no other GPU node types available, so 'gpu' is the only option despite its low availability.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU, and the only available node type with a GPU is 'gpu' with 1 reservable. There are no other GPU node types available, so 'gpu' is the only option despite its low availability.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 8 cores
+  RAM: 64 GB
+  Disk: 100 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010536-20260501053616-dcd549
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 8 cores, RAM: 64GB, Disk: 100GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 100GB (predicted: 100GB, image: 21GB)
+
+  ⚠ No KVM flavor perfectly matches requirements
+     → Using smallest available flavor and marking as undersized
+
+  Selected flavor: m1.medium (fallback)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+     Undersized: CPU: 2 < 8, RAM: 4.0GB < 64GB, Disk: 40GB < 100GB, GPU: Not available
+
+  ✓ KVM instance creation initiated: 9028ee2b-840c-46a6-9ec8-5998f5565344
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ERROR
+
+  ✗ Nova Fault Code: 500
+  ✗ Nova Fault Message: Build of instance 9028ee2b-840c-46a6-9ec8-5998f5565344 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+✗ KVM VM direct launch failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 9028ee2b-840c-46a6-9ec8-5998f5565344 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+
+
+✗ ERROR: KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: Build of instance 9028ee2b-840c-46a6-9ec8-5998f5565344 aborted: Failed to allocate the network(s) with error No fixed IP addresses available for network: 50073c73-5817-49c3-8e3a-69b8c357e158, not rescheduling.
+Final server_id: None
+Final flavor/node_type: gpu
+
+=== SUMMARY ===
+Total repos: 14
+⚠  NOTE: KVM@TACC does not use Blazar reservation; lease_success metric is not applicable.
+Provisioning successes: 6
+KVM provisioning success rate: 6/14 = 42.86%
+Hardware match rate: 2/6 = 33.33%
+GPU-required count: 4
+GPU-mismatch count: 4
+Undersized count: 4
+Top undersized reasons:
+  - CPU: 2 < 8: 2
+  - GPU: Not available: 2
+  - GPU: Not available on KVM@TACC: 2
+  - RAM: 4.0GB < 16GB: 1
+  - Disk: 40GB < 100GB: 1
+  - RAM: 4.0GB < 128GB: 1
+  - Disk: 40GB < 500GB: 1
+Failure reason breakdown:
+  - KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure: 4
+  - No fixed IP addresses available: 4
+{'repo': 'https://github.com/NVIDIA/tao_tutorials', 'rc': 0, 'log': 'logs_kvm_full/run_1.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': 'f2889856-8561-4ca0-9081-0f1008b0b2c1', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.185', 'info_json': 'logs_kvm_full/run_1_info.json', 'hardware_validation': {'predicted_cpu': 8, 'predicted_ram_gb': 16, 'predicted_disk_gb': 100, 'predicted_gpu_required': True, 'selected_flavor': 'm1.medium', 'actual_cpu': 2, 'actual_ram_gb': 4.0, 'actual_disk_gb': 40, 'actual_gpu_count': 0, 'hardware_match': False, 'undersized_reasons': ['CPU: 2 < 8', 'RAM: 4.0GB < 16GB', 'Disk: 40GB < 100GB', 'GPU: Not available'], 'gpu_warning': '⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.'}}
+{'repo': 'https://github.com/NVIDIA-NeMo/Gym', 'rc': 0, 'log': 'logs_kvm_full/run_2.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '6050f0b3-fc58-41c5-ad40-e3a282535683', 'flavor': 'kvm_vm_direct', 'fip': '129.114.27.236', 'info_json': 'logs_kvm_full/run_2_info.json', 'hardware_validation': {'predicted_cpu': 2, 'predicted_ram_gb': 8, 'predicted_disk_gb': 5, 'predicted_gpu_required': False, 'selected_flavor': 'm1.large', 'actual_cpu': 4, 'actual_ram_gb': 8.0, 'actual_disk_gb': 40, 'actual_gpu_count': 0, 'hardware_match': True, 'undersized_reasons': [], 'gpu_warning': None}}
+{'repo': 'https://github.com/mariocandela/ai-avatar', 'rc': 0, 'log': 'logs_kvm_full/run_3.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '10b0a87e-da16-463f-a4d4-72894bbb76ea', 'flavor': 'kvm_vm_direct', 'fip': '129.114.27.54', 'info_json': 'logs_kvm_full/run_3_info.json', 'hardware_validation': {'predicted_cpu': 2, 'predicted_ram_gb': 2, 'predicted_disk_gb': 1, 'predicted_gpu_required': False, 'selected_flavor': 'm1.medium', 'actual_cpu': 2, 'actual_ram_gb': 4.0, 'actual_disk_gb': 40, 'actual_gpu_count': 0, 'hardware_match': True, 'undersized_reasons': [], 'gpu_warning': None}}
+{'repo': 'https://github.com/snel-repo/Kilosort4', 'rc': 0, 'log': 'logs_kvm_full/run_4.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': 'fab7b177-ff91-49da-be0e-0689c3fece47', 'flavor': 'kvm_vm_direct', 'fip': '129.114.27.214', 'info_json': 'logs_kvm_full/run_4_info.json', 'hardware_validation': {'predicted_cpu': 4, 'predicted_ram_gb': 8, 'predicted_disk_gb': 20, 'predicted_gpu_required': True, 'selected_flavor': 'm1.large', 'actual_cpu': 4, 'actual_ram_gb': 8.0, 'actual_disk_gb': 40, 'actual_gpu_count': 0, 'hardware_match': False, 'undersized_reasons': ['GPU: Not available on KVM@TACC'], 'gpu_warning': '⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.'}}
+{'repo': 'https://github.com/nyu-systems/CLM-GS', 'rc': 0, 'log': 'logs_kvm_full/run_5.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '9c20318e-c3f9-46d8-b90e-aa333a7284ac', 'flavor': 'kvm_vm_direct', 'fip': '129.114.27.1', 'info_json': 'logs_kvm_full/run_5_info.json', 'hardware_validation': {'predicted_cpu': 8, 'predicted_ram_gb': 128, 'predicted_disk_gb': 500, 'predicted_gpu_required': True, 'selected_flavor': 'm1.medium', 'actual_cpu': 2, 'actual_ram_gb': 4.0, 'actual_disk_gb': 40, 'actual_gpu_count': 0, 'hardware_match': False, 'undersized_reasons': ['CPU: 2 < 8', 'RAM: 4.0GB < 128GB', 'Disk: 40GB < 500GB', 'GPU: Not available'], 'gpu_warning': '⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.'}}
+{'repo': 'https://github.com/TIO-IKIM/CellViT-plus-plus', 'rc': 1, 'log': 'logs_kvm_full/run_6.log', 'lease_success': False, 'provisioning_success': False, 'failure_reason': 'KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure', 'server_id': None, 'flavor': None, 'fip': None, 'info_json': None, 'hardware_validation': {}}
+{'repo': 'https://github.com/TIO-IKIM/CellViT-Inference', 'rc': 1, 'log': 'logs_kvm_full/run_7.log', 'lease_success': False, 'provisioning_success': False, 'failure_reason': 'KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure', 'server_id': None, 'flavor': None, 'fip': None, 'info_json': None, 'hardware_validation': {}}
+{'repo': 'https://github.com/sideprotocol/plonky2-gpu', 'rc': 0, 'log': 'logs_kvm_full/run_8.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': 'f25ac765-1717-410c-9f00-002a060f2382', 'flavor': 'kvm_vm_direct', 'fip': '129.114.27.101', 'info_json': 'logs_kvm_full/run_8_info.json', 'hardware_validation': {'predicted_cpu': 8, 'predicted_ram_gb': 16, 'predicted_disk_gb': 1, 'predicted_gpu_required': True, 'selected_flavor': 'm1.xlarge', 'actual_cpu': 8, 'actual_ram_gb': 16.0, 'actual_disk_gb': 40, 'actual_gpu_count': 0, 'hardware_match': False, 'undersized_reasons': ['GPU: Not available on KVM@TACC'], 'gpu_warning': '⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.'}}
+{'repo': 'https://github.com/SVRTK/svrtk-docker-gpu', 'rc': 1, 'log': 'logs_kvm_full/run_9.log', 'lease_success': False, 'provisioning_success': False, 'failure_reason': 'KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure', 'server_id': None, 'flavor': None, 'fip': None, 'info_json': None, 'hardware_validation': {}}
+{'repo': 'https://github.com/PluralisResearch/node0', 'rc': 1, 'log': 'logs_kvm_full/run_10.log', 'lease_success': False, 'provisioning_success': False, 'failure_reason': 'No fixed IP addresses available', 'server_id': None, 'flavor': None, 'fip': None, 'info_json': None, 'hardware_validation': {}}
+{'repo': 'https://github.com/EsmaeilNarimissa/SciDOCX', 'rc': 1, 'log': 'logs_kvm_full/run_11.log', 'lease_success': False, 'provisioning_success': False, 'failure_reason': 'KVM@TACC provisioning failed: KVM instance launch failed: KVM instance entered ERROR state: No valid host was found. There are not enough hosts available. To troubleshoot, please see bit.ly/faq-instance-failure', 'server_id': None, 'flavor': None, 'fip': None, 'info_json': None, 'hardware_validation': {}}
+{'repo': 'https://github.com/perslev/U-Time', 'rc': 1, 'log': 'logs_kvm_full/run_12.log', 'lease_success': False, 'provisioning_success': False, 'failure_reason': 'No fixed IP addresses available', 'server_id': None, 'flavor': None, 'fip': None, 'info_json': None, 'hardware_validation': {}}
+{'repo': 'https://github.com/nesaorg/bootstrap', 'rc': 1, 'log': 'logs_kvm_full/run_13.log', 'lease_success': False, 'provisioning_success': False, 'failure_reason': 'No fixed IP addresses available', 'server_id': None, 'flavor': None, 'fip': None, 'info_json': None, 'hardware_validation': {}}
+{'repo': 'https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast', 'rc': 1, 'log': 'logs_kvm_full/run_14.log', 'lease_success': False, 'provisioning_success': False, 'failure_reason': 'No fixed IP addresses available', 'server_id': None, 'flavor': None, 'fip': None, 'info_json': None, 'hardware_validation': {}}
+
+✓ Logs saved to logs_kvm_full
+✓ Master log: logs_kvm_full/batch_provision.log
+✓ Summary JSON: logs_kvm_full/summary.json

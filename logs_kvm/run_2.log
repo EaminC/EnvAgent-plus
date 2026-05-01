@@ -1,0 +1,105 @@
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/Gym
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: 8 GB
+  GPU: Not required
+  Disk: 5 GB
+  OS: ubuntu 20.04
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify an Ubuntu 20.04 image without CUDA or GPU support. The selected images are all based on Ubuntu 20.04 and do not mention CUDA, making them suitable candidates. The selected images are also from different update periods, providing options for different levels of patching and updates.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, ensuring higher availability and a greater success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, ensuring higher availability and a greater success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010305-20260501030554-e638f8
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: 8GB)...
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.large
+    CPU: 4, RAM: 8192MB
+
+  ✓ KVM instance creation initiated: 9813ccd0-903b-4a04-bce6-b1d3e153283b
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010305-20260501030554-e638f8
+Server ID: 9813ccd0-903b-4a04-bce6-b1d3e153283b
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010305-20260501030554-e638f8_info.json

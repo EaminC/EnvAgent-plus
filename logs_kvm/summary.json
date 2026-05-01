@@ -1,0 +1,156 @@
+[
+  {
+    "repo": "https://github.com/NVIDIA/tao_tutorials",
+    "rc": 0,
+    "log": "logs_kvm/run_1.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "2004867e-bae1-41cc-9246-df61f9c3b25e",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/NVIDIA-NeMo/Gym",
+    "rc": 0,
+    "log": "logs_kvm/run_2.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "9813ccd0-903b-4a04-bce6-b1d3e153283b",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/mariocandela/ai-avatar",
+    "rc": 0,
+    "log": "logs_kvm/run_3.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "ebc985ac-3cfb-47ba-a972-cc5c8b60dfeb",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/snel-repo/Kilosort4",
+    "rc": 0,
+    "log": "logs_kvm/run_4.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "6150616c-8e7f-4c13-b2e1-079f4f6fc210",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/nyu-systems/CLM-GS",
+    "rc": 0,
+    "log": "logs_kvm/run_5.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "4b743c8a-b0b0-40f2-a020-271f3e6b7619",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/TIO-IKIM/CellViT-plus-plus",
+    "rc": 0,
+    "log": "logs_kvm/run_6.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "8f9160f9-b030-4469-a58a-48969b7c6bca",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/TIO-IKIM/CellViT-Inference",
+    "rc": 0,
+    "log": "logs_kvm/run_7.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "65ec6741-e15f-4cb9-b323-41df9820b9b4",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/sideprotocol/plonky2-gpu",
+    "rc": 0,
+    "log": "logs_kvm/run_8.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "842edcee-e8ee-426f-88f4-878c5ad26220",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/SVRTK/svrtk-docker-gpu",
+    "rc": 0,
+    "log": "logs_kvm/run_9.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "f3f998e0-c0ec-49a5-b3b6-912fcff92a39",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/PluralisResearch/node0",
+    "rc": 0,
+    "log": "logs_kvm/run_10.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "396e05b0-fe28-4005-a218-c7ea7e000bde",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/EsmaeilNarimissa/SciDOCX",
+    "rc": 0,
+    "log": "logs_kvm/run_11.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "6203957d-6be2-4f2f-b7c2-a766b39ae047",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/perslev/U-Time",
+    "rc": 0,
+    "log": "logs_kvm/run_12.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "9b8d0683-3fd7-4fba-81cd-f222aadb8a79",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/nesaorg/bootstrap",
+    "rc": 0,
+    "log": "logs_kvm/run_13.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "239f9983-48b2-455c-a225-1ce671bc0b35",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  },
+  {
+    "repo": "https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast",
+    "rc": 0,
+    "log": "logs_kvm/run_14.log",
+    "lease_success": false,
+    "provisioning_success": true,
+    "failure_reason": null,
+    "server_id": "73dd3a53-36eb-4fd8-bd30-de9abc3819db",
+    "flavor": "kvm_vm_direct",
+    "fip": "129.114.26.249"
+  }
+]

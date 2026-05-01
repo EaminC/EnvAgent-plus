@@ -1,0 +1,160 @@
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/CLM-GS
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 128 GB
+  GPU: Required
+  GPU Memory: 24 GB
+  Disk: 500 GB
+  OS: ubuntu 20.04
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 0 candidates
+  Reasoning: The available images do not include any Ubuntu 20.04 images with CUDA support. All images with CUDA support are for Ubuntu 22.04 or 24.04, which do not meet the requirement for Ubuntu 20.04. Therefore, there are no suitable candidates that match all the specified requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu_rtx_6000
+  Reasoning: The gpu_rtx_6000 node type matches the user's requirement for a GPU with at least 24 GB of memory. It is the only available GPU node type, and it has 1 reservable, which is the highest available for GPU nodes. Although the compute nodes have higher reservable counts, they do not meet the GPU requirement.
+✓ AI selected node type: gpu_rtx_6000
+  Reasoning: The gpu_rtx_6000 node type matches the user's requirement for a GPU with at least 24 GB of memory. It is the only available GPU node type, and it has 1 reservable, which is the highest available for GPU nodes. Although the compute nodes have higher reservable counts, they do not meet the GPU requirement.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch with requirements-based flavor selection
+============================================================
+
+Predicted hardware requirements:
+  CPU: 8 cores
+  RAM: 128 GB
+  Disk: 500 GB
+  GPU: Required
+
+  Launching KVM VM with requirements-based flavor selection:
+    Name: auto-server-202605010530-20260501053050-ea4097
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  → Selecting KVM flavor for predicted requirements:
+     CPU: 8 cores, RAM: 128GB, Disk: 500GB
+     GPU: Required
+     ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+     → Minimum disk required: 500GB (predicted: 500GB, image: 21GB)
+
+  ⚠ No KVM flavor perfectly matches requirements
+     → Using smallest available flavor and marking as undersized
+
+  Selected flavor: m1.medium (fallback)
+     Actual: 2 vCPU, 4.0GB RAM, 40GB disk
+     Undersized: CPU: 2 < 8, RAM: 4.0GB < 128GB, Disk: 40GB < 500GB, GPU: Not available
+
+  ✓ KVM instance creation initiated: 9c20318e-c3f9-46d8-b90e-aa333a7284ac
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+======================================================================
+HARDWARE VALIDATION SUMMARY
+======================================================================
+
+→ Predicted Requirements:
+  CPU:      8 cores
+  RAM:      128 GB
+  Disk:     500 GB
+  GPU:      Yes
+
+→ Actual Provisioned (Flavor: m1.medium):
+  CPU:      2 cores
+  RAM:      4.0 GB
+  Disk:     40 GB
+  GPU:      No (KVM@TACC not available)
+
+→ Match Status:
+  ⚠ MISMATCH: VM provisioned but undersized for predicted workload
+  Reasons:
+    - CPU: 2 < 8
+    - RAM: 4.0GB < 128GB
+    - Disk: 40GB < 500GB
+    - GPU: Not available
+
+⚠ ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+======================================================================
+
+
+✓ KVM VM direct launch successful
+⚠ WARNING: VM provisioned but hardware is undersized or incomplete
+   - CPU: 2 < 8
+   - RAM: 4.0GB < 128GB
+   - Disk: 40GB < 500GB
+   - GPU: Not available
+  ⚠ GPU required but KVM@TACC does not provide GPU flavors. Workload may fail to run.
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.27.1
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010530-20260501053050-ea4097
+Server ID: 9c20318e-c3f9-46d8-b90e-aa333a7284ac
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.27.1
+
+SSH Connection:
+  ssh ubuntu@129.114.27.1
+⚠ Hardware Match: No (provisioned VM is undersized)
+    CPU: 2 < 8
+    RAM: 4.0GB < 128GB
+    Disk: 40GB < 500GB
+    GPU: Not available
+
+✓ Info saved to: auto-server-202605010530-20260501053050-ea4097_info.json

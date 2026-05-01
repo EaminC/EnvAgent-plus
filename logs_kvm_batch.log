@@ -1,0 +1,1582 @@
+
+=== RUN 1/14: https://github.com/NVIDIA/tao_tutorials ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA/tao_tutorials --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and no need for CUDA or GPU support. Therefore, a selection of recent and diverse operating systems without CUDA is appropriate. The chosen images include the latest versions of Ubuntu (24.04, 22.04, and 20.04) and CentOS (9-Stream and 8-Stream) without CUDA, providing a broad range of options for general use.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count (79) compared to the gpu node type (1). Selecting compute maximizes the success rate for lease creation due to its higher availability.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count (79) compared to the gpu node type (1). Selecting compute maximizes the success rate for lease creation due to its higher availability.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010247-20260501024720-8a94db
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: bfac1822-259d-46b5-8745-0c7103b53aa9
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010247-20260501024720-8a94db
+Server ID: bfac1822-259d-46b5-8745-0c7103b53aa9
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010247-20260501024720-8a94db_info.json
+Deleting server bfac1822-259d-46b5-8745-0c7103b53aa9
+Delete requested for bfac1822-259d-46b5-8745-0c7103b53aa9
+
+=== RUN 2/14: https://github.com/NVIDIA-NeMo/Gym ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA-NeMo/Gym --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type or version, nor do they require CUDA or GPU support. Therefore, the selection can be based on a variety of operating systems without CUDA. The chosen images include recent versions of Ubuntu and CentOS, which are popular and widely supported operating systems. This selection provides a mix of both Ubuntu and CentOS to cover different use cases and preferences.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010247-20260501024756-5b9564
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: c75a8892-d2cd-4da7-946b-7c50060e4ad4
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010247-20260501024756-5b9564
+Server ID: c75a8892-d2cd-4da7-946b-7c50060e4ad4
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010247-20260501024756-5b9564_info.json
+Deleting server c75a8892-d2cd-4da7-946b-7c50060e4ad4
+Delete requested for c75a8892-d2cd-4da7-946b-7c50060e4ad4
+
+=== RUN 3/14: https://github.com/mariocandela/ai-avatar ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/mariocandela/ai-avatar --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA/GPU support is not needed. Therefore, we can select a variety of images that do not have CUDA in their names, ensuring a mix of recent and stable releases. The selected images include the latest Ubuntu and CentOS versions without CUDA: CC-Ubuntu24.04, CC-Ubuntu22.04, CC-Ubuntu20.04, CC-CentOS9-Stream, and CC-CentOS8-Stream. These choices provide a balance between the latest features and stability.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010248-20260501024833-56d2cc
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 701f9907-e9e1-411d-a807-a202b3493bf9
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010248-20260501024833-56d2cc
+Server ID: 701f9907-e9e1-411d-a807-a202b3493bf9
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010248-20260501024833-56d2cc_info.json
+Deleting server 701f9907-e9e1-411d-a807-a202b3493bf9
+Delete requested for 701f9907-e9e1-411d-a807-a202b3493bf9
+
+=== RUN 4/14: https://github.com/snel-repo/Kilosort4 ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/snel-repo/Kilosort4 --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type or version, nor do they require CUDA or GPU support. Therefore, the selection focuses on the most recent and stable versions of popular Linux distributions without CUDA support. Ubuntu 24.04, 22.04, and 20.04 are selected for their popularity and wide support, while CentOS 9 Stream and CentOS 8 Stream are chosen for those who might prefer a CentOS environment. These images provide a good balance of modern features and stability.
+
+✓ Final Selection: CC-Ubuntu24.04
+  Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010249-20260501024910-4a8955
+    Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 7dec28f4-096c-459a-8b07-4a7154c25050
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010249-20260501024910-4a8955
+Server ID: 7dec28f4-096c-459a-8b07-4a7154c25050
+Image: CC-Ubuntu24.04
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010249-20260501024910-4a8955_info.json
+Deleting server 7dec28f4-096c-459a-8b07-4a7154c25050
+Delete requested for 7dec28f4-096c-459a-8b07-4a7154c25050
+
+=== RUN 5/14: https://github.com/nyu-systems/CLM-GS ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/nyu-systems/CLM-GS --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type, version, or CUDA/GPU support, so we can select a diverse set of images that cover different OS versions and distributions. The selected images include the latest versions of Ubuntu (24.04, 22.04, and 20.04) and CentOS (9-Stream and 8-Stream) without CUDA support, which are widely used and provide a good mix of recent and stable releases.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, compared to the 'gpu' node type which has only 1 reservable. Since the user does not require a GPU, the 'compute' node type is the most suitable choice with higher availability.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, compared to the 'gpu' node type which has only 1 reservable. Since the user does not require a GPU, the 'compute' node type is the most suitable choice with higher availability.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010249-20260501024946-6576fb
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: fce244dc-8923-4d59-9d05-e87773afbb4b
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010249-20260501024946-6576fb
+Server ID: fce244dc-8923-4d59-9d05-e87773afbb4b
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010249-20260501024946-6576fb_info.json
+Deleting server fce244dc-8923-4d59-9d05-e87773afbb4b
+Delete requested for fce244dc-8923-4d59-9d05-e87773afbb4b
+
+=== RUN 6/14: https://github.com/TIO-IKIM/CellViT-plus-plus ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/TIO-IKIM/CellViT-plus-plus --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type, version, or CUDA/GPU needs, allowing for a broad selection. The chosen images include a mix of recent Ubuntu and CentOS versions without CUDA, ensuring compatibility with a wide range of applications. These images are likely to be stable and well-supported, given their recent release dates and lack of specialized configurations like CUDA, which are unnecessary for the requirements.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, compared to the 'gpu' node type which has only 1 reservable. Since the user does not require a GPU, the 'compute' node type is the most suitable and available option.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, compared to the 'gpu' node type which has only 1 reservable. Since the user does not require a GPU, the 'compute' node type is the most suitable and available option.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010250-20260501025022-c74a8d
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 10a0d083-43cb-4579-8833-03a9a464367f
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010250-20260501025022-c74a8d
+Server ID: 10a0d083-43cb-4579-8833-03a9a464367f
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010250-20260501025022-c74a8d_info.json
+Deleting server 10a0d083-43cb-4579-8833-03a9a464367f
+Delete requested for 10a0d083-43cb-4579-8833-03a9a464367f
+
+=== RUN 7/14: https://github.com/TIO-IKIM/CellViT-Inference ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/TIO-IKIM/CellViT-Inference --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA or GPU support is not needed. Therefore, I selected a mix of recent and stable Ubuntu and CentOS images without CUDA support. These images are likely to be well-supported and widely used, making them suitable for general purposes. The selected images include the latest Ubuntu LTS versions (24.04, 22.04, and 20.04) and CentOS Stream versions (9 and 8), providing a good balance of modern features and stability.
+
+✓ Final Selection: CC-Ubuntu24.04
+  Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The 'compute' node type has 79 reservable nodes, which is the highest availability, ensuring a higher success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The 'compute' node type has 79 reservable nodes, which is the highest availability, ensuring a higher success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010250-20260501025059-1f82bf
+    Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 05db151c-b57d-403c-ac32-c74775ffebbd
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010250-20260501025059-1f82bf
+Server ID: 05db151c-b57d-403c-ac32-c74775ffebbd
+Image: CC-Ubuntu24.04
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010250-20260501025059-1f82bf_info.json
+Deleting server 05db151c-b57d-403c-ac32-c74775ffebbd
+Delete requested for 05db151c-b57d-403c-ac32-c74775ffebbd
+
+=== RUN 8/14: https://github.com/sideprotocol/plonky2-gpu ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/sideprotocol/plonky2-gpu --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no particular OS type or version, and CUDA or GPU support is not needed. Therefore, we can select a variety of images that do not include CUDA support. The selected images are recent and cover both Ubuntu and CentOS distributions, which are popular and widely used. This selection provides flexibility in terms of OS choice without unnecessary CUDA support.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010251-20260501025135-e03397
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: e1859cb3-dd72-46a9-ae4b-c90d3505dada
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010251-20260501025135-e03397
+Server ID: e1859cb3-dd72-46a9-ae4b-c90d3505dada
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010251-20260501025135-e03397_info.json
+Deleting server e1859cb3-dd72-46a9-ae4b-c90d3505dada
+Delete requested for e1859cb3-dd72-46a9-ae4b-c90d3505dada
+
+=== RUN 9/14: https://github.com/SVRTK/svrtk-docker-gpu ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/SVRTK/svrtk-docker-gpu --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements specify no preference for OS type or version, and CUDA or GPU support is not needed. Therefore, the selection is based on a variety of recent and stable images that do not include CUDA. The selected images include the latest versions of Ubuntu (24.04, 22.04, 20.04) and CentOS (9-Stream, 8-Stream) to provide a range of options for different environments.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, maximizing the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010252-20260501025211-205271
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 17cf2923-99fd-40d0-812f-8732bdc5b196
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010252-20260501025211-205271
+Server ID: 17cf2923-99fd-40d0-812f-8732bdc5b196
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010252-20260501025211-205271_info.json
+Deleting server 17cf2923-99fd-40d0-812f-8732bdc5b196
+Delete requested for 17cf2923-99fd-40d0-812f-8732bdc5b196
+
+=== RUN 10/14: https://github.com/PluralisResearch/node0 ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/PluralisResearch/node0 --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type, version, or CUDA/GPU support. Therefore, I selected a mix of recent and stable images from both Ubuntu and CentOS distributions. The selected images include the latest versions of Ubuntu 24.04, 22.04, and 20.04, as well as CentOS 9 Stream and CentOS 8 Stream, which are popular and widely used distributions.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, so the compute node type is suitable. It has the highest reservable count of 79, which maximizes the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, so the compute node type is suitable. It has the highest reservable count of 79, which maximizes the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010252-20260501025248-9587f6
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 8cc8858f-bdec-476a-b05c-64591f02fe1c
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010252-20260501025248-9587f6
+Server ID: 8cc8858f-bdec-476a-b05c-64591f02fe1c
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010252-20260501025248-9587f6_info.json
+Deleting server 8cc8858f-bdec-476a-b05c-64591f02fe1c
+Delete requested for 8cc8858f-bdec-476a-b05c-64591f02fe1c
+
+=== RUN 11/14: https://github.com/EsmaeilNarimissa/SciDOCX ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/EsmaeilNarimissa/SciDOCX --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type, version, or need for CUDA or GPU support. Therefore, the selection focuses on a variety of recent and stable images from both Ubuntu and CentOS distributions, which are commonly used and well-supported. The selected images are: CC-CentOS9-Stream, CC-Ubuntu24.04, CC-Ubuntu22.04, CC-Ubuntu20.04, and CC-CentOS8-Stream. These images provide a good mix of the latest versions of popular operating systems without CUDA, meeting the general-purpose needs.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+✓ AI selected node type: compute
+  Reasoning: The 'compute' node type has the highest reservable count of 79, which maximizes the success rate for lease creation. Since the user does not require a GPU, the 'compute' node type is the most suitable choice.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010253-20260501025324-710a5c
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 553a2c07-f1e1-4349-ac79-79ea3dab8904
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010253-20260501025324-710a5c
+Server ID: 553a2c07-f1e1-4349-ac79-79ea3dab8904
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010253-20260501025324-710a5c_info.json
+Deleting server 553a2c07-f1e1-4349-ac79-79ea3dab8904
+Delete requested for 553a2c07-f1e1-4349-ac79-79ea3dab8904
+
+=== RUN 12/14: https://github.com/perslev/U-Time ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/perslev/U-Time --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: The requirements do not specify any particular OS type or version, nor do they require CUDA or GPU support. Therefore, I selected a range of images that provide a mix of recent Ubuntu and CentOS versions without CUDA support. These include the latest Ubuntu 24.04, 22.04, and 20.04 images, as well as CentOS 8 and CentOS 9 Stream images. These selections offer a variety of stable and widely used operating systems suitable for general purposes.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, which maximizes the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has the highest reservable count of 79, which maximizes the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010254-20260501025400-6d091e
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 979a558d-b8c0-4a38-8522-00a3a7007b35
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010254-20260501025400-6d091e
+Server ID: 979a558d-b8c0-4a38-8522-00a3a7007b35
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010254-20260501025400-6d091e_info.json
+Deleting server 979a558d-b8c0-4a38-8522-00a3a7007b35
+Delete requested for 979a558d-b8c0-4a38-8522-00a3a7007b35
+
+=== RUN 13/14: https://github.com/nesaorg/bootstrap ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/nesaorg/bootstrap --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 5 candidates
+  Reasoning: Since there are no specific requirements for OS type, version, or CUDA/GPU support, I selected a variety of images that represent the latest versions of popular operating systems without CUDA. This includes the latest Ubuntu 24.04, 22.04, and 20.04 versions, as well as CentOS 9 and 8 Stream versions. These images provide a good range of options for general use cases.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The 'compute' node type has 79 reservable nodes, which is significantly higher than the 1 reservable GPU node, maximizing the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, so a general compute node is suitable. The 'compute' node type has 79 reservable nodes, which is significantly higher than the 1 reservable GPU node, maximizing the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010254-20260501025435-ce7159
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 2d624682-b018-43ae-b8c2-4f572989f3a0
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010254-20260501025435-ce7159
+Server ID: 2d624682-b018-43ae-b8c2-4f572989f3a0
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010254-20260501025435-ce7159_info.json
+Deleting server 2d624682-b018-43ae-b8c2-4f572989f3a0
+Delete requested for 2d624682-b018-43ae-b8c2-4f572989f3a0
+
+=== RUN 14/14: https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast ===
+CMD: /home/cc/EnvAgent-plus/venv/bin/python 2.0/src/provision_v2.py --repo https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast --site KVM@TACC --skip-repo-clone --lease-duration 2
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+⚠ Skipping repository clone (test mode)
+
+✓ Repository requirements analysis complete:
+  CPU: None cores
+  RAM: None GB
+  GPU: Not required
+  Disk: None GB
+  OS: None None
+  CUDA: Not required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 3 candidates
+  Reasoning: The requirements do not specify any particular OS type, version, or the need for CUDA or GPU support. Therefore, the selection focuses on recent and stable versions of popular Linux distributions. CC-Ubuntu24.04 and CC-Ubuntu22.04 are the latest LTS releases of Ubuntu, providing stability and long-term support. CC-CentOS9-Stream is a recent version of CentOS, which is also widely used in server environments for its stability and support. These images are chosen to provide a variety of options between Ubuntu and CentOS, covering different use cases and preferences.
+
+✓ Final Selection: CC-Ubuntu24.04
+  Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 0.3
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has a higher reservable count (79) compared to the GPU node type (1). Therefore, selecting the compute node type maximizes the success rate for lease creation.
+✓ AI selected node type: compute
+  Reasoning: The user does not require a GPU, and the compute node type has a higher reservable count (79) compared to the GPU node type (1). Therefore, selecting the compute node type maximizes the success rate for lease creation.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010255-20260501025511-e3812e
+    Image ID: f0c599f7-6dff-4f81-acec-851bcb5995cd
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: None, RAM: NoneGB)...
+  ⚠ RAM requirement missing; defaulting to 2 GB for flavor selection
+  ⚠ CPU requirement missing; defaulting to 2 cores for flavor selection
+  ✓ Selected flavor: m1.medium
+    CPU: 2, RAM: 4096MB
+
+  ✓ KVM instance creation initiated: 089464f8-3c39-4455-b67e-1fe860b5dfc8
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010255-20260501025511-e3812e
+Server ID: 089464f8-3c39-4455-b67e-1fe860b5dfc8
+Image: CC-Ubuntu24.04
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010255-20260501025511-e3812e_info.json
+Deleting server 089464f8-3c39-4455-b67e-1fe860b5dfc8
+Delete requested for 089464f8-3c39-4455-b67e-1fe860b5dfc8
+
+=== SUMMARY ===
+Total repos: 14
+⚠  NOTE: KVM@TACC does not use Blazar reservation; lease_success metric is not applicable.
+Provisioning successes: 14
+KVM provisioning success rate: 14/14 = 100.00%
+Failure reason breakdown:
+{'repo': 'https://github.com/NVIDIA/tao_tutorials', 'rc': 0, 'log': 'logs_kvm/run_1.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': 'bfac1822-259d-46b5-8745-0c7103b53aa9', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/NVIDIA-NeMo/Gym', 'rc': 0, 'log': 'logs_kvm/run_2.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': 'c75a8892-d2cd-4da7-946b-7c50060e4ad4', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/mariocandela/ai-avatar', 'rc': 0, 'log': 'logs_kvm/run_3.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '701f9907-e9e1-411d-a807-a202b3493bf9', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/snel-repo/Kilosort4', 'rc': 0, 'log': 'logs_kvm/run_4.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '7dec28f4-096c-459a-8b07-4a7154c25050', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/nyu-systems/CLM-GS', 'rc': 0, 'log': 'logs_kvm/run_5.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': 'fce244dc-8923-4d59-9d05-e87773afbb4b', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/TIO-IKIM/CellViT-plus-plus', 'rc': 0, 'log': 'logs_kvm/run_6.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '10a0d083-43cb-4579-8833-03a9a464367f', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/TIO-IKIM/CellViT-Inference', 'rc': 0, 'log': 'logs_kvm/run_7.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '05db151c-b57d-403c-ac32-c74775ffebbd', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/sideprotocol/plonky2-gpu', 'rc': 0, 'log': 'logs_kvm/run_8.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': 'e1859cb3-dd72-46a9-ae4b-c90d3505dada', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/SVRTK/svrtk-docker-gpu', 'rc': 0, 'log': 'logs_kvm/run_9.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '17cf2923-99fd-40d0-812f-8732bdc5b196', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/PluralisResearch/node0', 'rc': 0, 'log': 'logs_kvm/run_10.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '8cc8858f-bdec-476a-b05c-64591f02fe1c', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/EsmaeilNarimissa/SciDOCX', 'rc': 0, 'log': 'logs_kvm/run_11.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '553a2c07-f1e1-4349-ac79-79ea3dab8904', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/perslev/U-Time', 'rc': 0, 'log': 'logs_kvm/run_12.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '979a558d-b8c0-4a38-8522-00a3a7007b35', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/nesaorg/bootstrap', 'rc': 0, 'log': 'logs_kvm/run_13.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '2d624682-b018-43ae-b8c2-4f572989f3a0', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+{'repo': 'https://github.com/NVIDIA-AI-Blueprints/pdf-to-podcast', 'rc': 0, 'log': 'logs_kvm/run_14.log', 'lease_success': False, 'provisioning_success': True, 'failure_reason': None, 'server_id': '089464f8-3c39-4455-b67e-1fe860b5dfc8', 'flavor': 'kvm_vm_direct', 'fip': '129.114.26.249'}
+
+✓ Logs saved to logs_kvm
+✓ Master log: logs_kvm/batch_provision.log
+✓ Summary JSON: logs_kvm/summary.json

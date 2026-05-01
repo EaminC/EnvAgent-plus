@@ -1,0 +1,105 @@
+⚠ WARNING: python-chi not available; KVM provisioning will be limited
+
+============================================================
+Automated Hardware Provisioning Tool v2.0
+============================================================
+✓ Configuration loaded
+✓ AI client initialized
+✓ OpenStack connection established
+
+============================================================
+Step 1: Repository Analysis
+============================================================
+✓ Repository cloned to: /tmp/plonky2-gpu
+
+✓ Repository requirements analysis complete:
+  CPU: 8 cores
+  RAM: 16 GB
+  GPU: Required
+  GPU Memory: 12 GB
+  Disk: None GB
+  OS: None None
+  CUDA: Required
+
+============================================================
+Step 2: Image Selection
+============================================================
+✓ Found 205 available CC-* images
+✓ AI Stage 1: Selected 2 candidates
+  Reasoning: The requirement specifies that CUDA support is needed, but there are no specific requirements for the OS type or version. Therefore, the best candidates are images that include CUDA support. The available images with CUDA support are 'CC-Ubuntu24.04-CUDA' (ID: 00109732-cbe0-4283-99f0-2456ea437509) and 'CC-Ubuntu22.04-CUDA' (ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43). These images are selected as they meet the CUDA requirement, which is essential for GPU-related tasks.
+⚠ No candidates found, using fallback selection
+✓ Fallback image: CC-Ubuntu22.04-CUDA
+
+============================================================
+Step 3: SSH Key Management
+============================================================
+✓ Keypair exists: my-key
+
+============================================================
+Step 4: Network Configuration
+============================================================
+✓ Found network: sharednet1 (ID: 50073c73-5817-49c3-8e3a-69b8c357e158)
+
+============================================================
+Discovering Available Resources
+============================================================
+
+Discovering resources at KVM@TACC site...
+✓ Found 85 hosts
+✓ Discovered 2 node types (ranked by availability & fit):
+    compute: 79 reservable / 79 total | fit_score: 1.0
+    gpu: 1 reservable / 1 total | fit_score: 2.0
+✓ Found 2 node types available
+
+✓ AI resource selection complete
+  Node type: gpu
+  Reasoning: The user requires a GPU node, and although there is only 1 reservable GPU node available, it is the only option that meets the GPU requirement. The compute nodes do not have GPUs, so they do not match the user's requirements.
+✓ AI selected node type: gpu
+  Reasoning: The user requires a GPU node, and although there is only 1 reservable GPU node available, it is the only option that meets the GPU requirement. The compute nodes do not have GPUs, so they do not match the user's requirements.
+
+============================================================
+KVM@TACC: Skipping bare-metal Blazar (wrong model for KVM)
+TIER 4 FALLBACK: Direct Nova KVM launch
+============================================================
+
+  Launching KVM VM:
+    Name: auto-server-202605010309-20260501030944-e5737c
+    Image ID: 546bfd02-1a3f-4c00-bc74-c80cc5d6ad43
+    Key: my-key
+    Network ID: 50073c73-5817-49c3-8e3a-69b8c357e158
+
+  Selecting KVM flavor (CPU: 8, RAM: 16GB)...
+  ✓ Selected flavor: m1.xlarge
+    CPU: 8, RAM: 16384MB
+
+  ✓ KVM instance creation initiated: 842edcee-e8ee-426f-88f4-878c5ad26220
+
+  Waiting for KVM instance to become ACTIVE...
+  (This typically takes 1-5 minutes for VMs)
+    Status: BUILD
+    Status: ACTIVE
+
+  ✓ KVM instance is ACTIVE
+
+✓ KVM VM direct launch successful
+
+============================================================
+Step 7: Assign Floating IP
+============================================================
+✓ Using floating IP: 129.114.26.249
+✓ Floating IP attached
+
+============================================================
+✓ Provisioning Complete!
+============================================================
+Provisioning Type: kvm_vm
+Server Name: auto-server-202605010309-20260501030944-e5737c
+Server ID: 842edcee-e8ee-426f-88f4-878c5ad26220
+Image: CC-Ubuntu22.04-CUDA
+Node Type: kvm_vm_direct
+Floating IP: 129.114.26.249
+
+SSH Connection:
+  ssh ubuntu@129.114.26.249
+
+✓ Info saved to: auto-server-202605010309-20260501030944-e5737c_info.json
